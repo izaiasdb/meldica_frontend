@@ -1,0 +1,50 @@
+.logo {
+    background: white;
+    height: 100px;
+    width: 100%;
+    /* line-height: 50px; */
+}
+
+.topo {
+    display: -webkit-flex;
+    display: flex;
+}
+
+.boxLogo {
+    height: 48px;
+    width: 48px;
+    line-height: 48px;    
+    margin: 5px 5px 5px 15px;
+    -webkit-flex: initial;
+    flex: initial;
+}
+
+.boxLogo img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.nomeTopo {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bolder;
+    font-size: 24px;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.nomeRodape {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 9px;
+}
+
+.content {
+    padding: 12px;
+    background: '#ddd';
+    min-height: 100vh
+}
+
+.userTopo {
+    padding-left: 20px;
+    padding-right: 10px;
+    cursor: pointer;
+}
