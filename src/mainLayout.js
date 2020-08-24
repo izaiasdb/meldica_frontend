@@ -130,9 +130,10 @@ class MainLayout extends Component {
               <Link to="/dashboard">
                 <div className={"boxLogo"}><img src={logo} /></div>
               </Link>
-              <div className={"nomeTopo"} >Méldica - CE</div>
-              {/* <BuscaRapida /> */}
-              <div ><div><b> Unidade Atual: </b>{this.getUnidade()}</div></div>
+              <div className={"nomeTopo"} >
+                {/* Méldica */}
+                </div>
+              {/* <BuscaRapida /> */}              
               <div className={"userTopo"} >
                 <Popover placement="bottom" title={nome} content={this.getContent()}>
                   <Avatar size="small" icon="user" style={ { backgroundColor: '#149647'}} />
@@ -152,10 +153,10 @@ class MainLayout extends Component {
           </Content>
         </Layout>
         <Footer className={"nomeRodape"} style={{ textAlign: 'center', padding: 0, height: '48px'}}>
-          <p>
-            <b>Secretaria da Administração Penitenciária</b><br/>
-            Rua Tenente Benévolo, 1055 - Meireles, Fortaleza/CE - CEP: 60160-040 Fone: (85) 3101.2840<br/>
-            © - Governo do Estado do Ceará. Todos os Direitos Reservados
+          <p>        
+            <b>Méldica - Fábrica de produtos naturais</b><br/>
+            R. Francisco Morais Moreira, 1100, Conj. Cidade Nova, Icó-CE - CEP: 63430-000 Fone: (88) 3561-1827<br/>
+            © - IDB Sistemas - (85) 99828-7508. Todos os Direitos Reservados
           </p>
         </Footer>
       </Layout>

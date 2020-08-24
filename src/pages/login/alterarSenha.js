@@ -6,7 +6,7 @@ import DashboardActions from '../dashboard/redux'
 import { isAuthenticated } from '../../services/authenticationService';
 import { Redirect, Link, withRouter } from 'react-router-dom'
 import './login.css'
-import logo from '../../assets/images/logo_welcome.png'
+import logo from '../../assets/images/logo2.png'
 import { get, isEmpty, isNil } from 'lodash'
 import { openNotification } from '../util/notification'
 

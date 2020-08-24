@@ -11,12 +11,13 @@
 }
 
 .boxLogo {
-    height: 48px;
-    width: 48px;
+    height: 80px;
+    width: 120px;
     line-height: 48px;    
     margin: 5px 5px 5px 15px;
     -webkit-flex: initial;
     flex: initial;
+    margin-left: 35px;
 }
 
 .boxLogo img {

@@ -12,3 +12,5 @@ export const ICON_IMPRIMIR = "container"
 export const URL_IMAGEM = "http://172.18.4.10:3100/imageUtil";
 export const URL_BACKEND = "http://localhost:8080/meldica_backend";
 export const URL_FRONTEND = "http://localhost:8089/";
+
+export const PERFIL_ADMINISTRADOR = 1
