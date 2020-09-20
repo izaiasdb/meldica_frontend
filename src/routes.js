@@ -25,9 +25,15 @@ import UnidadeMedida from './pages/cadastro/unidadeMedida/container/unidadeMedid
 import Produto from './pages/cadastro/produto/container/produto'
 import CondicaoPagamento from './pages/cadastro/condicaoPagamento/container/condicaoPagamento'
 import FormaPagamento from './pages/cadastro/formaPagamento/container/formaPagamento'
+import FormaCondicaoPagamento from './pages/cadastro/formaCondicaoPagamento/container/formaCondicaoPagamento'
 import Cliente from './pages/cadastro/cliente/container/cliente'
 import Fornecedor from './pages/cadastro/fornecedor/container/fornecedor'
+import PlanoConta from './pages/cadastro/planoConta/container/planoConta'
+import Funcionario from './pages/cadastro/funcionario/container/funcionario'
+import Cargo from './pages/cadastro/cargo/container/cargo'
 
+//************************************ Movimentação ************************************/
+import OrdemServico from './pages/movimentacao/ordemServico/container/ordemServico'
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
         <Route  {...rest} 
@@ -59,8 +65,15 @@ const Routes = () => (
             <PrivateRoute path='/cadastro/produto' component={Produto} />
             <PrivateRoute path='/cadastro/formaPagamento' component={FormaPagamento} />
             <PrivateRoute path='/cadastro/condicaoPagamento' component={CondicaoPagamento} />
+            <PrivateRoute path='/cadastro/formaCondicaoPagamento' component={FormaCondicaoPagamento} />
             <PrivateRoute path='/cadastro/cliente' component={Cliente} />
             <PrivateRoute path='/cadastro/fornecedor' component={Fornecedor} />
+            <PrivateRoute path='/cadastro/planoConta' component={PlanoConta} />
+            <PrivateRoute path='/cadastro/funcionario' component={Funcionario} />
+            <PrivateRoute path='/cadastro/cargo' component={Cargo} />
+
+            {/************************************* Movimentações *************************************/}
+            <PrivateRoute path='/movimentacao/venda' component={OrdemServico} />            
            
 
         </React.Fragment>

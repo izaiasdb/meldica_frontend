@@ -174,8 +174,8 @@ export default class TabEndereco extends React.Component {
     render() {
         const { 
             form: { getFieldDecorator, getFieldValue },
-            estados = [],
-            municipios = [],
+            ufList = [],
+            municipioList = [],
             fornecedor = {},
             tipoEndereco = [{
                 id: 1,
@@ -274,9 +274,9 @@ export default class TabEndereco extends React.Component {
                                         >
                                         <Option key={1} value={null}>{"Selecione"}</Option>
                                         {
-                                            estados.map(({id, descricao}) => (<Option key={id} value={id} >
+                                            ufList.map(({id, nome}) => (<Option key={id} value={id} >
                                                 {
-                                                    `${descricao}-${id}`
+                                                    `${nome}-${id}`
                                                 }
                                             </Option>))
                                         }
@@ -298,11 +298,11 @@ export default class TabEndereco extends React.Component {
                                         <Option key={1} value={null}>{"Selecione"}</Option>
                                         {
                                             estado && 
-                                            municipios.filter(({uf}) => uf.id == estado)
-                                                    .map(({descricao}) => 
-                                                        (<Option key={descricao} value={descricao} >
+                                            municipioList.filter(({uf}) => uf.id == estado)
+                                                    .map(({nome}) => 
+                                                        (<Option key={nome} value={nome} >
                                                             {
-                                                                `${descricao}`
+                                                                `${nome}`
                                                             }
                                                         </Option>))
                                         }

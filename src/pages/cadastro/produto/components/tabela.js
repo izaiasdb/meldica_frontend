@@ -71,7 +71,7 @@ class Tabela extends Component {
                                     dataIndex={'tipoProdutoEnum'} 
                                     title={'Tipo Produto'} 
                                     align={ "left" }
-                                    render={ (text, record) => record.uf ? `${text}-${record.uf}` : text}/>
+                                    render={ (text, record) => text}/>
                     <Table.Column key={'acoes'} 
                                     dataIndex={'acoes'} 
                                     title={'Ações'} 

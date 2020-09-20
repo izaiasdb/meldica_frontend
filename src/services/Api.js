@@ -1,5 +1,5 @@
 import apisauce from 'apisauce';
-import { getToken, logout, getUnidadesAcesso } from './authenticationService';
+import { getToken, logout } from './authenticationService';
 import { get } from 'lodash'
 import { URL_BACKEND, URL_FRONTEND } from '../pages/util/constUtils'
 
@@ -51,7 +51,7 @@ const create = () => {
   }
 
   const BuscaRapida = {
-    search: (obj) => api.post('/pessoa/buscaRapida', {...obj, unidadesAcesso: getUnidadesAcesso().map(u => u.id)}),
+    search: (obj) => api.post('/pessoa/buscaRapida', {...obj}),
   }
 
   //************************************ Dashoboard ************************************/
@@ -59,14 +59,14 @@ const create = () => {
     getPopulacaoTotal: () => api.get('/dashboard/populacaocarceraria'),
     getTotalColaboradorPorTipo: () => api.get('/dashboard/totalcolaboradores'),
     getPopulacaoTotalPorUnidade: (unidades) => api.get(`/dashboard/populacaototalporunidade/${unidades}`),
-    pesquisarMensagemUnidade: (obj) => api.post('/dashboard/listarmensagensunidade', {...obj, unidadesAcesso: getUnidadesAcesso().map(u => u.id)}),
+    pesquisarMensagemUnidade: (obj) => api.post('/dashboard/listarmensagensunidade', {...obj}),
   }
 
   //************************************ Configuração ************************************/
 
   const MensagemDashboard = {
     salvar: (obj) => api.post('/mensagemdashboard/salvar', obj),
-    pesquisar: (obj) => api.post('/mensagemdashboard/pesquisar', {...obj, unidadesAcesso: getUnidadesAcesso().map(u => u.id)}),      
+    pesquisar: (obj) => api.post('/mensagemdashboard/pesquisar', {...obj}),      
   }
 
   //************************************ Controle usuário ************************************/
@@ -126,6 +126,12 @@ const create = () => {
     salvar: (obj) => api.post('/condicaoPagamento/salvar', obj),
   }
 
+  const FormaCondicaoPagamento = {
+    init: () => api.post('/formaCondicaoPagamento/init'),
+    pesquisar: (obj) => api.post('/formaCondicaoPagamento/pesquisar', obj),
+    salvar: (obj) => api.post('/formaCondicaoPagamento/salvar', obj),
+  }
+
   const Cliente = {
     init: () => api.post('/cliente/init'),
     pesquisar: (obj) => api.post('/cliente/pesquisar', obj),
@@ -138,7 +144,30 @@ const create = () => {
     salvar: (obj) => api.post('/fornecedor/salvar', obj),
   }  
 
-  
+  const PlanoConta = {
+    init: () => api.post('/planoConta/init'),
+    pesquisar: (obj) => api.post('/planoConta/pesquisar', obj),
+    salvar: (obj) => api.post('/planoConta/salvar', obj),
+  }  
+
+  const Funcionario = {
+    init: () => api.post('/funcionario/init'),
+    pesquisar: (obj) => api.post('/funcionario/pesquisar', obj),
+    salvar: (obj) => api.post('/funcionario/salvar', obj),
+  } 
+
+  const Cargo = {
+    init: () => api.post('/cargo/init'),
+    pesquisar: (obj) => api.post('/cargo/pesquisar', obj),
+    salvar: (obj) => api.post('/cargo/salvar', obj),
+  } 
+
+  //************************************ Movimentações ************************************/
+  const OrdemServico = {
+    init: () => api.post('/ordemServico/init'),
+    pesquisar: (obj) => api.post('/ordemServico/pesquisar', obj),
+    salvar: (obj) => api.post('/ordemServico/salvar', obj),
+  }
 
   return {
     Login,
@@ -155,9 +184,13 @@ const create = () => {
     Produto,
     FormaPagamento,
     CondicaoPagamento,
+    FormaCondicaoPagamento,
     Cliente,
-    Fornecedor
-
+    Fornecedor,
+    PlanoConta,
+    Funcionario,
+    Cargo,
+    OrdemServico,
   }
 }
 

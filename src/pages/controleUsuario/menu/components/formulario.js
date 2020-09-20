@@ -123,7 +123,7 @@ class Formulario extends Component {
                                     initialValue: ativo || true,
                                     valuePropName: 'checked'                                    
                                 })(
-                                    <Switch />
+                                    <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                                 )
                             }
                             </Form.Item>
@@ -135,7 +135,7 @@ class Formulario extends Component {
                                     initialValue: apenasDesenvolvimento || false,
                                     valuePropName: 'checked'                                    
                                 })(
-                                    <Switch />
+                                    <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                                 )
                             }
                             </Form.Item>
@@ -147,7 +147,7 @@ class Formulario extends Component {
                                     initialValue: isNil(visivelMenu) ? true : visivelMenu,
                                     valuePropName: 'checked'                                    
                                 })(
-                                    <Switch />
+                                    <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                                 )
                             }
                             </Form.Item>

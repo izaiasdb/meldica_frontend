@@ -36,9 +36,11 @@ export const request = (state) => state.merge({ fetching: true })
 export const success = (state, { dados }) =>  {
 
   let data = {
+    message:               get(dados, ['message'], get(state.data, ['message'], [])),    
     list:                  get(dados, ['list'], get(state.data, ['list'], [])),
     fornecedorList:           get(dados, ['fornecedorList'], get(state.data, ['fornecedorList'], [])),
-    message:               get(dados, ['message'], get(state.data, ['message'], [])),
+    ufList:                get(dados, ['ufList'], get(state.data, ['ufList'], [])),
+    municipioList:         get(dados, ['municipioList'], get(state.data, ['municipioList'], [])),    
   }
 
    state = state.merge({fetching: false, data})

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import './assets/css/topo.css'
 import logo from './assets/images/logo.png';
-import { getUser, getUnidadesAcesso } from './services/authenticationService';
+import { getUser } from './services/authenticationService';
 // import BuscaRapida from './pages/buscaRapida/buscaRapida';
 import LoginActions from './pages/login/redux'
 import { generateOptions } from './pages/util/helper'
@@ -53,24 +53,6 @@ class MainLayout extends Component {
               <span style={{fontWeight: 'bold'}}>{nome}</span>
               <Link to={link == null ? '': link} />
            </Menu.Item>
-  }
-
-  handleSelectChange = (id, { props: { children : abreviacao} }) => {
-    this.props.setUnidadeAtual({id, abreviacao})
-    this.props.history.push("/");
-  }
-
-  getUnidade = () => {
-    const unidades = getUnidadesAcesso() || []
-    const { profile = {} } = this.props
-    const { unidadeAtual = {} } = profile
-    return (<Select value={unidadeAtual.id || null} showSearch
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    onSelect={this.handleSelectChange}
-                    style={{'width': '200px'}}>
-                {generateOptions(unidades && unidades.map(({id, abreviacao: descricao}) => ({id, descricao})))}
-        </Select>)
   }
 
   getMenusFilho = (menus = [], menuId = null) => {    

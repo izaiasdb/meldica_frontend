@@ -62,7 +62,7 @@ class Tabela extends Component {
                                       width={'7%'}
                                       render={(text, record) => (
                                         <span>
-                                            {hasAnyAuthority("CONDICOES_DE_PAGAMENTO__ALTERAR") &&
+                                            {hasAnyAuthority("CONDICOES_DE_PAGAMENTO_ALTERAR") &&
                                                 <Icon style={{cursor: 'pointer'}} type={ 'edit' } onClick={(e) => this.prepareUpdate(record)}></Icon>
                                             }
                                         </span>

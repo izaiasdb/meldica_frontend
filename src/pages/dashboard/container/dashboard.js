@@ -4,7 +4,6 @@ import { Card, Spin, Row, Col, Avatar, Select, Carousel , Form, Input } from 'an
 import { Bar } from 'react-chartjs-2'
 import DashboardActions from '../redux'
 import { cloneDeep, isEmpty, isNil } from 'lodash'
-import { getUnidadesAcesso } from '../../../services/authenticationService'
 import { generateOptions } from '../../util/helper'
 
 const { Meta } = Card
@@ -166,7 +165,7 @@ class Dashboard extends Component {
     }
 
     getExtra = () => {
-        const unidades = getUnidadesAcesso() || []
+        const unidades = []
         const { form: { getFieldDecorator }} = this.props
 
         return (

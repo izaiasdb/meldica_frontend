@@ -63,7 +63,7 @@ const TabDados2 = (props) => {
                             initialValue: true,
                             valuePropName: 'checked'                                    
                         })(
-                            <Switch />
+                            <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                         )
                     }
                     </Form.Item>

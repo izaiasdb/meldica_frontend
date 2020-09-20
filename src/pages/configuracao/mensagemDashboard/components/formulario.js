@@ -7,7 +7,7 @@ import { SEARCHING, INSERTING, EDITING } from '../../../util/state'
 import { connect } from 'react-redux'
 import MensagemDashboardActions from '../redux'
 import { openNotification } from '../../../util/notification'
-import { hasAnyAuthority , getUnidadesAcesso } from '../../../../services/authenticationService'
+import { hasAnyAuthority } from '../../../../services/authenticationService'
 import { isNil } from 'lodash'
 
 class Formulario extends Component {
@@ -30,7 +30,7 @@ class Formulario extends Component {
     }
 
     render() {
-        const unidades = getUnidadesAcesso() || []
+        const unidades = []
         const { fetching , profile , form: { getFieldDecorator } } = this.props
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
         const idUnidadeAtual = !isNil(profile) && !isNil(profile.unidadeAtual) && !isNil(profile.unidadeAtual.id) ? profile.unidadeAtual.id : null;

@@ -93,7 +93,7 @@ class TabItems extends React.Component {
                             <InputNumber style={{ width: "150" }}
                             min={1}
                             precision={3}
-                            step={0.1}
+                            step={1}
                             />                            
                             //<NumericInput maxLength={ 3 } />
                         )

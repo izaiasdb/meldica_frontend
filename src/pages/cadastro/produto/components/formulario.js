@@ -44,7 +44,7 @@ class Formulario extends Component {
         const { activeKey } = this.state
         const { fetching, produto, form } = this.props
         const { getFieldDecorator } = form
-        const { id, ativo, idUsuarioInclusao} = isNil(produto) ? {} : produto
+        const { id, idUsuarioInclusao, qtdEstoqueMinimo} = isNil(produto) ? {} : produto
 
         return (
             <Spin spinning={fetching}>
@@ -52,7 +52,7 @@ class Formulario extends Component {
                 <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'}  produto`) } >                    
                     { getFieldDecorator("produto.id", { initialValue: id })(<Input type="hidden" />) }
                     { getFieldDecorator("produto.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
-                    { getFieldDecorator("produto.ativo", { initialValue: isNil(ativo) ? true : ativo})(<Input type="hidden" />) }
+                    { getFieldDecorator("produto.qtdEstoqueMinimo", { initialValue: qtdEstoqueMinimo})(<Input type="hidden" />) }
                     <Row>
                         <Tabs activeKey={activeKey} type={'card'} onChange={this.setActiveKey}>
                             <Tabs.TabPane key={1} tab={<span><Icon type="form" />Dados</span>}>
