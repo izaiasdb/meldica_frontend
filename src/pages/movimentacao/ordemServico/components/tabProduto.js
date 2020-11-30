@@ -167,7 +167,7 @@ export default class TabProduto extends React.Component {
         const id = getFieldValue("osProduto.id") || null    
         const idProduto = getFieldValue("osProduto.produto.id") || null
         const quantidade = getFieldValue("osProduto.quantidade") || null
-        let produtoListFilter = produtoList.filter(c=> c.tipo == 'P')
+        let produtoListFilter = produtoList.filter(c=> c.tipo == 'P' || c.tipo == 'C')
         let totalProduto = 0;
         let produtoForm = null;  
         let percDescontoMaximo = 0;      

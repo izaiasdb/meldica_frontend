@@ -16,8 +16,8 @@ class Dashboard extends Component {
     }   
 
     componentDidMount() {
-        this.props.getTotalColaboradorPorTipo();
-        this.props.getPopulacaoTotalPorUnidade();
+        //this.props.getTotalColaboradorPorTipo();
+        //this.props.getPopulacaoTotalPorUnidade();
     }
 
     getDatasetForColaboradorTotal = (colaboradorTotal) => {
@@ -73,7 +73,7 @@ class Dashboard extends Component {
         return (
             <Spin spinning={ fetching }>
                 <Row gutter={24}>
-                    <Col span={6}>
+                    {/* <Col span={6}>
                         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} >
                             <Meta avatar = {
                                     <Avatar size={72} icon={"global"} style = {{ color : '#FBC658', backgroundColor : '#fff' }}/>
@@ -88,8 +88,8 @@ class Dashboard extends Component {
                                 }
                             />
                         </Card>
-                    </Col>
-                    <Col span={6}>
+                    </Col> */}
+                    {/* <Col span={6}>
                         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}}>
                             <Meta avatar = {
                                     <Avatar size={72} icon={"solution"} style = {{ color : '#6BD098', backgroundColor : '#fff' }}/>
@@ -104,8 +104,8 @@ class Dashboard extends Component {
                                 }
                             />
                         </Card>
-                    </Col>
-                    <Col span={6}>
+                    </Col> */}
+                    {/* <Col span={6}>
                         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}}>
                             <Meta avatar = {
                                     <Avatar size={72} icon={"solution"} style = {{ color : '#51BCDA', backgroundColor : '#fff' }}/>
@@ -120,8 +120,8 @@ class Dashboard extends Component {
                                 }
                             />
                         </Card>
-                    </Col>
-                    <Col span={6}>
+                    </Col> */}
+                    {/* <Col span={6}>
                         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}}>
                             <Meta avatar = {
                                     <Avatar size={72} icon={"solution"} style = {{ color : '#DA120B', backgroundColor : '#fff' }}/>
@@ -136,10 +136,10 @@ class Dashboard extends Component {
                                 }
                             />
                         </Card>
-                    </Col>
+                    </Col> */}
                 </Row>                
                 <Row gutter={24}>
-                    <Col span={24}>
+                    {/* <Col span={24}>
                         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} extra={this.getExtra()}>
                         {
                             unidade && unidade.id == null &&
@@ -152,7 +152,7 @@ class Dashboard extends Component {
                             </Carousel>
                         }
                         </Card>
-                    </Col>
+                    </Col> */}
                 </Row>
             </Spin>
         )
@@ -171,7 +171,7 @@ class Dashboard extends Component {
         return (
             <Form>
                 {getFieldDecorator("obj.ativo", { initialValue: true })(<Input type="hidden" />)}
-                <Form.Item label={"Unidade prisional"}>
+                {/* <Form.Item label={"Unidade prisional"}>
                 {
                     getFieldDecorator('obj.unidade', {
                         initialValue: [],
@@ -186,7 +186,7 @@ class Dashboard extends Component {
                         </Select>
                     )
                 }
-                </Form.Item>
+                </Form.Item> */}
             </Form>
         )
     }

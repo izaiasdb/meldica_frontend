@@ -19,7 +19,7 @@ class OrdemServico extends Component {
         const { fetching, stateView } = this.props
         return (
             <Spin spinning={ fetching }>
-                { getHeader('OrdemServicos') }
+                { getHeader('Ordem de Serviços') }
                 {
                     isEqual(stateView, SEARCHING) &&
                     <div>

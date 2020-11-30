@@ -24,7 +24,8 @@ const TabDados = (props) => {
         valorProducao,
         valorNf,
         qtdEstoque,        
-        percDescontoMaximo,        
+        percDescontoMaximo,  
+        atualizaEstoque      
     } = produto || {}
 
     const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
@@ -44,6 +45,7 @@ const TabDados = (props) => {
                 </Form.Item>
             </Col>                     
             <Col span={ 4 }>
+                <Tooltip title='Insumo(ex: Tampa, Rôtulo), Produto(ex: Extrato), Combinado(ex: Caixa Extrato)' placement='left'>
                 <Form.Item label={"Tipo Produto"}>
                     {
                         getFieldDecorator('produto.tipo', {
@@ -55,19 +57,20 @@ const TabDados = (props) => {
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                 <Option key={1} value={null}>{"Selecione"}</Option>
-                                <Option key={2} value={'P'}>{"PRODUTO"}</Option>
-                                <Option key={3} value={'I'}>{"INSUMO"}</Option>
-                                <Option key={3} value={'C'}>{"COMBINADO"}</Option>
+                                <Option key={2} value={'I'}>{"INSUMO"}</Option>
+                                <Option key={3} value={'P'}>{"PRODUTO"}</Option>                                
+                                <Option key={4} value={'C'}>{"COMBINADO"}</Option>
                         </Select>
                         )
                     }
                 </Form.Item>
+                </Tooltip>
             </Col> 
             <Col span={ 4 }>            
                 <Form.Item label={"Ativo"}>
                 {
                     getFieldDecorator('produto.ativo', {
-                        initialValue: ativo || true,
+                        initialValue: isNil(ativo) ? true : ativo,
                         valuePropName: 'checked'                                    
                     })(
                         <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
@@ -200,6 +203,18 @@ const TabDados = (props) => {
                     }
                 </Form.Item>
             </Col>
+            {/* <Col span={ 4 }>            
+                <Form.Item label={"Atualiza estoque"}>
+                {
+                    getFieldDecorator('produto.atualizaEstoque', {
+                        initialValue: isNil(atualizaEstoque) ? true : atualizaEstoque,
+                        valuePropName: 'checked'                                    
+                    })(
+                        <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
+                    )
+                }
+                </Form.Item>
+            </Col>              */}
         </Row>  
     </div>)
 }

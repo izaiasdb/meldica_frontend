@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Row, Button, Form, Spin, Tabs, Icon, Input, Modal, Col, Avatar } from 'antd'
+import { Card, Row, Button, Form, Spin, Tabs, Icon, Input, Modal, Col, Avatar, Divider } from 'antd'
 import { isEqual, isNil, isEmpty, get } from 'lodash'
 import { SEARCHING, INSERTING } from '../../../util/state'
 import { connect } from 'react-redux'
@@ -127,15 +127,19 @@ class Formulario extends Component {
                             this.getCard('Valor Recebido', '#DA120B', 'dollar', valorPago ? valorPago : 0)
                         }
                     </Row>                    
+                    <Divider />
                     <Row>
                         <TabDados {...this.props} />
                     </Row>
+                    <Divider />
                     <Row>
                         <TabProduto {...this.props} />
                     </Row>
+                    <Divider />
                     <Row>
                         <TabForma {...this.props} />
-                    </Row>                    
+                    </Row>  
+                    <Divider />                  
                     <Row style={{textAlign: "right"}}>
                         <Button type={ "primary"} 
                                 onClick={this.voltar}

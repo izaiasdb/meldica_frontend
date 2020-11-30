@@ -16,6 +16,7 @@ const { Types, Creators } = createActions({
    ordemServicoSetStateView: ['stateView'],
    ordemServicoSetOrdemServico: ['ordemServico'],
    ordemServicoCleanTable: null,
+   ordemServicoAlterarStatus: ['obj'],
 });
 
 export const OrdemServicoTypes = Types;
@@ -38,6 +39,7 @@ export const success = (state, { dados }) =>  {
   let data = {
     list:                  get(dados, ['list'], get(state.data, ['list'], [])),
     clienteList:           get(dados, ['clienteList'], get(state.data, ['clienteList'], [])),
+    funcionarioList:       get(dados, ['funcionarioList'], get(state.data, ['funcionarioList'], [])),    
     produtoList:           get(dados, ['produtoList'], get(state.data, ['produtoList'], [])),
     formaCondicaoList:     get(dados, ['formaCondicaoList'], get(state.data, ['formaCondicaoList'], [])),    
     message:               get(dados, ['message'], get(state.data, ['message'], [])),
@@ -64,6 +66,8 @@ export const setOrdemServicoItems = (state, { ordemServicoItems }) => state.merg
   }  
 })
 
+export const finalizarOrdemServico = (state, { ordemServico }) => state.merge({fetching: true})
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -76,4 +80,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ORDEM_SERVICO_SET_STATE_VIEW]    : setStateView,
   [Types.ORDEM_SERVICO_SET_ORDEM_SERVICO] : setOrdemServico,
   [Types.ORDEM_SERVICO_CLEAN_TABLE]       : cleanTable,
+  [Types.ORDEM_SERVICO_ALTERAR_STATUS]    : request,
 })

@@ -167,6 +167,7 @@ const create = () => {
     init: () => api.post('/ordemServico/init'),
     pesquisar: (obj) => api.post('/ordemServico/pesquisar', obj),
     salvar: (obj) => api.post('/ordemServico/salvar', obj),
+    alterarStatus: (obj) => api.post('/ordemServico/alterarStatus', obj),    
   }
 
   return {

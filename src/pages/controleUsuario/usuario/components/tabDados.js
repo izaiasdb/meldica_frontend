@@ -67,20 +67,20 @@ class TabDados extends Component {
                             }                               
                         </Form.Item>
                     </Col>
-                    <Col span={ 4 }>
+                    {/* <Col span={ 4 }>
                         <Button type={ "primary"} 
                                 onClick={this.copiarPermissoes}
                                 style={{marginRight: '10px', marginTop: '42px'}}>
                                 Copiar permissões
                         </Button>                    
-                    </Col>                  
+                    </Col>                   */}
                 </Row>
                 <Row gutter={24}>                     
                     <Col span={ 2 }>
                         <Form.Item label={"Ativo"}>
                         {
                             getFieldDecorator('usuario.ativo', {
-                                initialValue: ativo || true,
+                                initialValue: isNil(ativo) ? true : ativo,
                                 valuePropName: 'checked'                                    
                             })(
                                 <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>

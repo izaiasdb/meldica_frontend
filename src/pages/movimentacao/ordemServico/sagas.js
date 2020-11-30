@@ -62,3 +62,26 @@ export function * salvar (api, { obj })  {
   }
 }
 
+export function * alterarStatus (api, { obj })  {
+  try {
+    const { id } = getUser();
+    obj.idUsuarioAlteracao = id;
+
+    const response = yield call(api.OrdemServico.alterarStatus, {...obj })
+    
+    if (response.ok) {
+      yield put(Actions.ordemServicoSuccess({
+        message: {
+          tipo: 'success', descricao: `Registro ${obj && obj.id ? 'alterado' : 'salvo'} com sucesso.`
+        }
+      }))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.ordemServicoFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.ordemServicoFailure())
+  }
+}
+

@@ -27,12 +27,12 @@ const TabDados = (props) => {
         form: { getFieldDecorator, getFieldValue, getFieldsValue },
         ordemServico = {},
         clienteList = [],
+        funcionarioList = [],
     } = props
     const {
         cliente = {},
+        funcionario = {},
         dataOrdemServico,
-        valorPago,    
-        statusNota,
         observacao,        
     } = ordemServico || {}
 
@@ -42,7 +42,7 @@ const TabDados = (props) => {
 
     return (<div>
         <Row gutter={ 12 }>
-            <Col span={ 16 }>
+            <Col span={ 10 }>
                 <Form.Item label={"Cliente"}>
                     {
                         getFieldDecorator('ordemServico.cliente.id', {
@@ -59,7 +59,25 @@ const TabDados = (props) => {
                         )
                     }
                 </Form.Item>
-            </Col> 
+            </Col>
+            <Col span={ 10 }>
+                <Form.Item label={"Funcionário"}>
+                    {
+                        getFieldDecorator('ordemServico.funcionario.id', {
+                            rules: [{required: true, message: 'Por favor, informe o funcionário.'}],
+                            initialValue: isNil(funcionario) ? null : funcionario.id
+                        })(
+                        <Select showSearch
+                                optionFilterProp="children"
+                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                <Option key={1} value={null}>{"Selecione"}</Option>
+                                {generateOptions(funcionarioList)}
+                        </Select>
+                        )
+                    }
+                </Form.Item>
+            </Col>             
             <Col span={ 4 }>
                 <Form.Item label={"Data da venda"}>
                     {

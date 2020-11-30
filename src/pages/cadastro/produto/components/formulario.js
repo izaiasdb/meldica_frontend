@@ -43,8 +43,11 @@ class Formulario extends Component {
     render() {
         const { activeKey } = this.state
         const { fetching, produto, form } = this.props
-        const { getFieldDecorator } = form
-        const { id, idUsuarioInclusao, qtdEstoqueMinimo} = isNil(produto) ? {} : produto
+        const { getFieldDecorator, getFieldValue } = form
+        const { id, idUsuarioInclusao, qtdEstoqueMinimo, tipo, atualizaEstoque} = isNil(produto) ? {} : produto
+        let tipoProdutoForm = getFieldValue("produto.tipo") || tipo
+        let obrigaItems = (//tipoProdutoForm == 'P' || 
+        tipoProdutoForm == 'C') ? true : false;
 
         return (
             <Spin spinning={fetching}>
@@ -52,15 +55,19 @@ class Formulario extends Component {
                 <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'}  produto`) } >                    
                     { getFieldDecorator("produto.id", { initialValue: id })(<Input type="hidden" />) }
                     { getFieldDecorator("produto.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
-                    { getFieldDecorator("produto.qtdEstoqueMinimo", { initialValue: qtdEstoqueMinimo})(<Input type="hidden" />) }
+                    { getFieldDecorator("produto.qtdEstoqueMinimo", { initialValue: qtdEstoqueMinimo || 0})(<Input type="hidden" />) }
+                    { getFieldDecorator("produto.atualizaEstoque", { initialValue: isNil(atualizaEstoque) ? true : atualizaEstoque})(<Input type="hidden" />) }
+                    
                     <Row>
                         <Tabs activeKey={activeKey} type={'card'} onChange={this.setActiveKey}>
                             <Tabs.TabPane key={1} tab={<span><Icon type="form" />Dados</span>}>
                                 <TabDados {...this.props} />
-                            </Tabs.TabPane>                           
+                            </Tabs.TabPane>  
+                            { (tipoProdutoForm == 'P' || tipoProdutoForm == 'C') &&
                             <Tabs.TabPane key={2} tab={<span><Icon type="solution" />Produtos Items</span>}>
-                                <TabItems form={form} />
-                            </Tabs.TabPane>                            
+                                <TabItems form={form} obrigaItems={obrigaItems} tipoProduto={tipoProdutoForm} />
+                            </Tabs.TabPane>
+                            }
                         </Tabs>
                     </Row>                    
                     <Row style={{textAlign: "right"}}>
@@ -106,6 +113,13 @@ class Formulario extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, { produto }) => {
             if (!err) {
+                const {tipo, produtoItemsList = []} = produto
+
+                if (tipo == 'C' && (produtoItemsList && produtoItemsList.length == 0)) {
+                    openNotification({tipo: 'warning', descricao: 'Produto do tipo "COMBINADO" precisa informar itens.'})    
+                    return 
+                }
+
                 this.props.setProduto(produto)
                 this.props.salvar(produto)
                 

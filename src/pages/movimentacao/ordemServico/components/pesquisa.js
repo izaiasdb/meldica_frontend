@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Card, Row, Col, Input, Button, Select, Form, DatePicker, Divider } from 'antd'
 import { connect } from 'react-redux'
-import { get, isEmpty } from 'lodash'
+import { get, isEmpty, isEqual } from 'lodash'
 import { generateOptions, getTitle } from '../../../util/helper'
 import { hasAnyAuthority } from '../../../../services/authenticationService'
 import { openNotification } from '../../../util/notification'
@@ -22,8 +22,12 @@ class Pesquisa extends Component {
     	if (!isEmpty(message)) {
             openNotification(message)
             this.props.cleanMessage()
+
+            if (isEqual(message.descricao, 'Registro alterado com sucesso.')){
+                this.props.cleanTable();
+            }
         }
-    }    
+    }  
 
     getExtra = () => {
         return (

@@ -100,7 +100,7 @@ const TabDados = (props) => {
                 <Form.Item label={"Ativo"}>
                 {
                     getFieldDecorator('cliente.ativo', {
-                        initialValue: ativo || true,
+                        initialValue: isNil(ativo) ? true : ativo,
                         valuePropName: 'checked'                                    
                     })(
                         <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>

@@ -76,7 +76,7 @@ class Formulario extends Component {
                             <Form.Item label={"Ativo"}>
                             {
                                 getFieldDecorator('formaPagamento.ativo', {
-                                    initialValue: ativo || true,
+                                    initialValue: isNil(ativo) ? true : ativo,
                                     valuePropName: 'checked'                                    
                                 })(
                                     <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>

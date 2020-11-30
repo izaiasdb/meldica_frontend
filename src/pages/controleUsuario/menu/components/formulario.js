@@ -62,7 +62,7 @@ class Formulario extends Component {
             menu = {}
         } = this.props
         const { id, idUsuarioInclusao, modulo = {}, 
-            idPermissoes = [], nome, ativo, apenasDesenvolvimento, 
+            idPermissoes = [], nome, authority, ativo, apenasDesenvolvimento, 
             visivelMenu, dataInclusao, nivel, menu: menuFilho = {}, 
             ordem, iconType, link } = menu || {}
         const { id: idModulo } = modulo || {}
@@ -116,23 +116,37 @@ class Formulario extends Component {
                                 }
                             </Form.Item>
                         </Col>
+                        <Col span={ 8 }>
+                            <Form.Item label={"Authority"}>
+                                {
+                                    getFieldDecorator('menu.authority', {
+                                        rules: [{ required: true, message: 'Por favor, informe a authority.' }],
+                                        initialValue: authority || null
+                                    })(
+                                        <Input maxLength={ 100 } onKeyUp={keyHandler} />
+                                    )
+                                }
+                            </Form.Item>
+                        </Col>                        
                         <Col span={ 2 }>
                             <Form.Item label={"Ativo"}>
                             {
                                 getFieldDecorator('menu.ativo', {
-                                    initialValue: ativo || true,
+                                    initialValue: isNil(ativo) ? true : ativo,
                                     valuePropName: 'checked'                                    
                                 })(
                                     <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                                 )
                             }
                             </Form.Item>
-                        </Col>                                                  
-                        <Col span={ 2 }>
-                            <Form.Item label={"Apenas desenv."}>
+                        </Col>    
+                    </Row>
+                    <Row gutter={12}> 
+                        <Col span={ 3 }>
+                            <Form.Item label={"Apenas dev."}>
                             {
                                 getFieldDecorator('menu.apenasDesenvolvimento', {
-                                    initialValue: apenasDesenvolvimento || false,
+                                    initialValue: isNil(apenasDesenvolvimento) ? false : apenasDesenvolvimento,                                    
                                     valuePropName: 'checked'                                    
                                 })(
                                     <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
@@ -140,7 +154,7 @@ class Formulario extends Component {
                             }
                             </Form.Item>
                         </Col>                          
-                        <Col span={ 2 }>
+                        <Col span={ 3 }>
                             <Form.Item label={"Visível no menu"}>
                             {
                                 getFieldDecorator('menu.visivelMenu', {
@@ -152,7 +166,7 @@ class Formulario extends Component {
                             }
                             </Form.Item>
                         </Col>                              
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                             <Form.Item label={"Data inclusão"} style={{marginTop: '-4px'}}>
                                 {
                                     getFieldDecorator('menu.dataInclusao', {
@@ -213,7 +227,7 @@ class Formulario extends Component {
                             }
                             </Form.Item>                            
                         </Col> 
-                        <Col span={ 8 }>
+                        <Col span={ 7 }>
                             <Form.Item label={"Permissões"}>
                             {
                                 getFieldDecorator('menu.idPermissoes', {    
