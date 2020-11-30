@@ -3,7 +3,7 @@ import { Card, Row, Col, Input, Button, Select, Form, DatePicker, Divider } from
 import { connect } from 'react-redux'
 import { get, isEmpty } from 'lodash'
 import { generateOptions, getTitle } from '../../../util/helper'
-import { getUnidadesAcesso, hasAnyAuthority } from '../../../../services/authenticationService'
+import { hasAnyAuthority } from '../../../../services/authenticationService'
 import { openNotification } from '../../../util/notification'
 import Actions from '../redux'
 import { INSERTING } from '../../../util/state'

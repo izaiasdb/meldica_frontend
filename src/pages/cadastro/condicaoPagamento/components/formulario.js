@@ -81,10 +81,10 @@ class Formulario extends Component {
                             <Form.Item label={"Ativo"}>
                             {
                                 getFieldDecorator('condicaoPagamento.ativo', {
-                                    initialValue: ativo || true,
+                                    initialValue: isNil(ativo) ? true : ativo,
                                     valuePropName: 'checked'                                    
                                 })(
-                                    <Switch />
+                                    <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                                 )
                             }
                             </Form.Item>
@@ -111,7 +111,7 @@ class Formulario extends Component {
                                         <InputNumber style={{ width: "150" }}                                                         
                                         min={0}
                                         precision={0}
-                                        step={0.1}                            
+                                        step={1}                            
                                         />
                                     )
                                 }
@@ -127,7 +127,7 @@ class Formulario extends Component {
                                         <InputNumber style={{ width: "150" }}                                                         
                                         min={0}
                                         precision={0}
-                                        step={0.1}                            
+                                        step={1}                            
                                         />
                                     )
                                 }
@@ -143,7 +143,7 @@ class Formulario extends Component {
                                         <InputNumber style={{ width: "150" }}                                                         
                                         min={0}
                                         precision={0}
-                                        step={0.1}                            
+                                        step={1}                            
                                         />
                                     )
                                 }
@@ -156,7 +156,7 @@ class Formulario extends Component {
                                     initialValue: entrada || true,
                                     valuePropName: 'checked'                                    
                                 })(
-                                    <Switch />
+                                    <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                                 )
                             }
                             </Form.Item>

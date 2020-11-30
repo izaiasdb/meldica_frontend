@@ -80,7 +80,7 @@ class Formulario extends Component {
                                     initialValue: true,
                                     valuePropName: 'checked'                                    
                                 })(
-                                    <Switch />
+                                    <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                                 )
                             }
                             </Form.Item>

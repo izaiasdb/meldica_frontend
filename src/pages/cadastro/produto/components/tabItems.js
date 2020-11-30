@@ -60,10 +60,19 @@ class TabItems extends React.Component {
         form,        
         produtoList = [],
         produtoPesquisar,
-        produto = {} 
+        produto = {},
+        obrigaItems,
+        tipoProduto
     } = this.props
     const { produtoItemsList = [] } = produto || {}
     const { getFieldDecorator } = form
+    let produtoListFilter = []
+    
+    if (tipoProduto == 'P'){
+        produtoListFilter = produtoList.filter(c=> c.tipo == 'I')
+    } else if (tipoProduto == 'C'){
+        produtoListFilter = produtoList.filter(c=> c.tipo == 'P')
+    }    
 
     return (<div>
         <Row gutter = { 12 }>
@@ -78,7 +87,7 @@ class TabItems extends React.Component {
                                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     onSearch={(nome = '') => nome.length > 3 && produtoPesquisar({ nome, tipo: 'I' })}
                                     >
-                                {generateOptions(produtoList)}
+                                {generateOptions(produtoListFilter)}
                             </Select>
                         )
                     }
@@ -88,14 +97,12 @@ class TabItems extends React.Component {
                 <Form.Item label={"Quantidade"}>
                     {
                         getFieldDecorator('produtoItem.quantidade', {                            
-                            //initialValue: cpf
                         })(
                             <InputNumber style={{ width: "150" }}
                             min={1}
                             precision={3}
-                            step={0.1}
+                            step={1}
                             />                            
-                            //<NumericInput maxLength={ 3 } />
                         )
                     }
                 </Form.Item>
@@ -112,7 +119,8 @@ class TabItems extends React.Component {
             <Form.Item label={"Produtos Items"}>
                 {
                     getFieldDecorator('produto.produtoItemsList', {
-                        rules: [{ required: true, type: 'array', message: 'Por favor, informe pelo menos uma relação.'}],
+                        rules: [{ required: obrigaItems ? true : false, 
+                            type: 'array', message: 'Por favor, informe pelo menos um item de produto.'}],
                         initialValue: [...produtoItemsList],
                         valuePropName: 'dataSource'
                     })(

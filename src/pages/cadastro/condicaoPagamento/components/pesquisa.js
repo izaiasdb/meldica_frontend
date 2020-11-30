@@ -107,6 +107,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     init: ()  => dispatch(Actions.condicaoPagamentoInit()),
     cleanTable: () => dispatch(Actions.condicaoPagamentoCleanTable()),
+    setCondicaoPagamento: () => dispatch(Actions.condicaoPagamentoSetCondicaoPagamento()),
     pesquisar: (condicaoPagamento) => dispatch(Actions.condicaoPagamentoPesquisar(condicaoPagamento)),
     setStateView: (stateView) => dispatch(Actions.condicaoPagamentoSetStateView(stateView)),
 })

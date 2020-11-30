@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, DatePicker, InputNumber, Switch } from 'antd'
+import { Row, Col, Form, Select, Input, DatePicker, InputNumber, Switch, Tooltip } from 'antd'
 import { generateOptions } from '../../../util/helper'
 import { isNil } from 'lodash'
 import moment from 'moment'
@@ -24,6 +24,8 @@ const TabDados = (props) => {
         valorProducao,
         valorNf,
         qtdEstoque,        
+        percDescontoMaximo,  
+        atualizaEstoque      
     } = produto || {}
 
     const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
@@ -43,6 +45,7 @@ const TabDados = (props) => {
                 </Form.Item>
             </Col>                     
             <Col span={ 4 }>
+                <Tooltip title='Insumo(ex: Tampa, Rôtulo), Produto(ex: Extrato), Combinado(ex: Caixa Extrato)' placement='left'>
                 <Form.Item label={"Tipo Produto"}>
                     {
                         getFieldDecorator('produto.tipo', {
@@ -54,29 +57,30 @@ const TabDados = (props) => {
                                 filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                 >
                                 <Option key={1} value={null}>{"Selecione"}</Option>
-                                <Option key={2} value={'P'}>{"PRODUTO"}</Option>
-                                <Option key={3} value={'I'}>{"INSUMO"}</Option>
-                                <Option key={3} value={'C'}>{"COMBINADO"}</Option>
+                                <Option key={2} value={'I'}>{"INSUMO"}</Option>
+                                <Option key={3} value={'P'}>{"PRODUTO"}</Option>                                
+                                <Option key={4} value={'C'}>{"COMBINADO"}</Option>
                         </Select>
                         )
                     }
                 </Form.Item>
+                </Tooltip>
             </Col> 
             <Col span={ 4 }>            
                 <Form.Item label={"Ativo"}>
                 {
                     getFieldDecorator('produto.ativo', {
-                        initialValue: ativo || true,
+                        initialValue: isNil(ativo) ? true : ativo,
                         valuePropName: 'checked'                                    
                     })(
-                        <Switch />
+                        <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                     )
                 }
                 </Form.Item>
             </Col>                              
         </Row>
-        <Row gutter={ 12 }>                           
-            <Col span={ 6 }>
+        <Row gutter={ 12 }>
+            <Col span={ 12 }>
                 <Form.Item label={"Unidade Medidda"}>
                     {
                         getFieldDecorator('produto.unidadeMedida.id', {
@@ -104,7 +108,7 @@ const TabDados = (props) => {
                             <InputNumber style={{ width: "150" }}
                             min={0}
                             precision={2}
-                            step={0.1}
+                            step={1}
                             />
                         )
                     }
@@ -120,12 +124,33 @@ const TabDados = (props) => {
                             <InputNumber style={{ width: "150" }}
                             min={0}
                             precision={2}
-                            step={0.1}
+                            step={1}
                             />
                         )
                     }
                 </Form.Item>
             </Col>
+            <Col span={ 5 }>
+                <Tooltip title='Máximo de desconto que pode ser dado para esse produto.' placement='left'>                            
+                <Form.Item label={"Perc.(%) máx. de Desconto"}>
+                    {
+                        getFieldDecorator('produto.percDescontoMaximo', {
+                            rules: [{required: true, message: 'Por favor, informe o percentual máximo de Desconto.'}],
+                            initialValue: percDescontoMaximo || 0
+                        })(
+                            <InputNumber //style={{ width: "150" }}                                                         
+                            min={0}
+                            max={100}
+                            precision={2}
+                            step={1}                            
+                            />
+                        )
+                    }
+                </Form.Item>
+                </Tooltip>
+            </Col>                         
+        </Row>
+        <Row gutter={ 12 }>            
             <Col span={ 3 }>
                 <Form.Item label={"Valor NF"}>
                     {
@@ -136,7 +161,7 @@ const TabDados = (props) => {
                             <InputNumber style={{ width: "150" }}                                                         
                             min={0}
                             precision={2}
-                            step={0.1}                            
+                            step={1}                            
                             />
                         )
                     }
@@ -153,7 +178,7 @@ const TabDados = (props) => {
                             disabled
                             min={0}
                             precision={2}
-                            step={0.1}                            
+                            step={1}                            
                             //formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                             //parser={value => value.replace(/\$\s?|(,*)/g, '')}
                             />
@@ -172,12 +197,24 @@ const TabDados = (props) => {
                             disabled
                             min={0}
                             precision={2}
-                            step={0.1}                            
+                            step={1}                            
                             />
                         )
                     }
                 </Form.Item>
             </Col>
+            {/* <Col span={ 4 }>            
+                <Form.Item label={"Atualiza estoque"}>
+                {
+                    getFieldDecorator('produto.atualizaEstoque', {
+                        initialValue: isNil(atualizaEstoque) ? true : atualizaEstoque,
+                        valuePropName: 'checked'                                    
+                    })(
+                        <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
+                    )
+                }
+                </Form.Item>
+            </Col>              */}
         </Row>  
     </div>)
 }

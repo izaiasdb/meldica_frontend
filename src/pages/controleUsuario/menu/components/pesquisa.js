@@ -5,7 +5,7 @@ import { isEmpty, get, isEqual } from 'lodash'
 import { generateOptions, getTitle } from '../../../util/helper'
 import { hasAnyAuthority } from '../../../../services/authenticationService'
 import { openNotification } from '../../../util/notification'
-import MenuActions from '../redux'
+import Actions from '../redux'
 
 const Option = Select.Option
 
@@ -119,10 +119,11 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    init: ()  => dispatch(MenuActions.menuInit()),
-    cleanMessage: ()  => dispatch(MenuActions.menuCleanMessage()),
-    cleanTable: () => dispatch(MenuActions.menuCleanTable()),
-    pesquisar: (menu) => dispatch(MenuActions.menuPesquisar(menu)),
+    init: ()  => dispatch(Actions.menuInit()),
+    cleanMessage: ()  => dispatch(Actions.menuCleanMessage()),
+    cleanTable: () => dispatch(Actions.menuCleanTable()),
+    pesquisar: (menu) => dispatch(Actions.menuPesquisar(menu)),
+    setMenu: () => dispatch(Actions.menuSetMenu()),
 })
 
 const wrapedPesquisa = Form.create()(Pesquisa)

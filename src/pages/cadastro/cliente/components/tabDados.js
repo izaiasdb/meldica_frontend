@@ -100,10 +100,10 @@ const TabDados = (props) => {
                 <Form.Item label={"Ativo"}>
                 {
                     getFieldDecorator('cliente.ativo', {
-                        initialValue: ativo || true,
+                        initialValue: isNil(ativo) ? true : ativo,
                         valuePropName: 'checked'                                    
                     })(
-                        <Switch />
+                        <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                     )
                 }
                 </Form.Item>
@@ -142,7 +142,7 @@ const TabDados = (props) => {
                         getFieldDecorator('cliente.observacao', {
                             rules:[
                                 {required: false, whitespace: true, message: 'A Observação é obrigatória.'},
-                                {required: true, max: 800, message: 'A quantidade máxima de caracteres é 800.'}
+                                {required: false, max: 800, message: 'A quantidade máxima de caracteres é 800.'}
                             ],
                             initialValue: observacao || null
                         })(<Input.TextArea autoSize={{ minRows: 3, maxRows: 5 }} 

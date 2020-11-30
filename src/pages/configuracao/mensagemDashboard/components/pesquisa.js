@@ -6,7 +6,7 @@ import { SEARCHING } from '../../../util/state'
 import { connect } from 'react-redux'
 import MensagemDashboardActions from '../redux'
 import { openNotification } from '../../../util/notification'
-import { getUnidadesAcesso, getUser , hasAnyAuthority } from '../../../../services/authenticationService'
+import { getUser , hasAnyAuthority } from '../../../../services/authenticationService'
 import { INSERTING } from '../../../util/state'
 
 class Pesquisa extends Component {
@@ -71,7 +71,7 @@ class Pesquisa extends Component {
     }
     
     render() {
-        const unidades = getUnidadesAcesso() || []
+        const unidades = []
         const { profile , form: { getFieldDecorator }} = this.props
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
         const idUnidadeAtual = !isNil(profile) && !isNil(profile.unidadeAtual) && !isNil(profile.unidadeAtual.id) ? profile.unidadeAtual.id : null;

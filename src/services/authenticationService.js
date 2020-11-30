@@ -46,31 +46,3 @@ export const getUser = () => {
     return {};
 }
 
-export const getUnidadeAtual = () => {
-  let user = getUser()
-  if(user) {
-    let { unidadeAtual, unidadeLotacao } = user
-    return unidadeAtual && unidadeAtual.id ? unidadeAtual : unidadeLotacao
-  }
-  return {};
-}
-
-export const setUnidadeAtual = (unidadeAtual) => {
-  let user = getUser()
-  if(user) {
-     user.unidadeAtual = unidadeAtual; 
-     localStorage.setItem(USER_KEY, JSON.stringify(user));
-  }
-  return {};
-}
-
-export const getUnidadesAcesso = () => {
-    let user = getUser() || {}
-    let unidades = user.unidades
-    if(!unidades) return []
-
-    let unidadesAcesso = new Set();
-    if(user.unidadeLotacao && user.unidadeLotacao.id) unidadesAcesso.add(user.unidadeLotacao.id);
-    unidades.forEach(u => unidadesAcesso.add(u.id));
-    return Array.from(unidades.filter(u => unidadesAcesso.has(u.id)));
-}

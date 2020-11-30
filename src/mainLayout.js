@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import './assets/css/topo.css'
 import logo from './assets/images/logo.png';
-import { getUser, getUnidadesAcesso } from './services/authenticationService';
+import { getUser } from './services/authenticationService';
 // import BuscaRapida from './pages/buscaRapida/buscaRapida';
 import LoginActions from './pages/login/redux'
 import { generateOptions } from './pages/util/helper'
@@ -55,24 +55,6 @@ class MainLayout extends Component {
            </Menu.Item>
   }
 
-  handleSelectChange = (id, { props: { children : abreviacao} }) => {
-    this.props.setUnidadeAtual({id, abreviacao})
-    this.props.history.push("/");
-  }
-
-  getUnidade = () => {
-    const unidades = getUnidadesAcesso() || []
-    const { profile = {} } = this.props
-    const { unidadeAtual = {} } = profile
-    return (<Select value={unidadeAtual.id || null} showSearch
-                    optionFilterProp="children"
-                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    onSelect={this.handleSelectChange}
-                    style={{'width': '200px'}}>
-                {generateOptions(unidades && unidades.map(({id, abreviacao: descricao}) => ({id, descricao})))}
-        </Select>)
-  }
-
   getMenusFilho = (menus = [], menuId = null) => {    
     return menus.filter(m => m.menu.id  == menuId)
                 .sort((a, b) => a.ordem-b.ordem)
@@ -87,15 +69,25 @@ class MainLayout extends Component {
   montarMenu = () => {
     const { desenvolvedor } = getUser()
     const { profile = {} } = this.props
-    const { usuarioMenuList = [] } = profile    
-    let menus = usuarioMenuList == null ? [] : [...usuarioMenuList].map(({menu}) => menu)
+    //Por usuário
+    //const { usuarioMenuList = [] } = profile    
+    //let menus = usuarioMenuList == null ? [] : [...usuarioMenuList].map(({menu}) => menu)
+    //Por Perfil    
+    const { perfilMenuList = [] } = profile    
+    let menus = perfilMenuList == null ? [] : [...perfilMenuList].map(({menu}) => menu)    
     let childrenMenus = null;
+
+    if (desenvolvedor) {
+      menus = menus.filter(m => m.ativo && m.ativo && m.visivelMenu)
+    } else {
+      menus = menus.filter(m => m.ativo && m.visivelMenu && !m.apenasDesenvolvimento)
+    } 
     
     // Menus que só desenvolvedores podem ver
     if (desenvolvedor) {
-      childrenMenus = menus.filter(m => m.menu != null && m.ativo && m.ativo)
+      childrenMenus = menus.filter(m => m.menu != null && m.ativo && m.visivelMenu)
     } else {
-      childrenMenus = menus.filter(m => m.menu != null && m.ativo && !m.apenasDesenvolvimento)
+      childrenMenus = menus.filter(m => m.menu != null && m.ativo && m.visivelMenu && !m.apenasDesenvolvimento)
     }    
 
     const rootMenus = menus.filter(m => m.menu == null && m.ativo).sort((a, b) => a.ordem-b.ordem)

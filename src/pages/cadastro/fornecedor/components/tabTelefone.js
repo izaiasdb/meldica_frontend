@@ -189,7 +189,7 @@ export default class TabTelefone extends Component {
                                                 render={ (text) => tipoTelefone.map(d => { if(d.id == text) return d.descricao }) }
                                                 />
                                     <Table.Column title={<center>DDD</center>} key={"ddd"} dataIndex={"ddd"} align={"center"} />
-                                    <Table.Column title={<center>Telefone</center>} key={"numero"} dataIndex={"telefone"} align={"center"} />
+                                    <Table.Column title={<center>Telefone</center>} key={"numero"} dataIndex={"numero"} align={"center"} />
                                     <Table.Column title={<center>Ações</center>} key={"actions"} 
                                                 dataIndex={"actions"} 
                                                 align={"center"} 

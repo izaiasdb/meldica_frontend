@@ -108,6 +108,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     init: ()  => dispatch(Actions.formaPagamentoInit()),
     cleanTable: () => dispatch(Actions.formaPagamentoCleanTable()),
+    setFormaPagamento: () => dispatch(Actions.formaPagamentoSetFormaPagamento()),
     pesquisar: (formaPagamento) => dispatch(Actions.formaPagamentoPesquisar(formaPagamento)),
     setStateView: (stateView) => dispatch(Actions.formaPagamentoSetStateView(stateView)),
 })

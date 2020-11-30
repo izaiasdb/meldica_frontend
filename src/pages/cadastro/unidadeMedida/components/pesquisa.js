@@ -107,6 +107,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     init: ()  => dispatch(Actions.unidadeMedidaInit()),
     cleanTable: () => dispatch(Actions.unidadeMedidaCleanTable()),
+    setUnidadeMedida: () => dispatch(Actions.unidadeMedidaSetUnidadeMedida()),
     pesquisar: (unidadeMedida) => dispatch(Actions.unidadeMedidaPesquisar(unidadeMedida)),
     setStateView: (stateView) => dispatch(Actions.unidadeMedidaSetStateView(stateView)),
 })

@@ -36,16 +36,28 @@ import { UnidadeMedidaTypes } from '../pages/cadastro/unidadeMedida/redux';
 import { ProdutoTypes } from '../pages/cadastro/produto/redux';
 import { FormaPagamentoTypes } from '../pages/cadastro/formaPagamento/redux';
 import { CondicaoPagamentoTypes } from '../pages/cadastro/condicaoPagamento/redux';
+import { FormaCondicaoPagamentoTypes } from '../pages/cadastro/formaCondicaoPagamento/redux';
 import { ClienteTypes } from '../pages/cadastro/cliente/redux';
 import { FornecedorTypes } from '../pages/cadastro/fornecedor/redux';
-
+import { PlanoContaTypes } from '../pages/cadastro/planoConta/redux';
+import { FuncionarioTypes } from '../pages/cadastro/funcionario/redux';
+import { CargoTypes } from '../pages/cadastro/cargo/redux';
 
 import * as UnidadeMedida from '../pages/cadastro/unidadeMedida/sagas';
 import * as Produto from '../pages/cadastro/produto/sagas';
 import * as FormaPagamento from '../pages/cadastro/formaPagamento/sagas';
 import * as CondicaoPagamento from '../pages/cadastro/condicaoPagamento/sagas';
+import * as FormaCondicaoPagamento from '../pages/cadastro/formaCondicaoPagamento/sagas';
 import * as Cliente from '../pages/cadastro/cliente/sagas';
 import * as Fornecedor from '../pages/cadastro/fornecedor/sagas';
+import * as PlanoConta from '../pages/cadastro/planoConta/sagas';
+import * as Funcionario from '../pages/cadastro/funcionario/sagas';
+import * as Cargo from '../pages/cadastro/cargo/sagas';
+
+//************************************ Movimentações ************************************/
+import { OrdemServicoTypes } from '../pages/movimentacao/ordemServico/redux';
+
+import * as OrdemServico from '../pages/movimentacao/ordemServico/sagas';
 
 
 const api = API.create();
@@ -112,6 +124,10 @@ export default function * root () {
         takeLatest(CondicaoPagamentoTypes.CONDICAO_PAGAMENTO_SALVAR, CondicaoPagamento.salvar, api),
         takeLatest(CondicaoPagamentoTypes.CONDICAO_PAGAMENTO_PESQUISAR, CondicaoPagamento.pesquisar, api),            
 
+        takeLatest(FormaCondicaoPagamentoTypes.FORMA_CONDICAO_PAGAMENTO_INIT, FormaCondicaoPagamento.fetch, api),
+        takeLatest(FormaCondicaoPagamentoTypes.FORMA_CONDICAO_PAGAMENTO_SALVAR, FormaCondicaoPagamento.salvar, api),
+        takeLatest(FormaCondicaoPagamentoTypes.FORMA_CONDICAO_PAGAMENTO_PESQUISAR, FormaCondicaoPagamento.pesquisar, api),
+
         takeLatest(ClienteTypes.CLIENTE_INIT, Cliente.fetch, api),
         takeLatest(ClienteTypes.CLIENTE_SALVAR, Cliente.salvar, api),
         takeLatest(ClienteTypes.CLIENTE_PESQUISAR, Cliente.pesquisar, api),        
@@ -120,7 +136,22 @@ export default function * root () {
         takeLatest(FornecedorTypes.FORNECEDOR_SALVAR, Fornecedor.salvar, api),
         takeLatest(FornecedorTypes.FORNECEDOR_PESQUISAR, Fornecedor.pesquisar, api),        
 
-        
+        takeLatest(PlanoContaTypes.PLANO_CONTA_INIT, PlanoConta.fetch, api),
+        takeLatest(PlanoContaTypes.PLANO_CONTA_SALVAR, PlanoConta.salvar, api),
+        takeLatest(PlanoContaTypes.PLANO_CONTA_PESQUISAR, PlanoConta.pesquisar, api),                
 
+        takeLatest(FuncionarioTypes.FUNCIONARIO_INIT, Funcionario.fetch, api),
+        takeLatest(FuncionarioTypes.FUNCIONARIO_SALVAR, Funcionario.salvar, api),
+        takeLatest(FuncionarioTypes.FUNCIONARIO_PESQUISAR, Funcionario.pesquisar, api),                
+
+        takeLatest(CargoTypes.CARGO_INIT, Cargo.fetch, api),
+        takeLatest(CargoTypes.CARGO_SALVAR, Cargo.salvar, api),
+        takeLatest(CargoTypes.CARGO_PESQUISAR, Cargo.pesquisar, api),                        
+
+        //************************************ Movimentação ************************************/
+        takeLatest(OrdemServicoTypes.ORDEM_SERVICO_INIT, OrdemServico.fetch, api),
+        takeLatest(OrdemServicoTypes.ORDEM_SERVICO_SALVAR, OrdemServico.salvar, api),
+        takeLatest(OrdemServicoTypes.ORDEM_SERVICO_PESQUISAR, OrdemServico.pesquisar, api),                        
+        takeLatest(OrdemServicoTypes.ORDEM_SERVICO_ALTERAR_STATUS, OrdemServico.alterarStatus, api),
     ])
 }

@@ -71,9 +71,9 @@ class Formulario extends Component {
                             <Tabs.TabPane key={1} tab={<span><Icon type="form" />Dados</span>}>
                                 <TabDados keyHandler={this.keyHandler} {...this.props} />
                             </Tabs.TabPane>                            
-                            <Tabs.TabPane key={2} tab={<span><Icon type="solution" />Menu acesso</span>}>
+                            {/* <Tabs.TabPane key={2} tab={<span><Icon type="solution" />Menu acesso</span>}>
                                 <TabMenu keyHandler={this.keyHandler} {...this.props} />
-                            </Tabs.TabPane>                            
+                            </Tabs.TabPane>                             */}
                         </Tabs>
                    </Row>
                    <Row style={{textAlign: "right"}}>

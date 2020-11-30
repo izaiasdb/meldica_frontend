@@ -250,10 +250,10 @@ class Login extends Component {
              </div>
              <div className={"footer"}>
                  <div id={"linha"}></div>
-                <p>
-                    <b>Secretaria da Administração Penitenciária</b><br/>
-                    Rua Tenente Benévolo, 1055 - Meireles, Fortaleza/CE - CEP: 60160-040 Fone: (85) 3101.2840<br/>
-                    © - Governo do Estado do Ceará. Todos os Direitos Reservados                
+                 <p>        
+                    <b>Méldica - Fábrica de produtos naturais</b><br/>
+                    R. Francisco Morais Moreira, 1100, Conj. Cidade Nova, Icó-CE - CEP: 63430-000 Fone: (88) 3561-1827<br/>
+                    © - IDB Sistemas - (85) 99828-7508. Todos os Direitos Reservados
                 </p>
              </div>
              </div>
