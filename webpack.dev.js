@@ -13,7 +13,8 @@ module.exports = merge(common, {
         open: true,
         historyApiFallback: true,
         contentBase: path.join(__dirname, 'dist'),
-        port: 8089
+        port: 8089,
+		host: '0.0.0.0'
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
