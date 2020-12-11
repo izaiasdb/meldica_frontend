@@ -14,6 +14,7 @@ module.exports = merge(common, {
         historyApiFallback: true,
         contentBase: path.join(__dirname, 'dist'),
         port: 8089,
+		host: '0.0.0.0'
         //host: '0.0.0.0'//Acessa por IP na rede local
     },
     plugins: [
