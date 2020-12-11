@@ -7,8 +7,6 @@ import Actions from '../redux'
 import TabDados from './tabDados'
 import TabEndereco from './tabEndereco'
 import TabTelefone from './tabTelefone'
-import TabRazao from './tabRazao'
-import TabTabelaPreco from './tabTabelaPreco'
 import { getTitle } from '../../../util/helper'
 import { openNotification } from '../../../util/notification'
 
@@ -26,14 +24,14 @@ class Formulario extends Component {
             openNotification(message)
         
             if (isEqual(message.tipo, 'success')) {
-                const { cliente } = this.props
+                const { transportadora } = this.props
                 
-                if (cliente.id){
+                if (transportadora.id){
                     this.props.cleanTable()
                     this.props.setStateView(SEARCHING)
                 } else {
                     this.handleReset()
-                    this.props.setCliente(null)
+                    this.props.setTransportadora(null)
                 }
             }
 
@@ -45,16 +43,16 @@ class Formulario extends Component {
 
     render() {
         const { activeKey } = this.state
-        const { fetching, cliente, form } = this.props
+        const { fetching, transportadora, form } = this.props
         const { getFieldDecorator } = form
-        const { id, ativo, idUsuarioInclusao} = isNil(cliente) ? {} : cliente
+        const { id, ativo, idUsuarioInclusao} = isNil(transportadora) ? {} : transportadora
 
         return (
             <Spin spinning={fetching}>
               <Form onSubmit={this.handleSubmit} >
-                <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'}  Cliente`) } >                    
-                    { getFieldDecorator("cliente.id", { initialValue: id })(<Input type="hidden" />) }
-                    { getFieldDecorator("cliente.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
+                <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'}  Transportadora`) } >                    
+                    { getFieldDecorator("transportadora.id", { initialValue: id })(<Input type="hidden" />) }
+                    { getFieldDecorator("transportadora.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
                     <Row>
                         <Tabs activeKey={activeKey} type={'card'} onChange={this.setActiveKey}>
                             <Tabs.TabPane key={1} tab={<span><Icon type="form" />Dados</span>}>
@@ -65,13 +63,7 @@ class Formulario extends Component {
                             </Tabs.TabPane>
                             <Tabs.TabPane key={3} tab={<span><Icon type="phone" />Telefones</span>}>
                                 <TabTelefone {...this.props} />
-                            </Tabs.TabPane>
-                            <Tabs.TabPane key={4} tab={<span><Icon type="usergroup-add" />Razões Sociais</span>}>
-                                <TabRazao {...this.props} />
-                            </Tabs.TabPane> 
-                            <Tabs.TabPane key={5} tab={<span><Icon type="dollar" />Tabela Preço</span>}>
-                                <TabTabelaPreco {...this.props} />
-                            </Tabs.TabPane>                                                           
+                            </Tabs.TabPane>                              
                         </Tabs>
                     </Row>                    
                     <Row style={{textAlign: "right"}}>
@@ -115,10 +107,10 @@ class Formulario extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        this.props.form.validateFields((err, { cliente }) => {
+        this.props.form.validateFields((err, { transportadora }) => {
             if (!err) {
-                this.props.setCliente(cliente)
-                this.props.salvar(cliente)
+                this.props.setTransportadora(transportadora)
+                this.props.salvar(transportadora)
                 
                 this.setActiveKey('1')
             } else {
@@ -131,20 +123,20 @@ class Formulario extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ...state.cliente.data,
-        cliente: state.cliente.cliente,
-        stateView: state.cliente.stateView,
-        fetching: state.cliente.fetching,   
+        ...state.transportadora.data,
+        transportadora: state.transportadora.transportadora,
+        stateView: state.transportadora.stateView,
+        fetching: state.transportadora.fetching,   
         profile: state.login.data.profile,      
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    cleanMessage: ()  => dispatch(Actions.clienteCleanMessage()),
-    cleanTable: () => dispatch(Actions.clienteCleanTable()),
-    setStateView: (stateView) => dispatch(Actions.clienteSetStateView(stateView)),
-    setCliente: (cliente) => dispatch(Actions.clienteSetCliente(cliente)),    
-    salvar: (obj) => dispatch(Actions.clienteSalvar(obj)),
+    cleanMessage: ()  => dispatch(Actions.transportadoraCleanMessage()),
+    cleanTable: () => dispatch(Actions.transportadoraCleanTable()),
+    setStateView: (stateView) => dispatch(Actions.transportadoraSetStateView(stateView)),
+    setTransportadora: (transportadora) => dispatch(Actions.transportadoraSetTransportadora(transportadora)),    
+    salvar: (obj) => dispatch(Actions.transportadoraSalvar(obj)),
 })
 
 const wrapedFormulario = Form.create()(Formulario)

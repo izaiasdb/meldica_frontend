@@ -162,12 +162,34 @@ const create = () => {
     salvar: (obj) => api.post('/cargo/salvar', obj),
   } 
 
+  const Transportadora = {
+    init: () => api.post('/transportadora/init'),
+    pesquisar: (obj) => api.post('/transportadora/pesquisar', obj),
+    salvar: (obj) => api.post('/transportadora/salvar', obj),
+  } 
+
+  const TabelaPreco = {
+    init: () => api.post('/tabelaPreco/init'),
+    pesquisar: (obj) => api.post('/tabelaPreco/pesquisar', obj),
+    salvar: (obj) => api.post('/tabelaPreco/salvar', obj),
+  }
+  
+
   //************************************ Movimentações ************************************/
   const OrdemServico = {
     init: () => api.post('/ordemServico/init'),
     pesquisar: (obj) => api.post('/ordemServico/pesquisar', obj),
     salvar: (obj) => api.post('/ordemServico/salvar', obj),
     alterarStatus: (obj) => api.post('/ordemServico/alterarStatus', obj),    
+  }
+
+   //************************************ Financeiro ************************************/
+   const ContasReceber = {
+    init: () => api.post('/pagarReceber/initReceber'),
+    pesquisar: (obj) => api.post('/pagarReceber/pesquisar', {...obj, receitaDespesa: 'R'} ),
+    salvar: (obj) => api.post('/pagarReceber/salvar', obj),
+    pagar: (obj) => api.post('/pagarReceber/pagar', obj),   
+    pagarParte: (obj) => api.post('/pagarReceber/salvarPagarReceberItem', obj),    
   }
 
   return {
@@ -192,6 +214,9 @@ const create = () => {
     Funcionario,
     Cargo,
     OrdemServico,
+    Transportadora,
+    TabelaPreco,
+    ContasReceber,
   }
 }
 

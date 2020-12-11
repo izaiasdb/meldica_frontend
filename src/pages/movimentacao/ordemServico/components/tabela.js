@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Table , Icon, Divider, Tooltip, Button, Modal } from 'antd'
-import { EDITING } from '../../../util/state'
+import { EDITING, VIEWING } from '../../../util/state'
 import { connect } from 'react-redux'
 import Actions from '../redux'
 import Pagination from '../../../util/Pagination'
@@ -51,8 +51,8 @@ class Tabela extends Component {
         } 
     }
    
-    prepareUpdate = (ordemServico) => {
-        this.props.setStateView(EDITING)
+    setModo = (ordemServico, stateView) => {
+        this.props.setStateView(stateView)
         this.props.setOrdemServico(ordemServico)
     }
 
@@ -79,14 +79,20 @@ class Tabela extends Component {
                 <>
                     {record.statusNota == 'A' &&
                     <Tooltip title="Editar Ordem Servico">
-                        <Icon style={{cursor: 'pointer'}} type={ 'edit' } onClick={(e) => this.prepareUpdate(record)}></Icon>
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'edit' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.setModo(record, EDITING)}></Icon>
                     </Tooltip>
                     }
                     {record.statusNota == 'A' &&
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Concluir Ordem Serviço">
-                        <Icon style={{cursor: 'pointer'}} type={ 'right-circle' } onClick={(e) => this.alterarStatusTabela(record, 'N', 'CONCLUIR')}></Icon>
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'check' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.alterarStatusTabela(record, 'N', 'CONCLUIR')}></Icon>
                     </Tooltip>
                     </>
                     }
@@ -94,7 +100,10 @@ class Tabela extends Component {
                     <>                
                     <Divider type="vertical"/>
                     <Tooltip title="Aprovar Ordem Serviço">
-                        <Icon style={{cursor: 'pointer'}} type={ 'check-circle' } onClick={(e) => this.alterarStatusTabela(record, 'O', 'APROVAR')}></Icon>
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'check-circle' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.alterarStatusTabela(record, 'O', 'APROVAR')}></Icon>
                     </Tooltip>
                     </>
                     }  
@@ -102,7 +111,8 @@ class Tabela extends Component {
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Reabrir Ordem Serviço">
-                        <Icon style={{cursor: 'pointer'}} type={ 'left-circle' } onClick={(e) => this.alterarStatusTabela(record, 'A', 'REABRIR')}></Icon>
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'redo' } onClick={(e) => this.alterarStatusTabela(record, 'A', 'REABRIR')}></Icon>
                     </Tooltip>
                     </>
                     }
@@ -110,10 +120,20 @@ class Tabela extends Component {
                     <>                
                     <Divider type="vertical"/>
                     <Tooltip title="Cancelar Ordem Serviço">
-                        <Icon style={{cursor: 'pointer'}} type={ 'close-circle' } onClick={(e) => this.alterarStatusTabela(record, 'C', 'CANCELAR')}></Icon>
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'close-circle' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.alterarStatusTabela(record, 'C', 'CANCELAR')}></Icon>
                     </Tooltip>                                
                     </>
-                    }                
+                    }  
+                    <Divider type="vertical"/>
+                    <Tooltip title="Visualizar">
+                        <Icon 
+                            className={'tabela-icone'}
+                            type={ 'zoom-in' } 
+                            onClick={(e) => this.setModo(record, VIEWING)} />
+                    </Tooltip>               
                 </>
                 }
             </div> 

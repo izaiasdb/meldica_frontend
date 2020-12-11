@@ -25,7 +25,8 @@ const TabDados = (props) => {
         valorNf,
         qtdEstoque,        
         percDescontoMaximo,  
-        atualizaEstoque      
+        atualizaEstoque,
+        quantidadeCaixa   
     } = produto || {}
 
     const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
@@ -203,6 +204,22 @@ const TabDados = (props) => {
                     }
                 </Form.Item>
             </Col>
+            <Col span={ 3 }>
+                <Form.Item label={"Quantidade na Caixa"}>
+                    {
+                        getFieldDecorator('produto.quantidadeCaixa', {
+                            rules: [{required: true, message: 'Por favor, informe a quantidade em uma caixa.'}],
+                            initialValue: quantidadeCaixa || 0
+                        })(
+                            <InputNumber style={{ width: "150" }}                                                         
+                            min={0}
+                            precision={0}
+                            step={1}                            
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>             
             {/* <Col span={ 4 }>            
                 <Form.Item label={"Atualiza estoque"}>
                 {

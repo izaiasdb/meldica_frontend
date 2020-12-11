@@ -23,18 +23,18 @@ class TabItems extends React.Component {
             produtoList = [],
         } = this.props
 
-        let { produtoItem } = getFieldsValue(['produtoItem'])
-        let { produtoFilho, quantidade } = produtoItem
+        let { tabelaPrecoItem } = getFieldsValue(['tabelaPrecoItem'])
+        let { produto, valor } = tabelaPrecoItem
 
-        if(!(produtoFilho && produtoFilho.id && quantidade)){
+        if(!(produto && produto.id && valor)){
             openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos restantes.'})
             return null        
         }    
 
-        let produtoItemsList = getFieldValue("produto.produtoItemsList")
+        let produtoItemsList = getFieldValue("tabelaPreco.produtoItemsList")
 
-        if (produtoItem.id){
-            let oldRegistro = produtoItemsList.find(c=> c.id == produtoItem.id)
+        if (tabelaPrecoItem.id){
+            let oldRegistro = produtoItemsList.find(c=> c.id == tabelaPrecoItem.id)
 
             const index = produtoItemsList.indexOf(oldRegistro);
 
@@ -42,7 +42,7 @@ class TabItems extends React.Component {
                 produtoItemsList.splice(index, 1);
             }          
         } else {
-            let oldRegistro = produtoItemsList.find(c=> c.produtoFilho.id == produtoItem.produtoFilho.id)
+            let oldRegistro = produtoItemsList.find(c=> c.produto.id == tabelaPrecoItem.produto.id)
 
             const index = produtoItemsList.indexOf(oldRegistro);
 
@@ -51,16 +51,16 @@ class TabItems extends React.Component {
             } 
         }
 
-        let prod = produtoList.find(c=> c.id == produtoFilho.id)
-        //produtoFilho.descricao = this.state.descricao
-        produtoFilho.descricao = prod.nome
-        produtoItemsList.push({...produtoItem})
+        //produto.descricao = this.state.descricao
+        let prod = produtoList.find(c=> c.id == produto.id)
+        produto.descricao = prod.nome
+        produtoItemsList.push({...tabelaPrecoItem})
 
-        setFieldsValue({produto: { produtoItemsList } }, () => {
+        setFieldsValue({tabelaPreco: { produtoItemsList } }, () => {
             setFieldsValue({
-                produtoItem: {
+                tabelaPrecoItem: {
                     id: null,
-                    produtoFilho: { id: null }, quantidade: null
+                    produto: { id: null }, valor: null
                 }
             })
         })
@@ -68,13 +68,13 @@ class TabItems extends React.Component {
         this.setState({ descricao: null, viewStateTab: INSERTING })
     }
     
-    remover = (produtoItem, { getFieldValue, setFieldsValue }) => {
-        let produtoItemsList = getFieldValue("produto.produtoItemsList")
+    remover = (tabelaPrecoItem, { getFieldValue, setFieldsValue }) => {
+        let produtoItemsList = getFieldValue("tabelaPreco.produtoItemsList")
         produtoItemsList.splice(produtoItemsList.findIndex((rel) => {            
-            return (rel.produtoFilho.id === produtoItem.produtoFilho.id) &&
-                   (rel.quantidade === produtoItem.quantidade)
+            return (rel.produto.id === tabelaPrecoItem.produto.id) &&
+                   (rel.valor === tabelaPrecoItem.valor)
         }), 1)
-        setFieldsValue({produtoItem: { produtoItemsList } })
+        setFieldsValue({tabelaPrecoItem: { produtoItemsList } })
         this.setState({ viewStateTab: INSERTING })
     }
 
@@ -82,18 +82,26 @@ class TabItems extends React.Component {
         this.setState({[property]: option.props.children})
     }
 
-    prepareUpdate = (produtoItem) => {
+    prepareUpdate = (tabelaPrecoItem) => {
         const { form: { setFieldsValue } } = this.props
-        setFieldsValue({ produtoItem: {...produtoItem } } )
-        this.setState({ viewStateTab: EDITING, descricao: produtoItem.produtoFilho.nome })
+        setFieldsValue({ tabelaPrecoItem: {...tabelaPrecoItem } } )
+        this.setState({ viewStateTab: EDITING, descricao: tabelaPrecoItem.produto.nome })
     } 
+
+    // remover = (index) => {
+    //     const { form: {getFieldValue, setFieldsValue } } = this.props
+    //     let produtoItemsList = getFieldValue("tabelaPreco.produtoItemsList")
+    //     produtoItemsList = produtoItemsList.filter((e, indexx) => indexx != index)
+    //     setFieldsValue({tabelaPreco: { produtoItemsList }})
+    //     this.setState({ viewStateTab: INSERTING })
+    // }
 
     limpar = () => {
         const { form: { getFieldsValue, setFieldsValue } } = this.props
         const fields = getFieldsValue()
-        fields.produtoItem = {
+        fields.tabelaPrecoItem = {
             id: null,
-            produtoFilho: { id: null }, quantidade: null
+            produto: { id: null }, valor: null
         }
         setFieldsValue(fields)
         this.setState({ viewStateTab: INSERTING })
@@ -103,52 +111,43 @@ class TabItems extends React.Component {
     const { 
         form,        
         produtoList = [],
-        produtoPesquisar,
-        produto = {},
-        obrigaItems,
-        tipoProduto
+        tabelaPrecoPesquisarProduto,
+        tabelaPreco = {},
     } = this.props
-    const { produtoItemsList = [] } = produto || {}
-    const { getFieldDecorator, getFieldValue  } = form
+    const { produtoItemsList = [] } = tabelaPreco || {}
+    const { getFieldDecorator, getFieldValue } = form
     const { viewStateTab } = this.state
-    let produtoListFilter = []
-    
-    if (tipoProduto == 'P'){
-        produtoListFilter = produtoList.filter(c=> c.tipo == 'I')
-    } else if (tipoProduto == 'C'){
-        produtoListFilter = produtoList.filter(c=> c.tipo == 'P')
-    }    
 
-    const id = getFieldValue("produtoItem.id") || null
+    const id = getFieldValue("tabelaPrecoItem.id") || null
 
     return (<div>
-        { getFieldDecorator("produtoItem.id", { initialValue: id })(<Input type="hidden" />) }
+        { getFieldDecorator("tabelaPrecoItem.id", { initialValue: id })(<Input type="hidden" />) }
         <Row gutter = { 12 }>
             <Col span = { 8 }>
-                <Form.Item label={"Produto"}>
+                <Form.Item label={"Produtos"}>
                     {
-                        getFieldDecorator('produtoItem.produtoFilho.id', {})(
+                        getFieldDecorator('tabelaPrecoItem.produto.id', {})(
                             <Select showSearch
                                     optionFilterProp="children"
                                     placeholder={"Digite para buscar"}
                                     onChange={(value, option) => this.handleChange(value, option, 'descricao')}
                                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                    onSearch={(nome = '') => nome.length > 3 && produtoPesquisar({ nome, tipo: 'I' })}
+                                    //onSearch={(nome = '') => nome.length > 3}//  && tabelaPrecoPesquisarProduto({ nome, tipo: 'P' })}
                                     >
-                                {generateOptions(produtoListFilter)}
+                                {generateOptions(produtoList.filter(c=> c.tipo == 'P'))}
                             </Select>
                         )
                     }
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item label={"Quantidade"}>
+                <Form.Item label={"Valor"}>
                     {
-                        getFieldDecorator('produtoItem.quantidade', {                            
+                        getFieldDecorator('tabelaPrecoItem.valor', {                            
                         })(
                             <InputNumber style={{ width: "150" }}
                             min={1}
-                            precision={0}
+                            precision={2}
                             step={1}
                             />                            
                         )
@@ -164,42 +163,42 @@ class TabItems extends React.Component {
                         <Button type={"primary"} onClick={() => this.limpar(form)} >
                             Limpar
                         </Button>
-                        </>
+                       </>
                     }
                 </Form.Item>
             </Col>
         </Row>
         <Row gutter = { 12 }>
-            <Form.Item label={"Produtos Items"}>
+            <Form.Item label={"Tabela Precos Produto"}>
                 {
-                    getFieldDecorator('produto.produtoItemsList', {
-                        rules: [{ required: obrigaItems ? true : false, 
-                            type: 'array', message: 'Por favor, informe pelo menos um item de produto.'}],
+                    getFieldDecorator('tabelaPreco.produtoItemsList', {
+                        rules: [{ required: true, 
+                            type: 'array', message: 'Por favor, informe pelo menos um item de tabelaPreco.'}],
                         initialValue: [...produtoItemsList],
                         valuePropName: 'dataSource'
                     })(
-                        <Table rowKey={(row) => row.id || row.produtoFilho && row.produtoFilho.id} size={"small"} 
+                        <Table rowKey={(row) => row.id || row.produto && row.produto.id} size={"small"} 
                                pagination={false} bordered>
-                            <Table.Column title={<center>Produto</center>} key={"produtoFilho"} dataIndex={"produtoFilho"} align={"center"} 
-                                          render={(produtoFilho = {}) => produtoFilho.descricao || produtoFilho.nome }/>
-                            <Table.Column title={<center>Quantidade</center>} key={"quantidade"} dataIndex={"quantidade"} align={"center"} />
+                            <Table.Column title={<center>Produto</center>} key={"produto"} dataIndex={"produto"} align={"center"} 
+                                          render={(produto = {}) => produto.descricao || produto.nome }/>
+                            <Table.Column title={<center>Valor</center>} key={"valor"} dataIndex={"valor"} align={"center"} />
                             <Table.Column title={<center>Ações</center>} key={"actions"} 
                                           dataIndex={"actions"} 
                                           align={"center"} 
                                           render={ (text, record) => {
-                                            const {produtoFilho = {}} = record
+                                            const {produto = {}} = record
                                             return (
                                                 <span>
                                                     {
                                                         <>
-                                                        <Icon style={{cursor: 'pointer'}} type={"edit"} onClick={() => this.prepareUpdate(record)} />
+                                                        <Icon style={{cursor: 'pointer'}} type={"edit"} onClick={(e) => this.prepareUpdate(record)} /> 
                                                         <Divider type="vertical"/>
                                                         </>
                                                     }
                                                     {
                                                         !record.id &&
                                                         <>
-                                                        <Icon style={{cursor: 'pointer'}} type={"delete"} onClick={() => this.remover(record, form) }/>
+                                                        <Icon style={{cursor: 'pointer'}} type={"delete"} onClick={ () => this.remover(record, form) }/>
                                                         <Divider type="vertical"/>
                                                         </>
                                                     }                                                   
@@ -218,17 +217,17 @@ class TabItems extends React.Component {
 const mapStateToProps = (state) => {
 
     return {
-        ...state.produto.data,
-        produto: state.produto.produto,
-        state: state.produto.state,
-        fetching: state.produto.fetching,   
+        ...state.tabelaPreco.data,
+        tabelaPreco: state.tabelaPreco.tabelaPreco,
+        state: state.tabelaPreco.state,
+        fetching: state.tabelaPreco.fetching,   
         profile: state.login.data.profile,      
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    produtoPesquisar: (obj) => dispatch(Actions.produtoPesquisarProduto(obj)),
-    setProdutoItems: (produtoItems) => dispatch(Actions.produtoSetProdutoItems(produtoItems))
+    tabelaPrecoPesquisarProduto: (obj) => dispatch(Actions.tabelaPrecoPesquisarProduto(obj)),
+    setTabelaPrecoItems: (tabelaPrecoItems) => dispatch(Actions.tabelaPrecoSetTabelaPrecoItems(tabelaPrecoItems))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabItems)

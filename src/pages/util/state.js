@@ -4,6 +4,7 @@
 export const SEARCHING = "SEARCHING"
 export const INSERTING = "INSERTING"
 export const EDITING   = "EDITING"
+export const VIEWING   = "VIEWING"
 
 /*
     States para FICHA

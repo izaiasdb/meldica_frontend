@@ -160,12 +160,12 @@ export default class TabEndereco extends React.Component {
 
         return (
             <>
-                <Button type={"primary"} onClick={this.limpar} >
-                    Limpar
-                </Button>
-                &nbsp;
                 <Button type={"primary"} onClick={this.adicionar} >
                     { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' }
+                </Button>
+                &nbsp;
+                <Button type={"primary"} onClick={this.limpar} >
+                    Limpar
                 </Button>
             </>
         )

@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
 import { Card, Row, Button, Form, Spin, Tabs, Icon, Input, Modal, Col, Avatar, Divider } from 'antd'
 import { isEqual, isNil, isEmpty, get } from 'lodash'
-import { SEARCHING, INSERTING } from '../../../util/state'
+import { SEARCHING, INSERTING, VIEWING } from '../../../util/state'
 import { connect } from 'react-redux'
 import Actions from '../redux'
 import TabDados from './tabDados'
 import TabProduto from './tabProduto'
 import TabForma from './tabForma'
+import TabEndereco from './tabEndereco'
+import TabTransportadora from './tabTransportadora'
 import { getTitle } from '../../../util/helper'
 import { openNotification } from '../../../util/notification'
+import { getCard } from '../../../util/miniCard'
 
 const { Meta } = Card
 
@@ -27,14 +30,6 @@ class Formulario extends Component {
         
             if (isEqual(message.tipo, 'success')) {
                 const { ordemServico } = this.props
-                
-                // if (ordemServico.id){
-                //     this.props.cleanTable()
-                //     this.props.setStateView(SEARCHING)
-                // } else {
-                //     this.handleReset()
-                //     this.props.setOrdemServico(null)
-                // }
 
                 this.props.cleanTable()
                 this.props.setStateView(SEARCHING)                
@@ -48,38 +43,38 @@ class Formulario extends Component {
 
     setActiveKey = (activeKey) => this.setState({activeKey})
 
-    getCard = (nome, color, icon, value, formata = true) => {
-        var formatter = new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          });          
+    // getCard = (nome, color, icon, value, formata = true) => {
+    //     var formatter = new Intl.NumberFormat('pt-BR', {
+    //         style: 'currency',
+    //         currency: 'BRL',
+    //       });          
         
-        return (<Col span={6}>
-            <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} id="cardVenda" >
-                <Meta avatar = { 
-                        <Avatar size={72} 
-                                //size="large"
-                                icon={icon} 
-                                style = {{ color, backgroundColor: '#fff', paddingRight: 0, width: '45px'}}/> }
-                      title={<span style={{ 'fontSize': '16px', 'fontWeight' : 'bold'}}>{nome}</span>}
-                      description = {
-                            <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '1.6em', 'color' : '#000'}}>
-                                { formata &&
-                                    formatter.format(value)
-                                }
-                                { !formata &&                                
-                                    value
-                                }
-                            </div>
-                      }
-                />
-            </Card>
-        </Col>)
-    }    
+    //     return (<Col span={6}>
+    //         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} id="cardVenda" >
+    //             <Meta avatar = { 
+    //                     <Avatar size={72} 
+    //                             //size="large"
+    //                             icon={icon} 
+    //                             style = {{ color, backgroundColor: '#fff', paddingRight: 0, width: '45px'}}/> }
+    //                   title={<span style={{ 'fontSize': '16px', 'fontWeight' : 'bold'}}>{nome}</span>}
+    //                   description = {
+    //                         <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '1.6em', 'color' : '#000'}}>
+    //                             { formata &&
+    //                                 formatter.format(value)
+    //                             }
+    //                             { !formata &&                                
+    //                                 value
+    //                             }
+    //                         </div>
+    //                   }
+    //             />
+    //         </Card>
+    //     </Col>)
+    // }    
 
     render() {
         const { activeKey } = this.state
-        const { fetching, ordemServico, form } = this.props
+        const { fetching, ordemServico, form, stateView} = this.props
         const { getFieldDecorator, getFieldValue } = form
         const { 
             id, 
@@ -101,7 +96,7 @@ class Formulario extends Component {
         return (
             <Spin spinning={fetching}>
               <Form onSubmit={this.handleSubmit} >
-                <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'}  OrdemServico`) } >                    
+                <Card title={ getTitle(`${isEqual(stateView, VIEWING) ? 'Visualizando' : (this.isSaving() ? 'Cadastro' : 'Edição')}  Ordem de Serviço`) } >                    
                     { getFieldDecorator("ordemServico.id", { initialValue: id })(<Input type="hidden" />) }
                     { getFieldDecorator("ordemServico.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
                     { getFieldDecorator("ordemServico.statusNota", { initialValue: isNil(statusNota) ? 'A' : statusNota})(<Input type="hidden" />) }
@@ -115,30 +110,35 @@ class Formulario extends Component {
                             //#51BCDA
                         } */}
                         {
-                            this.getCard(`${id ? 'Nota: ' + id : 'Status Nota'}`, '#6BD098', 'file-protect', statusNovaDescricao ? statusNovaDescricao : 'ABERTA', false)
+                            getCard(`${id ? 'Nota: ' + id : 'Status Nota'}`, '#6BD098', 'file-protect', statusNovaDescricao ? statusNovaDescricao : 'ABERTA', false)
                         }                                               
                         {
-                            this.getCard('Total Produtos', '#FBC658', 'code-sandbox', totalProduto)
+                            getCard('Total Produtos', '#FBC658', 'code-sandbox', totalProduto)
                         }
                         {
-                            this.getCard('Forma Pgto.', '#6BD098', 'sketch', totalForma)
+                            getCard('Forma Pgto.', '#6BD098', 'sketch', totalForma)
                         }
                         {
-                            this.getCard('Valor Recebido', '#DA120B', 'dollar', valorPago ? valorPago : 0)
+                            getCard('Valor Recebido', '#DA120B', 'dollar', valorPago ? valorPago : 0)
                         }
                     </Row>                    
-                    <Divider />
+                    {/* <Divider /> */}
                     <Row>
                         <TabDados {...this.props} />
                     </Row>
-                    <Divider />
+                    <Row>
+                        <TabEndereco {...this.props} />
+                    </Row>  
                     <Row>
                         <TabProduto {...this.props} />
                     </Row>
-                    <Divider />
                     <Row>
                         <TabForma {...this.props} />
                     </Row>  
+                    <Row>
+                        <TabTransportadora {...this.props} />
+                    </Row>  
+
                     <Divider />                  
                     <Row style={{textAlign: "right"}}>
                         <Button type={ "primary"} 
@@ -146,9 +146,11 @@ class Formulario extends Component {
                                 style={{marginRight: '10px'}}>
                                 Voltar
                         </Button>
-                        <Button type={"primary"}                             
+                        <Button 
+                            type={"primary"}
+                            disabled= {isEqual(stateView, VIEWING)}                             
                             htmlType={"submit"}>
-                            { this.isSaving() ? 'Salvar' : 'Atualizar' }
+                            { this.isSaving() ? 'Salvar' : 'Atualizar' } Ordem de Serviço
                         </Button>
                     </Row>
                 </Card>

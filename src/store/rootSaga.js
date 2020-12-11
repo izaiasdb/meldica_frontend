@@ -42,6 +42,8 @@ import { FornecedorTypes } from '../pages/cadastro/fornecedor/redux';
 import { PlanoContaTypes } from '../pages/cadastro/planoConta/redux';
 import { FuncionarioTypes } from '../pages/cadastro/funcionario/redux';
 import { CargoTypes } from '../pages/cadastro/cargo/redux';
+import { TransportadoraTypes } from '../pages/cadastro/transportadora/redux';
+import { TabelaPrecoTypes } from '../pages/cadastro/tabelaPreco/redux';
 
 import * as UnidadeMedida from '../pages/cadastro/unidadeMedida/sagas';
 import * as Produto from '../pages/cadastro/produto/sagas';
@@ -53,12 +55,18 @@ import * as Fornecedor from '../pages/cadastro/fornecedor/sagas';
 import * as PlanoConta from '../pages/cadastro/planoConta/sagas';
 import * as Funcionario from '../pages/cadastro/funcionario/sagas';
 import * as Cargo from '../pages/cadastro/cargo/sagas';
+import * as Transportadora from '../pages/cadastro/transportadora/sagas';
+import * as TabelaPreco from '../pages/cadastro/tabelaPreco/sagas';
 
 //************************************ Movimentações ************************************/
 import { OrdemServicoTypes } from '../pages/movimentacao/ordemServico/redux';
 
 import * as OrdemServico from '../pages/movimentacao/ordemServico/sagas';
 
+//************************************ Financeiro ************************************/
+import { ContasReceberTypes } from '../pages/financeiro/contasReceber/redux';
+
+import * as ContasReceber from '../pages/financeiro/contasReceber/sagas';
 
 const api = API.create();
 
@@ -146,12 +154,28 @@ export default function * root () {
 
         takeLatest(CargoTypes.CARGO_INIT, Cargo.fetch, api),
         takeLatest(CargoTypes.CARGO_SALVAR, Cargo.salvar, api),
-        takeLatest(CargoTypes.CARGO_PESQUISAR, Cargo.pesquisar, api),                        
+        takeLatest(CargoTypes.CARGO_PESQUISAR, Cargo.pesquisar, api),  
+        
+        takeLatest(TransportadoraTypes.TRANSPORTADORA_INIT, Transportadora.fetch, api),
+        takeLatest(TransportadoraTypes.TRANSPORTADORA_SALVAR, Transportadora.salvar, api),
+        takeLatest(TransportadoraTypes.TRANSPORTADORA_PESQUISAR, Transportadora.pesquisar, api),   
+
+        takeLatest(TabelaPrecoTypes.TABELA_PRECO_INIT, TabelaPreco.fetch, api),
+        takeLatest(TabelaPrecoTypes.TABELA_PRECO_SALVAR, TabelaPreco.salvar, api),
+        takeLatest(TabelaPrecoTypes.TABELA_PRECO_PESQUISAR, TabelaPreco.pesquisar, api),
+        takeLatest(TabelaPrecoTypes.TABELA_PRECO_PESQUISAR_PRODUTO, TabelaPreco.pesquisarProduto, api),   
 
         //************************************ Movimentação ************************************/
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_INIT, OrdemServico.fetch, api),
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_SALVAR, OrdemServico.salvar, api),
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_PESQUISAR, OrdemServico.pesquisar, api),                        
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_ALTERAR_STATUS, OrdemServico.alterarStatus, api),
+
+        //************************************ Financeiro ************************************/
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_INIT, ContasReceber.fetch, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_SALVAR, ContasReceber.salvar, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_PESQUISAR, ContasReceber.pesquisar, api),                        
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_PAGAR, ContasReceber.pagar, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_PAGAR_PARTE, ContasReceber.pagarParte, api),
     ])
 }

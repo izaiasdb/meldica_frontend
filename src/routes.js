@@ -31,9 +31,14 @@ import Fornecedor from './pages/cadastro/fornecedor/container/fornecedor'
 import PlanoConta from './pages/cadastro/planoConta/container/planoConta'
 import Funcionario from './pages/cadastro/funcionario/container/funcionario'
 import Cargo from './pages/cadastro/cargo/container/cargo'
+import Transportadora from './pages/cadastro/transportadora/container/transportadora'
+import TabelaPreco from './pages/cadastro/tabelaPreco/container/tabelaPreco'
 
 //************************************ Movimentação ************************************/
 import OrdemServico from './pages/movimentacao/ordemServico/container/ordemServico'
+
+//************************************ Financeiro ************************************/
+import ContasReceber from './pages/financeiro/contasReceber/container/contasReceber'
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
         <Route  {...rest} 
@@ -71,9 +76,14 @@ const Routes = () => (
             <PrivateRoute path='/cadastro/planoConta' component={PlanoConta} />
             <PrivateRoute path='/cadastro/funcionario' component={Funcionario} />
             <PrivateRoute path='/cadastro/cargo' component={Cargo} />
+            <PrivateRoute path='/cadastro/transportadora' component={Transportadora} />
+            <PrivateRoute path='/cadastro/tabelaPreco' component={TabelaPreco} />
 
             {/************************************* Movimentações *************************************/}
-            <PrivateRoute path='/movimentacao/venda' component={OrdemServico} />            
+            <PrivateRoute path='/movimentacao/venda' component={OrdemServico} />     
+
+            {/************************************* Financeiro *************************************/}
+            <PrivateRoute path='/financeiro/contasReceber' component={ContasReceber} />            
            
 
         </React.Fragment>

@@ -28,10 +28,14 @@ const rootReducer = combineReducers({
     planoConta: require('../pages/cadastro/planoConta/redux').reducer,
     cargo: require('../pages/cadastro/cargo/redux').reducer,    
     funcionario: require('../pages/cadastro/funcionario/redux').reducer,
+    transportadora: require('../pages/cadastro/transportadora/redux').reducer,
+    tabelaPreco: require('../pages/cadastro/tabelaPreco/redux').reducer,
 
     //************************************ Movimentação ************************************/      
     ordemServico: require('../pages/movimentacao/ordemServico/redux').reducer,    
-    
+  
+    //************************************ Financeiro ************************************/      
+    contasReceber: require('../pages/financeiro/contasReceber/redux').reducer,    
 
 });
 

@@ -36,24 +36,23 @@ export default class TabEndereco extends React.Component {
 
         if(error) return null
         
-        let funcionarioEnderecoList = getFieldValue("funcionario.funcionarioEnderecoList")
+        let transportadoraEnderecoList = getFieldValue("transportadora.transportadoraEnderecoList")
 
         if (endereco.id){
-            let oldRegistro = funcionarioEnderecoList.find(c=> c.id == endereco.id)
+            let oldRegistro = transportadoraEnderecoList.find(c=> c.id == endereco.id)
 
-            const index = funcionarioEnderecoList.indexOf(oldRegistro);
+            const index = transportadoraEnderecoList.indexOf(oldRegistro);
 
             if (index > -1) {
-                funcionarioEnderecoList.splice(index, 1);
+                transportadoraEnderecoList.splice(index, 1);
             }          
         }
 
-        funcionarioEnderecoList.push(endereco)
+        transportadoraEnderecoList.push(endereco)
         setFieldsValue({
-            funcionario: { funcionarioEnderecoList },
+            transportadora: { transportadoraEnderecoList },
             endereco: {
                 id: null,
-                //tipoEnderecoPessoa: { id: 2},                
                 idTipoEndereco: 2,
                 cep: '',
                 logradouro: '',
@@ -75,9 +74,9 @@ export default class TabEndereco extends React.Component {
     
     remover = (index) => {
         const { form: {getFieldValue, setFieldsValue } } = this.props
-        let funcionarioEnderecoList = getFieldValue("funcionario.funcionarioEnderecoList")
-        funcionarioEnderecoList = funcionarioEnderecoList.filter((e, indexx) => indexx != index)
-        setFieldsValue({funcionario: { funcionarioEnderecoList }})
+        let transportadoraEnderecoList = getFieldValue("transportadora.transportadoraEnderecoList")
+        transportadoraEnderecoList = transportadoraEnderecoList.filter((e, indexx) => indexx != index)
+        setFieldsValue({transportadora: { transportadoraEnderecoList }})
         this.setStateView({ viewStateTab: INSERTING })
     }
 
@@ -91,7 +90,6 @@ export default class TabEndereco extends React.Component {
             const fields = getFieldsValue()
             fields.endereco = {
                 id: null,
-                //tipoEnderecoPessoa: { id: 2},                
                 idTipoEndereco: 2,
                 cep: '',
                 logradouro: '',
@@ -109,7 +107,6 @@ export default class TabEndereco extends React.Component {
                 const fields = getFieldsValue()
                 if(data.erro) {
                     fields.endereco = {
-                        //tipoEnderecoPessoa: { id: 2},
                         idTipoEndereco: 2,
                         id: null,
                         cep: '',
@@ -122,7 +119,6 @@ export default class TabEndereco extends React.Component {
                     }
                     openNotification({descricao: "CEP não encontrado.", tipo: "warning"})
                 } else {
-                    //const { cep, logradouro: rua, bairro, uf, localidade: cidade } = data
                     const { cep, logradouro, bairro, uf, localidade: cidade } = data
                     fields.endereco = {
                         cep: cep && cep.replace('/\D/g',''),
@@ -160,12 +156,12 @@ export default class TabEndereco extends React.Component {
 
         return (
             <>
-                <Button type={"primary"} onClick={this.adicionar} >
-                    { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' }
-                </Button>
-                &nbsp;
                 <Button type={"primary"} onClick={this.limpar} >
                     Limpar
+                </Button>
+                &nbsp;
+                <Button type={"primary"} onClick={this.adicionar} >
+                    { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' }
                 </Button>
             </>
         )
@@ -176,7 +172,7 @@ export default class TabEndereco extends React.Component {
             form: { getFieldDecorator, getFieldValue },
             ufList = [],
             municipioList = [],
-            funcionario = {},
+            transportadora = {},
             tipoEndereco = [{
                 id: 1,
                 descricao: "COMERCIAL"
@@ -185,9 +181,8 @@ export default class TabEndereco extends React.Component {
                 descricao: "RESIDENCIAL"
             }],
         } = this.props
-        const { funcionarioEnderecoList = [] } = funcionario || {}
+        const { transportadoraEnderecoList = [] } = transportadora || {}
 
-        //const cepInput = useRef(null);
         const estado = getFieldValue("endereco.uf")
         const id = getFieldValue("endereco.id") || null
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };        
@@ -317,8 +312,8 @@ export default class TabEndereco extends React.Component {
                 <Row gutter = { 12 }>
                     <Form.Item>
                         {
-                            getFieldDecorator('funcionario.funcionarioEnderecoList', {
-                                initialValue: [...funcionarioEnderecoList],
+                            getFieldDecorator('transportadora.transportadoraEnderecoList', {
+                                initialValue: [...transportadoraEnderecoList],
                                 valuePropName: 'dataSource'
                             })(
                                 <Table rowKey={(row) => row.id || row.cep} 

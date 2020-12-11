@@ -19,7 +19,7 @@ const TabDados = (props) => {
 
     const { 
         form: { getFieldDecorator, getFieldValue },
-        cliente = {}
+        transportadora = {}
     } = props
     const {
         nome,    
@@ -30,7 +30,7 @@ const TabDados = (props) => {
         email,
         site,
         observacao 
-    } = cliente || {}
+    } = transportadora || {}
 
     const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
 
@@ -39,7 +39,7 @@ const TabDados = (props) => {
             <Col span={ 12 }>
                 <Form.Item label={"Nome"}>
                     {
-                        getFieldDecorator('cliente.nome', {
+                        getFieldDecorator('transportadora.nome', {
                             rules: [{ required: true, whitespace: true, message: 'Por favor, informe o nome.' }],
                             initialValue: nome || null
                         })(
@@ -51,7 +51,7 @@ const TabDados = (props) => {
             <Col span={ 12 }>
                 <Form.Item label={"Nome Fantasia"}>
                     {
-                        getFieldDecorator('cliente.nomeFantasia', {
+                        getFieldDecorator('transportadora.nomeFantasia', {
                             rules: [{ required: false, whitespace: true, message: 'Por favor, informe o nome fantasia.' }],
                             initialValue: nomeFantasia || null
                         })(
@@ -63,9 +63,9 @@ const TabDados = (props) => {
         </Row>
         <Row gutter={ 12 }>                         
             <Col span={ 4 }>
-                <Form.Item label={"Tipo Cliente"}>
+                <Form.Item label={"Tipo Transportadora"}>
                     {
-                        getFieldDecorator('cliente.fisicaJuridica', {
+                        getFieldDecorator('transportadora.fisicaJuridica', {
                             rules: [{required: true, message: 'Por favor, informe o sexo.'}],
                             initialValue: fisicaJuridica || 'J'
                         })(
@@ -82,24 +82,24 @@ const TabDados = (props) => {
                 </Form.Item>
             </Col> 
             <Col span={ 6 }>
-                <Form.Item label={"CNPJ / CPF"}>
-                    {
-                        getFieldDecorator('cliente.cpfCnpj', {
-                            rules: [
-                                { required: true, message: "Por favor, informe um CPF ou CNPJ." },
-                                //{ validator: validarCampoCPF },
-                            ],
-                            initialValue: cpfCnpj
-                        })(
-                            <NumericInput maxLength={ 20 } />
-                        )
-                    }
-                </Form.Item>
+                    <Form.Item label={"CNPJ / CPF"}>
+                        {
+                            getFieldDecorator('transportadora.cpfCnpj', {
+                                rules: [
+                                    { required: true, message: "Por favor, informe um CPF ou CNPJ." },
+                                    //{ validator: validarCampoCPF },
+                                ],
+                                initialValue: cpfCnpj
+                            })(
+                                <NumericInput maxLength={ 20 } />
+                            )
+                        }
+                    </Form.Item>
             </Col>             
             <Col span={ 4 }>            
                 <Form.Item label={"Ativo"}>
                 {
-                    getFieldDecorator('cliente.ativo', {
+                    getFieldDecorator('transportadora.ativo', {
                         initialValue: isNil(ativo) ? true : ativo,
                         valuePropName: 'checked'                                    
                     })(
@@ -113,7 +113,7 @@ const TabDados = (props) => {
             <Col span={ 12 }>
                 <Form.Item label={"Email"}>
                     {
-                        getFieldDecorator('cliente.email', {
+                        getFieldDecorator('transportadora.email', {
                             rules: [{ required: false, whitespace: true, message: 'Por favor, informe o email.' }],
                             initialValue: email || null
                         })(
@@ -125,7 +125,7 @@ const TabDados = (props) => {
             <Col span={ 12 }>
                 <Form.Item label={"Site"}>
                     {
-                        getFieldDecorator('cliente.site', {
+                        getFieldDecorator('transportadora.site', {
                             rules: [{ required: false, whitespace: true, message: 'Por favor, informe o site.' }],
                             initialValue: site || null
                         })(
@@ -139,7 +139,7 @@ const TabDados = (props) => {
             <Col span={24}>
                 <Form.Item label={"Observação"}>
                     {
-                        getFieldDecorator('cliente.observacao', {
+                        getFieldDecorator('transportadora.observacao', {
                             rules:[
                                 {required: false, whitespace: true, message: 'A Observação é obrigatória.'},
                                 {required: false, max: 800, message: 'A quantidade máxima de caracteres é 800.'}

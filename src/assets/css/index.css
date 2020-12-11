@@ -9,6 +9,16 @@ legend {
     font-size: 16px !important;
 }
 
+.tabela-icone {
+    cursor: pointer;
+    border-style: solid;
+    padding: 2px;
+    border-width: thin;
+    font-size: 24px;
+    width: 30px;
+    height: 30px;
+}
+
 /* .ant-layout-sider-has-trigger {
     max-width: 225px !important; 
     min-width: 225px !important;

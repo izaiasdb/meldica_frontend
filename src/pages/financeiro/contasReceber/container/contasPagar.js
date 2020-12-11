@@ -9,7 +9,7 @@ import Formulario from '../components/formulario'
 import { getHeader } from '../../../util/helper'
 import { SEARCHING, EDITING, INSERTING, VIEWING } from '../../../util/state'
 
-class OrdemServico extends Component {
+class ContasReceber extends Component {
     
     componentDidMount() {
         this.props.init()
@@ -19,7 +19,7 @@ class OrdemServico extends Component {
         const { fetching, stateView } = this.props
         return (
             <Spin spinning={ fetching }>
-                { getHeader('Ordem de Serviços') }
+                { getHeader('Contas a Receber') }
                 {
                     isEqual(stateView, SEARCHING) &&
                     <div>
@@ -28,7 +28,8 @@ class OrdemServico extends Component {
                     </div>
                 }
                 {
-                    (isEqual(stateView, INSERTING) || isEqual(stateView, EDITING) || isEqual(stateView, VIEWING)) &&
+                    (isEqual(stateView, INSERTING) || isEqual(stateView, EDITING) || 
+                    isEqual(stateView, VIEWING) || isEqual(stateView, 'PAGAR') ) &&
                     <div>
                         <Formulario />
                     </div>
@@ -40,18 +41,18 @@ class OrdemServico extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ...state.ordemServico.data,
-        fetching: state.ordemServico.fetching,
-        stateView: state.ordemServico.stateView,
-        ordemServico: state.ordemServico.ordemServico
+        ...state.contasReceber.data,
+        fetching: state.contasReceber.fetching,
+        stateView: state.contasReceber.stateView,
+        contasReceber: state.contasReceber.contasReceber
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    init: ()  => dispatch(Actions.ordemServicoInit()),
+    init: ()  => dispatch(Actions.contasReceberInit()),
 })
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(OrdemServico)
+)(ContasReceber)
