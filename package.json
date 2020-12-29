@@ -65,7 +65,7 @@
     "webpack-merge": "^4.2.2"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js -p --env.NODE_ENV=production",
+    "heroku-postbuild": "webpack --config webpack.prod.js -p --env.NODE_ENV=production",
     "start": "node ./server.js",
     "devstart": "webpack-dev-server --watch --config webpack.dev.js --env.NODE_ENV=development",
     "test": "react-scripts test --env=jsdom",
