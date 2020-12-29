@@ -116,7 +116,7 @@ const TabDados = (props) => {
                                 {generateOptions(funcionarioList)}
                             </Select>
                             )
-                        }
+                        } 
                     </Form.Item>
                 </Col> 
                 <Col span={ 10 }>
