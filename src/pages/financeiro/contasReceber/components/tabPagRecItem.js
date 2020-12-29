@@ -20,7 +20,8 @@ export default class TabForma extends React.Component {
     adicionar = () => {
         const {
             form: { getFieldValue, getFieldsValue, setFieldsValue },
-            formaCondicaoList,
+            formaCondicaoList, 
+            tipoTela,
         } = this.props
         const { viewStateTab } = this.state
 
@@ -45,7 +46,7 @@ export default class TabForma extends React.Component {
         // }
 
         if (valor + totalPago > (pagarReceber.valor)) {
-            openNotification({tipo: 'warning', descricao: 'Valor do pagamento excede o total do documento.'})
+            openNotification({tipo: 'warning', descricao: `Valor do ${isEqual(tipoTela, 'PAGAR') ? 'pagamento': 'recebimento'} excede o total do documento.`})
             return null
         }
 
@@ -129,7 +130,8 @@ export default class TabForma extends React.Component {
             formaCondicaoList = [],
             clienteList = [],
             contasReceber = {},
-            stateView
+            stateView,
+            tipoTela
         } = this.props
         const { pagarReceberItemsList = [] } = contasReceber || {}
         const { getFieldDecorator, getFieldValue } = form
@@ -175,7 +177,7 @@ export default class TabForma extends React.Component {
                         </Form.Item>
                     </Col> */}
                     <Col span={ 24 }>
-                        <Form.Item label={"Forma condição de pagamento"}>
+                        <Form.Item label={`Forma condição de ${isEqual(tipoTela, 'PAGAR') ? 'pagamento': 'recebimento'}`}>
                             {
                                 getFieldDecorator('pagarReceberItem.formaCondicaoPagamento.id', {
                                     rules: [{required: false, message: 'Por favor, informe o cliente.'}],
@@ -183,7 +185,8 @@ export default class TabForma extends React.Component {
                                 })(
                                 <Select showSearch
                                         optionFilterProp="children"
-                                        width= "100%"
+                                        style = {{ width: '98%' }}
+                                        //width= "100%"
                                         filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                         disabled= {isEqual(stateView, VIEWING)}
                                         >
@@ -201,7 +204,7 @@ export default class TabForma extends React.Component {
                         <Form.Item label={"Data do Vencimento"}>
                             {
                                 getFieldDecorator('pagarReceberItem.dataPagamento', {
-                                    rules: [{required: true, message: "Por favor, informe a data da venda."}
+                                    rules: [{required: true, message: "Por favor, informe a data do vencimento."}
                                     //{ validator: validateDataContasReceber}
                                 ], //initialValue: isNil(dataVencimento) ? moment() : new moment(dataVencimento)
                                     initialValue: new moment()
@@ -252,7 +255,7 @@ export default class TabForma extends React.Component {
                                 <Button type={"primary"} 
                                     onClick={() => this.adicionar(form)}
                                     disabled= {isEqual(stateView, VIEWING)}>
-                                    { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } Recebimento
+                                    { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } {isEqual(tipoTela, 'PAGAR') ? 'Pagamento': 'Recebimento'}
                                 </Button>
                             }
                         </Form.Item>
@@ -278,10 +281,10 @@ export default class TabForma extends React.Component {
                     </Col>
                 </Row>
                 <Row gutter = { 12 }>
-                    <Form.Item label={"Formas de pagamento"}>
+                    <Form.Item label={`Formas de ${isEqual(tipoTela, 'PAGAR') ? 'Pagamento': 'Recebimento'}`}>
                         {
                             getFieldDecorator('contasReceber.pagarReceberItemsList', {
-                                rules: [{ required: false, type: 'array', message: 'Por favor, informe pelo menos uma forma de pagamento.'}],
+                                rules: [{ required: false, type: 'array', message: `Por favor, informe pelo menos uma forma de ${isEqual(tipoTela, 'PAGAR') ? 'Pagamento': 'Recebimento'}.`}],
                                 initialValue: [...pagarReceberItemsList],
                                 valuePropName: 'dataSource'
                             })(
@@ -300,7 +303,7 @@ export default class TabForma extends React.Component {
                                             !isNil(record.formaCondicaoPagamento.formaPagamento) ? 
                                                 record.formaCondicaoPagamento.formaPagamento.nome : text
                                         } />
-                                    <Table.Column title={<center>Condição pagamento</center>} 
+                                    <Table.Column title={<center>Condição {isEqual(tipoTela, 'PAGAR') ? 'Pagamento': 'Recebimento'}</center>} 
                                         key={"nomeCondicaoPagamento"} 
                                         dataIndex={"nomeCondicaoPagamento"} 
                                         align={"center"}

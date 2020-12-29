@@ -13,6 +13,7 @@ class ContasReceber extends Component {
     
     componentDidMount() {
         this.props.init()
+        //this.props.setTipoTela('RECEBER')
     }
 
     render() {
@@ -23,15 +24,18 @@ class ContasReceber extends Component {
                 {
                     isEqual(stateView, SEARCHING) &&
                     <div>
-                        <Pesquisa />
-                        <Tabela />
+                        <Pesquisa tipoTela={"RECEBER"} />
+                        <Tabela tipoTela={"RECEBER"} />
+                        {/* <Pesquisa />
+                        <Tabela /> */}
                     </div>
                 }
                 {
                     (isEqual(stateView, INSERTING) || isEqual(stateView, EDITING) || 
                     isEqual(stateView, VIEWING) || isEqual(stateView, 'PAGAR') ) &&
                     <div>
-                        <Formulario />
+                        <Formulario tipoTela={"RECEBER"} />
+                        {/* <Formulario /> */}
                     </div>
                 }                
             </Spin>
@@ -49,7 +53,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    init: ()  => dispatch(Actions.contasReceberInit()),
+    init: ()  => dispatch(Actions.contasReceberInitReceber()),
+    //setTipoTela: (tipoTela) => dispatch(Actions.contasReceberSetTipoTela(tipoTela)),
 })
 
 export default connect(

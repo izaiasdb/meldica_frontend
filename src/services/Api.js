@@ -1,7 +1,7 @@
 import apisauce from 'apisauce';
 import { getToken, logout } from './authenticationService';
 import { get } from 'lodash'
-import { URL_BACKEND, URL_FRONTEND } from '../pages/util/constUtils'
+import { URL_BACKEND, URL_FRONTEND } from '../pages/util/constUrlUtils'
 
 const create = () => {
   const baseURL = URL_BACKEND
@@ -185,8 +185,10 @@ const create = () => {
 
    //************************************ Financeiro ************************************/
    const ContasReceber = {
-    init: () => api.post('/pagarReceber/initReceber'),
-    pesquisar: (obj) => api.post('/pagarReceber/pesquisar', {...obj, receitaDespesa: 'R'} ),
+    initReceber: () => api.post('/pagarReceber/initReceber'),
+    initPagar: () => api.post('/pagarReceber/initPagar'),
+    pesquisarReceber: (obj) => api.post('/pagarReceber/pesquisar', {...obj, receitaDespesa: 'R'} ),
+    pesquisarPagar: (obj) => api.post('/pagarReceber/pesquisar', {...obj, receitaDespesa: 'D'} ),
     salvar: (obj) => api.post('/pagarReceber/salvar', obj),
     pagar: (obj) => api.post('/pagarReceber/pagar', obj),   
     pagarParte: (obj) => api.post('/pagarReceber/salvarPagarReceberItem', obj),    

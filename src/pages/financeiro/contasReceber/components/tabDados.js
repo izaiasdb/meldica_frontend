@@ -26,12 +26,15 @@ const TabDados = (props) => {
         form: { getFieldDecorator, getFieldValue, getFieldsValue },
         contasReceber = {},
         clienteList = [],
+        fornecedorList = [],
         planoContaList = [],
         formaCondicaoList = [],
         stateView,
+        tipoTela,
     } = props
     const {
         cliente = {},
+        fornecedor = {},
         planoConta = {},
         documento,
         descricao,
@@ -48,10 +51,11 @@ const TabDados = (props) => {
     let date = new moment();
 
     return (<div>
-        <Card title={"Informe os dados referente a Contas a Receber"}>
+        <Card title={`Informe os dados referente a Contas a ${isEqual(tipoTela, 'PAGAR') ? 'pagar': 'receber'}`}>
             <Row gutter={ 12 }>
                 { (isEqual(stateView, EDITING) || isEqual(stateView, VIEWING)) && !isNil(cliente) &&
                 <Col span={ 12 }>
+                    { isEqual(tipoTela, 'PAGAR') &&
                     <Form.Item label={"Cliente"}>
                         {
                             getFieldDecorator('contasReceber.cliente.id', {
@@ -68,7 +72,25 @@ const TabDados = (props) => {
                             </Select>
                             )
                         }
-                    </Form.Item>
+                    </Form.Item> }
+                    { isEqual(tipoTela, 'RECEBER') &&
+                    <Form.Item label={"Fornecedor"}>
+                        {
+                            getFieldDecorator('contasReceber.fornecedor.id', {
+                                rules: [{required: false, message: 'Por favor, informe o fornecedor.'}],
+                                initialValue: isNil(fornecedor) ? null : fornecedor.id
+                            })(
+                            <Select showSearch
+                                    disabled = {true}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                    <Option key={1} value={null}>{"Selecione"}</Option>
+                                    {generateOptions(fornecedorList)}
+                            </Select>
+                            )
+                        }
+                    </Form.Item> }                    
                 </Col>
                 }
                 <Col span={ 12 }>
@@ -84,7 +106,7 @@ const TabDados = (props) => {
                                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                     <Option key={1} value={null}>{"Selecione"}</Option>
-                                    {generateOptions(planoContaList.filter(c=> c.receitaDespesa == 'R'))}
+                                    {generateOptions(planoContaList.filter(c=> c.receitaDespesa == (isEqual(tipoTela, 'PAGAR') ? 'D' : 'R') ))}
                             </Select>
                             )
                         }
@@ -162,7 +184,7 @@ const TabDados = (props) => {
                     <Form.Item label={"Data do Vencimento"}>
                         {
                             getFieldDecorator('contasReceber.dataVencimento', {
-                                rules: [{required: true, message: "Por favor, informe a data da venda."}
+                                rules: [{required: true, message: "Por favor, informe a data do vencimento."}
                                 //{ validator: validateDataContasReceber}
                             ], initialValue: isNil(dataVencimento) ? moment() : new moment(dataVencimento)
                             })(
@@ -248,7 +270,7 @@ const TabDados = (props) => {
                     </Form.Item>
                 </Col>  */}
                 <Col span = { 10 }>
-                    <Form.Item label={"Forma condição de pagamento"}>
+                    <Form.Item label={`Forma condição de ${isEqual(tipoTela, 'PAGAR') ? 'pagamento' : 'recebimento'} `}>
                         {
                             getFieldDecorator('contasReceber.formaCondicaoPagamento.id', {})(
                                 <Select showSearch

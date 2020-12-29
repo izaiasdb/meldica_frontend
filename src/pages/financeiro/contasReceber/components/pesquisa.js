@@ -29,13 +29,13 @@ class Pesquisa extends Component {
         }
     }  
 
-    getExtra = () => {
+    getExtra = (tipoTela) => {
         return (
             <div>
                 <Button type={"primary"}
                         htmlType={"submit"}
                         onClick={this.handleSubmit}
-                        disabled = {!hasAnyAuthority("CONTAS_RECEBER_CONSULTAR")}>
+                        disabled = {isEqual(tipoTela, 'PAGAR') ? !hasAnyAuthority("CONTAS_PAGAR_CONSULTAR") : !hasAnyAuthority("CONTAS_RECEBER_CONSULTAR")}>
                         Pesquisar
                 </Button>
                 <Divider type="vertical" />
@@ -45,7 +45,7 @@ class Pesquisa extends Component {
                 </Button>
                 <Divider type="vertical" />
                 <Button type={ "primary"} 
-                            disabled = {!hasAnyAuthority("CONTAS_RECEBER_INSERIR")}
+                            disabled = {isEqual(tipoTela, 'PAGAR') ? !hasAnyAuthority("CONTAS_PAGAR_INSERIR") : !hasAnyAuthority("CONTAS_RECEBER_CONSULTAR")}
                             onClick={this.prepareInsert}>
                             Cadastrar
                 </Button>
@@ -67,11 +67,17 @@ class Pesquisa extends Component {
     }
 
     handleSubmit = e => {
+        const { tipoTela} = this.props
+
         this.props.cleanTable()
         e.preventDefault();
         this.props.form.validateFields((err, { contasReceber }) => {
             if (!err) {
-                this.props.pesquisar(contasReceber)
+                if (isEqual(tipoTela, 'PAGAR')) {
+                    this.props.pesquisarPagar(contasReceber)
+                } else {
+                    this.props.pesquisarReceber(contasReceber)
+                }
             } else {
                 openNotification({tipo: 'warning', descricao: 'Existem campos obrigatórios a serem preenchidos.'})
             }
@@ -79,14 +85,14 @@ class Pesquisa extends Component {
     };
 
     render() {
-        const { form, clienteList = [], } = this.props
+        const { form, clienteList = [], fornecedorList = [], tipoTela} = this.props
         const { getFieldDecorator, getFieldValue } = form
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
 
         return (
             <Form onSubmit={this.handleSubmit}>
-            <Card title={getTitle("Pesquisa Contas a Receber")}
-                extra={this.getExtra()}
+            <Card title={getTitle(`Pesquisa Contas a ${isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'}`)}
+                extra={this.getExtra(tipoTela)}
                 style={{ marginBottom: '10px' }}
                 >
                 <Row gutter={12}>
@@ -111,6 +117,7 @@ class Pesquisa extends Component {
                         </Form.Item>
                     </Col>   */}
                     <Col span={ 16 }>
+                        { isEqual(tipoTela, 'RECEBER') &&
                         <Form.Item label={"Cliente"}>
                             {
                                 getFieldDecorator('contasReceber.cliente.id', {
@@ -127,6 +134,25 @@ class Pesquisa extends Component {
                                 )
                             }
                         </Form.Item>
+                        }
+                        { isEqual(tipoTela, 'PAGAR') &&
+                        <Form.Item label={"Fornecedor"}>
+                            {
+                                getFieldDecorator('contasReceber.fornecedor.id', {
+                                    rules: [{required: false, message: 'Por favor, informe o Fornecedor.'}],
+                                    //initialValue: isNil(cliente) ? null : cliente.id
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        {generateOptions(fornecedorList)}
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                        }                        
                     </Col>                                                      
                 </Row>
             </Card>
@@ -139,6 +165,7 @@ const mapStateToProps = (state) => {
     return {
         ...state.contasReceber.data,
         fetching: state.contasReceber.fetching,
+        //tipoTela: state.contasReceber.tipoTela,
         profile: state.login.data.profile,      
     }
 }
@@ -146,7 +173,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     cleanTable: () => dispatch(Actions.contasReceberCleanTable()),
     cleanMessage: ()  => dispatch(Actions.contasReceberCleanMessage()),
-    pesquisar: (contasReceber) => dispatch(Actions.contasReceberPesquisar(contasReceber)),
+    pesquisarReceber: (contasReceber) => dispatch(Actions.contasReceberPesquisarReceber(contasReceber)),
+    pesquisarPagar: (contasReceber) => dispatch(Actions.contasReceberPesquisarPagar(contasReceber)),
     setContasReceber: (contasReceber) => dispatch(Actions.contasReceberSetContasReceber(contasReceber)),
     setStateView: (stateView) => dispatch(Actions.contasReceberSetStateView(stateView)),    
 })

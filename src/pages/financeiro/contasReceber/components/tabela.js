@@ -5,14 +5,14 @@ import { connect } from 'react-redux'
 import Actions from '../redux'
 import Pagination from '../../../util/Pagination'
 import moment from 'moment'
-import { Link } from 'react-router-dom'
+//import { Link } from 'react-router-dom'
 import { getTitle } from '../../../util/helper'
 import { hasAnyAuthority } from '../../../../services/authenticationService'
 import Workbook from 'react-excel-workbook'
-import { openNotification } from '../../../util/notification'
+//import { openNotification } from '../../../util/notification'
 import { isEqual, isEmpty, get } from 'lodash'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMoneyBillAlt, faHandHoldingUsd, faDollarSign } from '@fortawesome/free-solid-svg-icons' //user-md -> faUserMd
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+//import { faMoneyBillAlt, faHandHoldingUsd, faDollarSign } from '@fortawesome/free-solid-svg-icons' //user-md -> faUserMd
 
 const Sheet = Workbook.Sheet
 const Column = Workbook.Column
@@ -20,16 +20,19 @@ const Column = Workbook.Column
 class Tabela extends Component {
 
     getExtra = (length) => {
+        const { tipoTela } = this.props;
+
         if (length && length > 0) {
             return (
                 <div>
-                    <Workbook filename='contasRecebers.xlsx'
+                    {/* <Workbook filename='contasRecebers.xlsx' */}
+                    <Workbook filename={`${isEqual(tipoTela, 'PAGAR') ? 'contasPagar': 'contasReceber'}.xlsx`}
                         element={
                             <Tooltip title='Click para baixar os registros.' placement='left'>
                                 <Button type='primary' shape='circle' size='small' icon='download' />
                             </Tooltip>
                         }>
-                        <Sheet data={this.props.list || []} name='contasRecebers'>
+                        <Sheet data={this.props.list || []} name={`${isEqual(tipoTela, 'PAGAR') ? 'contasPagar': 'contasReceber'}`}>
                             {/* <Column label='Nome' value={row => row.nome ?  row.nome : '' } /> */}
                             <Column label='Valor' value={row => row.valor ? row.valor : ''} />
                         </Sheet>
@@ -50,11 +53,11 @@ class Tabela extends Component {
 
     pagarConta = (contasReceber) => {
         const { confirm } = Modal;
-        const { contasReceberPagar } = this.props;
+        const { contasReceberPagar, tipoTela } = this.props;
 
         confirm({
             title: `Pagar o Documento todo`,
-            content: 'Tem certeza que deseja pagar o documento?',
+            content: `Tem certeza que deseja ${isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'} o documento?`,
             onOk() {
                 contasReceberPagar({...contasReceber})
             },
@@ -65,12 +68,17 @@ class Tabela extends Component {
     }    
 
     getAcoes = (record) => {
+        const { tipoTela } = this.props;
+
+        let permissao = isEqual(tipoTela, "PAGAR") ? hasAnyAuthority("CONTAS_PAGAR_ALTERAR") : hasAnyAuthority("CONTAS_RECEBER_ALTERAR")
+        
         return (
             <div>
-                {hasAnyAuthority("CONTAS_RECEBER_ALTERAR") && 
+                {/* { (isEqual(tipoTela, "PAGAR") ? hasAnyAuthority("CONTAS_PAGAR_ALTERAR") : hasAnyAuthority("CONTAS_RECEBER_ALTERAR"))  &&  */}
+                { permissao && 
                 <>
                     {record.valorPago == 0 &&
-                    <Tooltip title="Editar Contas a Receber">
+                    <Tooltip title={`Editar Contas a ${isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'}`}>
                         <Icon 
                             className={'tabela-icone'}
                             type={ 'edit' } 
@@ -80,7 +88,7 @@ class Tabela extends Component {
                     {record.valor > record.valorPago  &&
                     <>
                     <Divider type="vertical"/>
-                    <Tooltip title="Pagar parte do documento">
+                    <Tooltip title={`${isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'} do documento`}>
                         {/* <FontAwesomeIcon 
                             icon={faDollarSign} 
                         }} /> */}
@@ -102,21 +110,25 @@ class Tabela extends Component {
                     </Tooltip>
                     </>
                     }
-                    <Divider type="vertical"/>
-                    <Tooltip title="Visualizar documento">
-                        <Icon 
-                            className={'tabela-icone'}
-                            type={ 'zoom-in' } 
-                            onClick={(e) => this.setModo(record, VIEWING)} />
-                    </Tooltip>  
                 </>
+                }
+                {
+                <>
+                <Divider type="vertical"/>
+                <Tooltip title="Visualizar documento">
+                    <Icon 
+                        className={'tabela-icone'}
+                        type={ 'zoom-in' } 
+                        onClick={(e) => this.setModo(record, VIEWING)} />
+                </Tooltip>  
+                </> 
                 }
             </div> 
         )       
     }
 
     render() {
-        const { list = [] , remover } = this.props
+        const { list = [] , remover, tipoTela  } = this.props
         return (
             list.length > 0 &&
             <Card title={ getTitle("Listagem") } extra={ this.getExtra(list.length)} >
@@ -157,7 +169,7 @@ class Tabela extends Component {
                                     align={ "left" }/>   
                     <Table.Column key={'valorPago'} 
                                     dataIndex={'valorPago'} 
-                                    title={'Valor Pago'} 
+                                    title={`Valor ${isEqual(tipoTela, 'PAGAR') ? 'Pago': 'Recebido'}`} 
                                     align={ "left" }/> 
                     <Table.Column key={'acoes'} 
                                     dataIndex={'acoes'} 
@@ -177,6 +189,7 @@ const mapStateToProps = (state) => {
         ...state.contasReceber.data,
         fetching: state.contasReceber.fetching,
         stateView: state.contasReceber.stateView,
+        //tipoTela: state.contasReceber.tipoTela,
         contasReceber: state.contasReceber.visita
     }
 }

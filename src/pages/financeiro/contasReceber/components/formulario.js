@@ -60,7 +60,7 @@ class Formulario extends Component {
 
     render() {
         const { activeKey } = this.state
-        const { fetching, contasReceber, form, stateView } = this.props
+        const { fetching, contasReceber, form, stateView, tipoTela } = this.props
         const { getFieldDecorator, getFieldValue } = form
         const {
             id,
@@ -74,14 +74,15 @@ class Formulario extends Component {
 
         //let produtoItemsListForm = getFieldValue("contasReceber.pagarReceberItemsList") || produtoItemsList
         //let totalForma = produtoItemsListForm.reduce((acum,{valor}) => acum + Number(valor), 0);
-
+        let receitaDespesaInsert = isEqual(tipoTela, 'PAGAR') ? 'D' : 'R'
+        
         return (
             <Spin spinning={fetching}>
               <Form onSubmit={this.handleSubmit} >
-                <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'}  Contas a Receber`) } >
+                <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'}  Contas a ${isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'}`) } >
                     { getFieldDecorator("contasReceber.id", { initialValue: id })(<Input type="hidden" />) }
                     { getFieldDecorator("contasReceber.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
-                    { getFieldDecorator("contasReceber.receitaDespesa", { initialValue: isNil(receitaDespesa) ? 'R' : receitaDespesa})(<Input type="hidden" />) }
+                    { getFieldDecorator("contasReceber.receitaDespesa", { initialValue: isNil(receitaDespesa) ? receitaDespesaInsert : receitaDespesa})(<Input type="hidden" />) }
                     {/* { getFieldDecorator("contasReceber.statusNota", { initialValue: isNil(statusNota) ? 'A' : statusNota})(<Input type="hidden" />) } */}
                     { getFieldDecorator("contasReceber.selecionado", { initialValue: isNil(selecionado) ? false : selecionado})(<Input type="hidden" />) }
                     { getFieldDecorator("contasReceber.valorPago", { initialValue: isNil(valorPago) ? 0 : valorPago})(<Input type="hidden" />) }
@@ -90,7 +91,7 @@ class Formulario extends Component {
                             getCard('Valor Documento', '#FBC658', 'sketch', valor)
                         }
                         {
-                            getCard('Valor Recebido', '#DA120B', 'dollar', valorPago ? valorPago : 0)
+                            getCard(`Valor ${isEqual(tipoTela, 'PAGAR') ? 'Pago': 'Recebido'}`, '#DA120B', 'dollar', valorPago ? valorPago : 0)
                         }
                     </Row>
                     <Row>
@@ -107,26 +108,26 @@ class Formulario extends Component {
                         <Button type={ "primary"}
                                 onClick={(e) => this.showModal()}
                                 style={{marginRight: '10px'}}>
-                                { isEqual(stateView, VIEWING) ? 'Visualizar Documentos' : 'Adicionar Recebimentos' }
+                                { isEqual(stateView, VIEWING) ? 'Visualizar Documentos' : `Adicionar ${isEqual(tipoTela, 'PAGAR') ? 'Pagamentos': 'Recebimentos'} `}
                         </Button> }                     
                         <Button type={"primary"}
                             htmlType={"submit"}
                             disabled= {isEqual(stateView, VIEWING)}
                             >
-                            { this.isSaving() ? 'Salvar' : 'Atualizar' } Contas a Receber
+                            { this.isSaving() ? 'Salvar' : 'Atualizar' } Contas a {isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'}
                         </Button>
                     </Row>
                 </Card>
 
                 <Modal
-                    title={getTitle("Recebimentos")}
+                    title={getTitle(`${isEqual(tipoTela, 'PAGAR') ? 'Pagamentos': 'Recebimentos'}`)}
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                     width = {1000}
                     cancelButtonProps={{ style: { display: 'none' } }}
                 >
-                    <TabPagRecItem {...this.props} />
+                    <TabPagRecItem {...this.props} tipoTela={tipoTela} />
                 </Modal>            
             </Form>
         </Spin>
@@ -159,12 +160,17 @@ class Formulario extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, { contasReceber }) => {
             if (!err) {
-                const { produtoItemsList = [], formaItemsList = [] } = contasReceber
-                let totalProduto = produtoItemsList.reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
-                let totalForma = formaItemsList.reduce((acum,{valor}) => acum + Number(valor), 0);
+                //const { produtoItemsList = [], formaItemsList = [] } = contasReceber
+                // let totalProduto = produtoItemsList.reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
+                // let totalForma = formaItemsList.reduce((acum,{valor}) => acum + Number(valor), 0);
 
-                if (totalProduto < totalForma){
-                    openNotification({tipo: 'warning', descricao: 'Total de forma de pagamento não pode ser maior que o total de produtos.'})
+                // if (totalProduto < totalForma){
+                //     openNotification({tipo: 'warning', descricao: 'Total de forma de pagamento não pode ser maior que o total de produtos.'})
+                //     return
+                // }
+
+                if (contasReceber.valor == 0){
+                    openNotification({tipo: 'warning', descricao: 'Por favor informe um valor para o documento!.'})
                     return
                 }
 
@@ -191,6 +197,7 @@ const mapStateToProps = (state) => {
         contasReceber: state.contasReceber.contasReceber,
         stateView: state.contasReceber.stateView,
         fetching: state.contasReceber.fetching,
+        //tipoTela: state.contasReceber.tipoTela,
         profile: state.login.data.profile,
     }
 }

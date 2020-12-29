@@ -7,13 +7,16 @@ import { MESSAGE_ERROR_DEFAULT } from '../../util/messages'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-   contasReceberInit: null,
+   contasReceberInitReceber: null,
+   contasReceberInitPagar: null,
    contasReceberSuccess: ['dados'],
-   contasReceberPesquisar: ['contasReceber'],
+   contasReceberPesquisarReceber: ['contasReceber'],
+   contasReceberPesquisarPagar: ['contasReceber'],
    contasReceberFailure: ['message'],
    contasReceberCleanMessage: null,
    contasReceberSalvar: ['obj'],
    contasReceberSetStateView: ['stateView'],
+   contasReceberSetTipoTela: ['tipoTela'],
    contasReceberSetContasReceber: ['contasReceber'],
    contasReceberSetContasReceberItem: ['contasReceberItem'],
    contasReceberCleanTable: null,
@@ -30,6 +33,7 @@ export const INITIAL_STATE = Immutable({
     data:  {},
     fetching: false,
     stateView: SEARCHING,
+    tipoTela: 'PAGAR',
     contasReceber: null,
     contasReceberItem: null
 });
@@ -43,6 +47,7 @@ export const success = (state, { dados }) =>  {
     list:                  get(dados, ['list'], get(state.data, ['list'], [])),
     message:               get(dados, ['message'], get(state.data, ['message'], [])),
     clienteList:           get(dados, ['clienteList'], get(state.data, ['clienteList'], [])),
+    fornecedorList:        get(dados, ['fornecedorList'], get(state.data, ['fornecedorList'], [])),
     formaCondicaoList:     get(dados, ['formaCondicaoList'], get(state.data, ['formaCondicaoList'], [])), 
     planoContaList:        get(dados, ['planoContaList'], get(state.data, ['planoContaList'], [])),    
   }
@@ -59,6 +64,7 @@ export const cleanMessage = (state) => state.merge({data: {...state.data, messag
 export const cleanTable = (state) => state.merge({data: {...state.data, list: []}})
 
 export const setStateView = (state, action) => state.merge({stateView: action.stateView})
+export const setTipoTela = (state, action) => state.merge({tipoTela: action.tipoTela})
 export const setContasReceber = (state, { contasReceber }) => state.merge({contasReceber})
 export const setContasReceberItem = (state, { contasReceberItem }) => state.merge({contasReceberItem})
 
@@ -74,13 +80,16 @@ export const finalizarContasReceber = (state, { contasReceber }) => state.merge(
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.CONTAS_RECEBER_INIT]              : request,
-  [Types.CONTAS_RECEBER_SUCCESS]           : success,
-  [Types.CONTAS_RECEBER_PESQUISAR]         : request,
-  [Types.CONTAS_RECEBER_FAILURE]           : failure,
-  [Types.CONTAS_RECEBER_CLEAN_MESSAGE]     : cleanMessage,
+  [Types.CONTAS_RECEBER_INIT_RECEBER]            : request,
+  [Types.CONTAS_RECEBER_INIT_PAGAR]              : request,
+  [Types.CONTAS_RECEBER_SUCCESS]                 : success,
+  [Types.CONTAS_RECEBER_PESQUISAR_RECEBER]       : request,
+  [Types.CONTAS_RECEBER_PESQUISAR_PAGAR]         : request,
+  [Types.CONTAS_RECEBER_FAILURE]                 : failure,
+  [Types.CONTAS_RECEBER_CLEAN_MESSAGE]           : cleanMessage,
   [Types.CONTAS_RECEBER_SALVAR]                  : request,
   [Types.CONTAS_RECEBER_SET_STATE_VIEW]          : setStateView,
+  [Types.CONTAS_RECEBER_SET_TIPO_TELA]           : setTipoTela,
   [Types.CONTAS_RECEBER_SET_CONTAS_RECEBER]      : setContasReceber,
   [Types.CONTAS_RECEBER_SET_CONTAS_RECEBER_ITEM] : setContasReceberItem,
   [Types.CONTAS_RECEBER_CLEAN_TABLE]             : cleanTable,

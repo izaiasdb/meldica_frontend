@@ -39,6 +39,7 @@ import OrdemServico from './pages/movimentacao/ordemServico/container/ordemServi
 
 //************************************ Financeiro ************************************/
 import ContasReceber from './pages/financeiro/contasReceber/container/contasReceber'
+import ContasPagar from './pages/financeiro/contasReceber/container/contasPagar'
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
         <Route  {...rest} 
@@ -84,7 +85,7 @@ const Routes = () => (
 
             {/************************************* Financeiro *************************************/}
             <PrivateRoute path='/financeiro/contasReceber' component={ContasReceber} />            
-           
+            <PrivateRoute path='/financeiro/contasPagar' component={ContasPagar} />            
 
         </React.Fragment>
 );

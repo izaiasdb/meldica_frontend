@@ -3,9 +3,9 @@ import Actions from './redux';
 import { get } from "lodash";
 import { getUser } from '../../../services/authenticationService'
 
-export function * fetch (api)  {
+export function * initReceber (api)  {
   try {    
-      const response = yield call(api.ContasReceber.init)
+      const response = yield call(api.ContasReceber.initReceber)
       if (response.ok) {
         const data = get(response, ['data'], {})
         yield put(Actions.contasReceberSuccess(data))
@@ -19,10 +19,44 @@ export function * fetch (api)  {
   }
 }
 
-export function * pesquisar (api, { contasReceber })  {
+export function * initPagar (api)  {
+  try {    
+      const response = yield call(api.ContasReceber.initPagar)
+      if (response.ok) {
+        const data = get(response, ['data'], {})
+        yield put(Actions.contasReceberSuccess(data))
+      } else {
+        const { message } = get(response, ['data'], {})
+        yield put(Actions.contasReceberFailure(message))
+     }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.contasReceberFailure())
+  }
+}
+
+export function * pesquisarPagar (api, { contasReceber })  {
   try {
     console.log('opa')    
-    const response = yield call(api.ContasReceber.pesquisar, contasReceber)
+    const response = yield call(api.ContasReceber.pesquisarPagar, contasReceber)
+
+    if (response.ok) {
+      const list = get(response, ['data'], {})
+      yield put(Actions.contasReceberSuccess({list}))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.contasReceberFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.contasReceberFailure())
+  }
+}
+
+export function * pesquisarReceber (api, { contasReceber })  {
+  try {
+    console.log('opa')    
+    const response = yield call(api.ContasReceber.pesquisarReceber, contasReceber)
 
     if (response.ok) {
       const list = get(response, ['data'], {})

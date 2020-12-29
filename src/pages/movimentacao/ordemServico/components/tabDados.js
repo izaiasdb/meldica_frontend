@@ -29,6 +29,7 @@ const TabDados = (props) => {
         ordemServico = {},
         clienteList = [],
         funcionarioList = [],
+        tabelaPrecoList = [],
         stateView,
     } = props
     const {
@@ -81,7 +82,7 @@ const TabDados = (props) => {
                     </Form.Item>                
                 </Col> 
                 <Col span={ 4 }>
-                    <Form.Item label={"Previsão eentrega"}>
+                    <Form.Item label={"Previsão entrega"}>
                         {
                             getFieldDecorator('ordemServico.dataPrevisaoEntrega', {
                                 rules: [{required: false, message: "Por favor, informe a data da venda."}
@@ -118,6 +119,26 @@ const TabDados = (props) => {
                         }
                     </Form.Item>
                 </Col> 
+                <Col span={ 10 }>
+                    <Form.Item label={"Tabela de Preço"}>
+                        {
+                            getFieldDecorator('ordemServico.tabelaPreco.id', {
+                                rules: [{required: true, message: 'Por favor, informe a Tabela de Preço.'}],
+                                initialValue: isNil(funcionario) ? null : funcionario.id
+                            })(
+                            <Select 
+                                showSearch
+                                optionFilterProp="children"
+                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                disabled= {isEqual(stateView, VIEWING)}
+                                >
+                                <Option key={1} value={null}>{"Selecione"}</Option>
+                                {generateOptions(tabelaPrecoList)}
+                            </Select>
+                            )
+                        }
+                    </Form.Item>
+                </Col>                
             </Row>   
             <Row gutter={12}>
                 <Col span={24}>

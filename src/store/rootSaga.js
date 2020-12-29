@@ -172,9 +172,11 @@ export default function * root () {
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_ALTERAR_STATUS, OrdemServico.alterarStatus, api),
 
         //************************************ Financeiro ************************************/
-        takeLatest(ContasReceberTypes.CONTAS_RECEBER_INIT, ContasReceber.fetch, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_INIT_RECEBER, ContasReceber.initReceber, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_INIT_PAGAR, ContasReceber.initPagar, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_SALVAR, ContasReceber.salvar, api),
-        takeLatest(ContasReceberTypes.CONTAS_RECEBER_PESQUISAR, ContasReceber.pesquisar, api),                        
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_PESQUISAR_RECEBER, ContasReceber.pesquisarReceber, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_PESQUISAR_PAGAR, ContasReceber.pesquisarPagar, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_PAGAR, ContasReceber.pagar, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_PAGAR_PARTE, ContasReceber.pagarParte, api),
     ])

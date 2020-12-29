@@ -46,6 +46,7 @@ export const success = (state, { dados }) =>  {
     ufList:                get(dados, ['ufList'], get(state.data, ['ufList'], [])),
     municipioList:         get(dados, ['municipioList'], get(state.data, ['municipioList'], [])),
     transportadoraList:    get(dados, ['transportadoraList'], get(state.data, ['transportadoraList'], [])),
+    tabelaPrecoList:       get(dados, ['tabelaPrecoList'], get(state.data, ['tabelaPrecoList'], [])),
   }
 
    state = state.merge({fetching: false, data})

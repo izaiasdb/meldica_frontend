@@ -104,7 +104,8 @@ export default class TabProduto extends React.Component {
 
     handleChangeProduto = (idProduto) => {    
         const { form: { getFieldsValue, setFieldsValue }, produtoList = [], } = this.props    
-        const { osProduto } = getFieldsValue()       
+        const { osProduto } = getFieldsValue() 
+        let tabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")      
         const { percDesconto } = osProduto 
 
         let produtoForm = produtoList.find(c=> c.id == idProduto);

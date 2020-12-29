@@ -9,29 +9,33 @@ import Formulario from '../components/formulario'
 import { getHeader } from '../../../util/helper'
 import { SEARCHING, EDITING, INSERTING, VIEWING } from '../../../util/state'
 
-class ContasReceber extends Component {
+class ContasPagar extends Component {
     
     componentDidMount() {
         this.props.init()
+        //this.props.setTipoTela('PAGAR')
     }
 
     render() {
         const { fetching, stateView } = this.props
         return (
             <Spin spinning={ fetching }>
-                { getHeader('Contas a Receber') }
+                { getHeader('Contas a Pagar') }
                 {
                     isEqual(stateView, SEARCHING) &&
                     <div>
-                        <Pesquisa />
-                        <Tabela />
+                        <Pesquisa tipoTela={"PAGAR"} />
+                        <Tabela tipoTela={"PAGAR"}/>
+                        {/* <Pesquisa />
+                        <Tabela />                         */}
                     </div>
                 }
                 {
                     (isEqual(stateView, INSERTING) || isEqual(stateView, EDITING) || 
                     isEqual(stateView, VIEWING) || isEqual(stateView, 'PAGAR') ) &&
                     <div>
-                        <Formulario />
+                        <Formulario tipoTela={"PAGAR"}/>
+                        {/* <Formulario /> */}
                     </div>
                 }                
             </Spin>
@@ -49,10 +53,11 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    init: ()  => dispatch(Actions.contasReceberInit()),
+    init: ()  => dispatch(Actions.contasReceberInitPagar()),
+    //setTipoTela: (tipoTela) => dispatch(Actions.contasReceberSetTipoTela(tipoTela)),
 })
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(ContasReceber)
+)(ContasPagar)
