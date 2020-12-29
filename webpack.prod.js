@@ -9,9 +9,10 @@ module.exports = merge(common, {
     optimization: {
         minimizer: [new UglifyJsPlugin()],
     },
-    devServer: {
-        host: '0.0.0.0'//Acessa por IP na rede local
-    },
+    // Rede local
+    // devServer: {
+    //     host: '0.0.0.0'//Acessa por IP na rede local
+    // },
     plugins: [
         new webpack.ProgressPlugin(),
         new webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify('production') })
