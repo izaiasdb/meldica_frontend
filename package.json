@@ -69,6 +69,7 @@
     "build": "webpack --config webpack.prod.js -p --env.NODE_ENV=production",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "server": "node ./server.js"
+    "server": "node ./server.js",
+    "heroku-prebuild": "npm install --dev"
   }
 }
