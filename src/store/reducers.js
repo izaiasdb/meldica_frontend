@@ -8,7 +8,7 @@ const rootReducer = combineReducers({
     alterarSenha: require('../pages/alterarSenha/redux').reducer,    
     
     //************************************ Configuração ************************************/
-    mensagemDashboard: require('../pages/configuracao/mensagemDashboard/redux').reducer,  
+    configuracao: require('../pages/configuracao/redux').reducer,  
 
     //************************************ Controle usuário ************************************/
     sistema: require('../pages/controleUsuario/sistema/redux').reducer,
@@ -30,6 +30,7 @@ const rootReducer = combineReducers({
     funcionario: require('../pages/cadastro/funcionario/redux').reducer,
     transportadora: require('../pages/cadastro/transportadora/redux').reducer,
     tabelaPreco: require('../pages/cadastro/tabelaPreco/redux').reducer,
+    empresa: require('../pages/cadastro/empresa/redux').reducer,
 
     //************************************ Movimentação ************************************/      
     ordemServico: require('../pages/movimentacao/ordemServico/redux').reducer,    

@@ -74,11 +74,35 @@ export default class TabEndereco extends React.Component {
         }
     }
 
+    handleEnderecoChange = (value, option) => {
+        const {form: { getFieldsValue, setFieldsValue, getFieldValue }, clienteEnderecoList = [] } = this.props
+        //const idClienteEndereco = getFieldValue("ordemServico.idClienteEndereco");
+
+        //console.log('value: ' + value)
+        //console.log('idClienteEndereco: ' + idClienteEndereco)
+        //console.log('option: ' + option)
+        if (value) {
+            let obj = clienteEnderecoList.find(c=> c.id == value);
+
+            const fields = getFieldsValue();
+            fields.ordemServico.idTipoEndereco = obj.idTipoEndereco;
+            fields.ordemServico.cep = obj.cep;
+            fields.ordemServico.logradouro = obj.logradouro;
+            fields.ordemServico.numero = obj.numero;
+            fields.ordemServico.complemento = obj.complemento;
+            fields.ordemServico.bairro = obj.bairro;
+            fields.ordemServico.uf = obj.uf;
+            fields.ordemServico.cidade = obj.cidade;
+            setFieldsValue({...fields});
+        }
+    }
+    
     render() {
         const { 
             form: { getFieldDecorator, getFieldValue },
             ufList = [],
             municipioList = [],
+            clienteEnderecoList = [],
             ordemServico = {},
             tipoEndereco = [{
                 id: 1,
@@ -101,10 +125,37 @@ export default class TabEndereco extends React.Component {
         } = ordemServico || {}
 
         const estado = getFieldValue("ordemServico.uf")
-        const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };        
+        const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };  
+        const idCliente = getFieldValue("ordemServico.cliente.id")      
 
         return (<div>
             <Card title={"Busque pelo CEP ou digite os dados referente ao endereço de 'ENTREGA DA MERCADORIA.'"}>
+                <Row gutter = { 12 }>
+                    <Col span={ 10 }>
+                        <Form.Item label={"Cliente endereço"}>
+                            {
+                            // Só para limpar
+                            getFieldDecorator('ordemServico.idClienteEndereco', {
+                                rules: [{required: false, message: 'Por favor, informe o cliente.'}],
+                                initialValue: null//isNil(cliente) ? null : cliente.id
+                            })(                                
+                                <Select 
+                                    showSearch
+                                    disabled= {isEqual(stateView, VIEWING)}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    //onChange={() => this.handleEnderecoChange()} 
+                                    onChange={(value, option) => this.handleEnderecoChange(value, option)}
+                                    >
+                                    <Option key={1} value={null}>{"Selecione"}</Option>
+                                    {generateOptions(idCliente && clienteEnderecoList.filter(c=> c.idCliente == idCliente)
+                                        .map(({id, logradouro}) => ({id, descricao: logradouro})))}
+                                </Select>
+                            )
+                            }
+                        </Form.Item>
+                    </Col> 
+                </Row>
                 <Row gutter = { 12 }>
                     <Col span={ 4 }>
                         <Form.Item label={"Tipo de Endereco"}>

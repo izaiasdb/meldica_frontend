@@ -48,7 +48,7 @@ const TabDados = (props) => {
                     }
                 </Form.Item>
             </Col>
-            <Col span={ 12 }>
+            {/* <Col span={ 12 }>
                 <Form.Item label={"Nome Fantasia"}>
                     {
                         getFieldDecorator('cliente.nomeFantasia', {
@@ -59,7 +59,7 @@ const TabDados = (props) => {
                         )
                     }
                 </Form.Item>
-            </Col>  
+            </Col>   */}
         </Row>
         <Row gutter={ 12 }>                         
             <Col span={ 4 }>

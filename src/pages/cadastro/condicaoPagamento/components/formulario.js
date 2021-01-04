@@ -149,18 +149,18 @@ class Formulario extends Component {
                                 }
                             </Form.Item>
                         </Col>  
-                        {/* <Col span={ 2 }>
+                        <Col span={ 2 }>
                             <Form.Item label={"Entrada"}>
                             {
                                 getFieldDecorator('condicaoPagamento.entrada', {
-                                    initialValue: entrada || true,
+                                    initialValue: isNil(entrada) ? true : entrada,
                                     valuePropName: 'checked'                                    
                                 })(
                                     <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
                                 )
                             }
                             </Form.Item>
-                        </Col>                                                   */}
+                        </Col>                                                  
                     </Row>
                     <Row style={{textAlign: "right"}}>
                         <Button type={ "primary"} 

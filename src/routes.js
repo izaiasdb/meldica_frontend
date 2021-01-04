@@ -11,7 +11,7 @@ import Login from './pages/login/login'
 import AlterarSenha from './pages/login/alterarSenha'
 import Dashboard from './pages/dashboard/container/dashboard'
 
-import MensagemDashboard from './pages/configuracao/mensagemDashboard/container/mensagemDashboard'
+import Configuracao from './pages/configuracao/container/configuracao'
 
 //************************************ Controle usuário ************************************/
 import Sistema from './pages/controleUsuario/sistema/container/sistema'
@@ -33,6 +33,7 @@ import Funcionario from './pages/cadastro/funcionario/container/funcionario'
 import Cargo from './pages/cadastro/cargo/container/cargo'
 import Transportadora from './pages/cadastro/transportadora/container/transportadora'
 import TabelaPreco from './pages/cadastro/tabelaPreco/container/tabelaPreco'
+import Empresa from './pages/cadastro/empresa/container/empresa'
 
 //************************************ Movimentação ************************************/
 import OrdemServico from './pages/movimentacao/ordemServico/container/ordemServico'
@@ -57,7 +58,7 @@ const Routes = () => (
             <PrivateRoute path='/dashboard' component={Dashboard} />
 
             {/************************************* Configuração *************************************/}
-            <PrivateRoute path='/configuracao/mensagemDashboard' component={MensagemDashboard} />
+            <PrivateRoute path='/configuracao' component={Configuracao} />
 
             {/************************************* Controle usuário *************************************/}
             <PrivateRoute path='/controle/sistema' component={Sistema} />
@@ -79,6 +80,7 @@ const Routes = () => (
             <PrivateRoute path='/cadastro/cargo' component={Cargo} />
             <PrivateRoute path='/cadastro/transportadora' component={Transportadora} />
             <PrivateRoute path='/cadastro/tabelaPreco' component={TabelaPreco} />
+            <PrivateRoute path='/cadastro/empresa' component={Empresa} />
 
             {/************************************* Movimentações *************************************/}
             <PrivateRoute path='/movimentacao/venda' component={OrdemServico} />     

@@ -90,13 +90,17 @@ class Formulario extends Component {
         let produtoItemsListForm = getFieldValue("ordemServico.produtoItemsList") || produtoItemsList
         let formaItemsListForm = getFieldValue("ordemServico.formaItemsList") || formaItemsList
 
-        let totalProduto = produtoItemsListForm.reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
+        let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
+        let totalPeso = produtoItemsListForm.reduce((acum,{peso, quantidade}) => acum + (Number(quantidade) * Number(peso)), 0);
+        let totalVolume = produtoItemsListForm.reduce((acum,{quantidade, quantidadeCaixa}) => acum + (Number(quantidade) / Number(quantidadeCaixa)), 0);
         let totalForma = formaItemsListForm.reduce((acum,{valor}) => acum + Number(valor), 0);
+        let faltaReceber = totalProduto - (valorPago ? valorPago : 0);
+        let faltaFormaPgto = totalProduto - totalForma;
 
         return (
             <Spin spinning={fetching}>
               <Form onSubmit={this.handleSubmit} >
-                <Card title={ getTitle(`${isEqual(stateView, VIEWING) ? 'Visualizando' : (this.isSaving() ? 'Cadastro' : 'Edição')}  Ordem de Serviço`) } >                    
+                <Card title={ getTitle(`${isEqual(stateView, VIEWING) ? 'Visualizando' : (this.isSaving() ? 'Cadastro' : 'Edição')} Pedido`) } >                    
                     { getFieldDecorator("ordemServico.id", { initialValue: id })(<Input type="hidden" />) }
                     { getFieldDecorator("ordemServico.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
                     { getFieldDecorator("ordemServico.statusNota", { initialValue: isNil(statusNota) ? 'A' : statusNota})(<Input type="hidden" />) }
@@ -113,15 +117,29 @@ class Formulario extends Component {
                             getCard(`${id ? 'Nota: ' + id : 'Status Nota'}`, '#6BD098', 'file-protect', statusNovaDescricao ? statusNovaDescricao : 'ABERTA', false)
                         }                                               
                         {
-                            getCard('Total Produtos', '#FBC658', 'code-sandbox', totalProduto)
+                            getCard('Total produtos', '#FBC658', 'code-sandbox', totalProduto)
                         }
                         {
-                            getCard('Forma Pgto.', '#6BD098', 'sketch', totalForma)
+                            getCard('Forma pgto.', '#6BD098', 'sketch', totalForma)
                         }
                         {
-                            getCard('Valor Recebido', '#DA120B', 'dollar', valorPago ? valorPago : 0)
+                            getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago : 0)
                         }
-                    </Row>                    
+                    </Row>   
+                    <Row gutter={12}>
+                        {
+                            getCard('Total peso', '#FBC658', 'arrow-down', totalPeso ? totalPeso : 0, false)
+                        } 
+                        {
+                            getCard('Total volume', '#FBC658', 'appstore', totalVolume, false)
+                        }  
+                        {
+                            getCard('Falta forma.', '#DA120B', 'sketch', faltaFormaPgto)
+                        }
+                        {
+                            getCard('Falta receber', '#DA120B', 'dollar', faltaReceber)
+                        }                                                                    
+                    </Row>                 
                     {/* <Divider /> */}
                     <Row>
                         <TabDados {...this.props} />
@@ -150,7 +168,7 @@ class Formulario extends Component {
                             type={"primary"}
                             disabled= {isEqual(stateView, VIEWING)}                             
                             htmlType={"submit"}>
-                            { this.isSaving() ? 'Salvar' : 'Atualizar' } Ordem de Serviço
+                            { this.isSaving() ? 'Salvar' : 'Atualizar' } Pedido
                         </Button>
                     </Row>
                 </Card>
@@ -186,7 +204,7 @@ class Formulario extends Component {
         this.props.form.validateFields((err, { ordemServico }) => {
             if (!err) {         
                 const { produtoItemsList = [], formaItemsList = [] } = ordemServico
-                let totalProduto = produtoItemsList.reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
+                let totalProduto = produtoItemsList.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
                 let totalForma = formaItemsList.reduce((acum,{valor}) => acum + Number(valor), 0);
             
                 if (totalProduto < totalForma){

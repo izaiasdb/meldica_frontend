@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import { Card, Row, Col, Input, Button, Select, Form, DatePicker, Divider } from 'antd'
 import { connect } from 'react-redux'
 import { get, isEmpty, isEqual } from 'lodash'
+import moment from 'moment'
+
 import { generateOptions, getTitle } from '../../../util/helper'
 import { hasAnyAuthority } from '../../../../services/authenticationService'
 import { openNotification } from '../../../util/notification'
 import Actions from '../redux'
 import { INSERTING } from '../../../util/state'
-
+ 
 const Option = Select.Option
 
 class Pesquisa extends Component {
@@ -85,9 +87,17 @@ class Pesquisa extends Component {
     };
 
     render() {
-        const { form, clienteList = [], fornecedorList = [], tipoTela} = this.props
+        const { form, 
+            clienteList = [], 
+            fornecedorList = [], 
+            planoContaList = [],
+            tipoTela} = this.props
         const { getFieldDecorator, getFieldValue } = form
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
+        
+        const primeiroDiaMes = moment().clone().startOf('month').format('DD/MM/YYYY');
+        const ultimoDiaMes   = moment().clone().endOf('month').format('DD/MM/YYYY');
+        const dateFormat = 'DD/MM/YYYY'
 
         return (
             <Form onSubmit={this.handleSubmit}>
@@ -96,10 +106,27 @@ class Pesquisa extends Component {
                 style={{ marginBottom: '10px' }}
                 >
                 <Row gutter={12}>
-                    {/* <Col span={4}>
-                        <Form.Item label={"Tipo Ordem de Serviço"}>
+                    <Col span={6}>
+                        <Form.Item label={"Período"} >
                             {
-                                getFieldDecorator('contasReceber.tipo', {
+                                getFieldDecorator('contasReceber.periodo', {
+                                    initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
+                                    rules: [{required: true, message: 'Por favor, informe um período.'}],
+                                })(
+                                    <DatePicker.RangePicker 
+                                        format={'DD/MM/YYYY'} 
+                                        moment='YYYY-MM-DD'
+                                        //defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+                                        //onChange={() => this.handleCleanTable()} 
+                                        />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={4}>
+                        <Form.Item label={"Tipo"}>
+                            {
+                                getFieldDecorator('contasReceber.status', {
                                     initialValue: null
                                 })(
                                     <Select showSearch
@@ -109,14 +136,16 @@ class Pesquisa extends Component {
                                         <Option key={1} value={null}>{"Selecione"}</Option>
                                         <Option key={2} value={'A'}>{"ABERTA"}</Option>
                                         <Option key={3} value={'P'}>{"PAGA"}</Option>
-                                        <Option key={3} value={'C'}>{"CANCELADA"}</Option>
-                                        <Option key={3} value={'G'}>{"GRÁTIS"}</Option>
+                                        {/* <Option key={3} value={'C'}>{"CANCELADA"}</Option>
+                                        <Option key={3} value={'G'}>{"GRÁTIS"}</Option> */}
                                     </Select>
                                 )
                             }
                         </Form.Item>
-                    </Col>   */}
-                    <Col span={ 16 }>
+                    </Col>                      
+                </Row>
+                <Row gutter={12}>
+                    <Col span={ 12 }>
                         { isEqual(tipoTela, 'RECEBER') &&
                         <Form.Item label={"Cliente"}>
                             {
@@ -153,7 +182,25 @@ class Pesquisa extends Component {
                             }
                         </Form.Item>
                         }                        
-                    </Col>                                                      
+                    </Col>  
+                    <Col span={ 12 }>
+                        <Form.Item label={"Plano de conta"}>
+                            {
+                                getFieldDecorator('contasReceber.planoConta.id', {
+                                    rules: [{required: false, message: 'Por favor, informe o cliente.'}],
+                                    //initialValue: isNil(cliente) ? null : cliente.id
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        {generateOptions(planoContaList)}
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                                                                          
                 </Row>
             </Card>
             </Form>

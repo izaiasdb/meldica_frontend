@@ -7,20 +7,18 @@ import { MESSAGE_ERROR_DEFAULT } from '../../util/messages'
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-   produtoInit: null,
-   produtoSuccess: ['dados'],
-   produtoPesquisar: ['produto'],
-   produtoFailure: ['message'],
-   produtoCleanMessage: null,
-   produtoSalvar: ['obj'],
-   produtoSetStateView: ['stateView'],
-   produtoSetProduto: ['produto'],
-   produtoCleanTable: null,
-   produtoSetProdutoItems: ['produtoItems'],
-   produtoPesquisarProduto: ['obj'],
+   empresaInit: null,
+   empresaSuccess: ['dados'],
+   empresaPesquisar: ['empresa'],
+   empresaFailure: ['message'],
+   empresaCleanMessage: null,
+   empresaSalvar: ['obj'],
+   empresaSetStateView: ['stateView'],
+   empresaSetEmpresa: ['empresa'],
+   empresaCleanTable: null,
 });
 
-export const ProdutoTypes = Types;
+export const EmpresaTypes = Types;
 export default Creators;
 
 /* ------------- Initial State ------------- */
@@ -29,7 +27,7 @@ export const INITIAL_STATE = Immutable({
     data:  {},
     fetching: false,
     stateView: SEARCHING,
-    produto: null,
+    empresa: null,
 });
 
 /* ------------- Reducers ------------- */
@@ -38,11 +36,11 @@ export const request = (state) => state.merge({ fetching: true })
 export const success = (state, { dados }) =>  {
 
   let data = {
-    message:               get(dados, ['message'], get(state.data, ['message'], [])),
+    message:               get(dados, ['message'], get(state.data, ['message'], [])),    
     list:                  get(dados, ['list'], get(state.data, ['list'], [])),
-    produtoList:           get(dados, ['produtoList'], get(state.data, ['produtoList'], [])),
-    unidadeMedidaList:     get(dados, ['unidadeMedidaList'], get(state.data, ['unidadeMedidaList'], [])),
     empresaList:           get(dados, ['empresaList'], get(state.data, ['empresaList'], [])),
+    ufList:                get(dados, ['ufList'], get(state.data, ['ufList'], [])),
+    municipioList:         get(dados, ['municipioList'], get(state.data, ['municipioList'], [])),
   }
 
    state = state.merge({fetching: false, data})
@@ -57,27 +55,25 @@ export const cleanMessage = (state) => state.merge({data: {...state.data, messag
 export const cleanTable = (state) => state.merge({data: {...state.data, list: []}})
 
 export const setStateView = (state, action) => state.merge({stateView: action.stateView})
-export const setProduto = (state, { produto }) => state.merge({produto})
+export const setEmpresa = (state, { empresa }) => state.merge({empresa})
 
-export const setProdutoItems = (state, { produtoItems }) => state.merge({
-  produto: {
-    ...state.produto,
-    produtoItems
+export const setEmpresaItems = (state, { empresaItems }) => state.merge({
+  empresa: {
+    ...state.empresa,
+    empresaItems
   }  
 })
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.PRODUTO_INIT]              : request,
-  [Types.PRODUTO_SUCCESS]           : success,
-  [Types.PRODUTO_PESQUISAR]         : request,
-  [Types.PRODUTO_FAILURE]           : failure,
-  [Types.PRODUTO_CLEAN_MESSAGE]     : cleanMessage,
-  [Types.PRODUTO_SALVAR]            : request,
-  [Types.PRODUTO_SET_STATE_VIEW]    : setStateView,
-  [Types.PRODUTO_SET_PRODUTO]       : setProduto,
-  [Types.PRODUTO_CLEAN_TABLE]       : cleanTable,
-  [Types.PRODUTO_SET_PRODUTO_ITEMS] : setProdutoItems,
-  [Types.PRODUTO_PESQUISAR_PRODUTO] : request,
+  [Types.EMPRESA_INIT]              : request,
+  [Types.EMPRESA_SUCCESS]           : success,
+  [Types.EMPRESA_PESQUISAR]         : request,
+  [Types.EMPRESA_FAILURE]           : failure,
+  [Types.EMPRESA_CLEAN_MESSAGE]     : cleanMessage,
+  [Types.EMPRESA_SALVAR]            : request,
+  [Types.EMPRESA_SET_STATE_VIEW]    : setStateView,
+  [Types.EMPRESA_SET_EMPRESA]       : setEmpresa,
+  [Types.EMPRESA_CLEAN_TABLE]       : cleanTable,
 })

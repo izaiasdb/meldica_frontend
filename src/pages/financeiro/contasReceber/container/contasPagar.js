@@ -12,9 +12,14 @@ import { SEARCHING, EDITING, INSERTING, VIEWING } from '../../../util/state'
 class ContasPagar extends Component {
     
     componentDidMount() {
-        this.props.init()
+        this.props.init();
+        // this.props.cleanTable();
         //this.props.setTipoTela('PAGAR')
     }
+
+    UNSAFE_componentWillMount() {
+        this.props.cleanTable();
+    }   
 
     render() {
         const { fetching, stateView } = this.props
@@ -54,6 +59,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     init: ()  => dispatch(Actions.contasReceberInitPagar()),
+    cleanTable: () => dispatch(Actions.contasReceberCleanTable()),
     //setTipoTela: (tipoTela) => dispatch(Actions.contasReceberSetTipoTela(tipoTela)),
 })
 

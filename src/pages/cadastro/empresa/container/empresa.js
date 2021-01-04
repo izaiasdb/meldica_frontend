@@ -1,30 +1,25 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Actions from '../redux'
 import { Spin } from 'antd'
 import { isEqual } from 'lodash'
-import Actions from '../redux'
 import Tabela from '../components/tabela'
 import Pesquisa from '../components/pesquisa'
 import Formulario from '../components/formulario'
 import { getHeader } from '../../../util/helper'
-import { SEARCHING, EDITING, INSERTING, VIEWING } from '../../../util/state'
+import { SEARCHING, EDITING, INSERTING } from '../../../util/state'
 
-class OrdemServico extends Component {
+class Empresa extends Component {
     
     componentDidMount() {
         this.props.init()
     }
 
-    UNSAFE_componentWillMount() {
-        this.props.cleanTable();
-        this.props.setStateView(SEARCHING)
-    }   
-
     render() {
         const { fetching, stateView } = this.props
         return (
             <Spin spinning={ fetching }>
-                { getHeader('Pedidos') }
+                { getHeader('Empresas') }
                 {
                     isEqual(stateView, SEARCHING) &&
                     <div>
@@ -33,7 +28,7 @@ class OrdemServico extends Component {
                     </div>
                 }
                 {
-                    (isEqual(stateView, INSERTING) || isEqual(stateView, EDITING) || isEqual(stateView, VIEWING)) &&
+                    (isEqual(stateView, INSERTING) || isEqual(stateView, EDITING)) &&
                     <div>
                         <Formulario />
                     </div>
@@ -45,20 +40,18 @@ class OrdemServico extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ...state.ordemServico.data,
-        fetching: state.ordemServico.fetching,
-        stateView: state.ordemServico.stateView,
-        ordemServico: state.ordemServico.ordemServico
+        ...state.empresa.data,
+        fetching: state.empresa.fetching,
+        stateView: state.empresa.stateView,
+        empresa: state.empresa.empresa
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    init: ()  => dispatch(Actions.ordemServicoInit()),
-    cleanTable: () => dispatch(Actions.ordemServicoCleanTable()),
-    setStateView: (stateView) => dispatch(Actions.ordemServicoSetStateView(stateView)),
+    init: ()  => dispatch(Actions.empresaInit()),
 })
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(OrdemServico)
+)(Empresa)

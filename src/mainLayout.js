@@ -9,8 +9,8 @@ import { getUser } from './services/authenticationService';
 import LoginActions from './pages/login/redux'
 import { generateOptions } from './pages/util/helper'
 import { Redirect, withRouter } from 'react-router-dom'
-// import AlterarSenha from './pages/alterarSenha/alterarSenha'
-// import AlterarSenhaActions from './pages/alterarSenha/redux'
+import AlterarSenha from './pages/alterarSenha/alterarSenha'
+import AlterarSenhaActions from './pages/alterarSenha/redux'
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu
@@ -153,7 +153,7 @@ class MainLayout extends Component {
         </Footer>
       </Layout>
 
-      {/* <AlterarSenha /> */}
+      <AlterarSenha />
       </div>
     );  
     }
@@ -172,7 +172,7 @@ const mapDispatchToProps = (dispatch) => ({
   cleanMessage: ()  => dispatch(LoginActions.loginCleanMessage()),
   logout: () => dispatch(LoginActions.loginLogout()),
   setUnidadeAtual: (unidadeAtual) => dispatch(LoginActions.loginSetUnidadeAtual(unidadeAtual)),
-  // setVisivel: (visibilidade) => dispatch(AlterarSenhaActions.alterarSenhaSetVisivel(visibilidade)),  
+  setVisivel: (visibilidade) => dispatch(AlterarSenhaActions.alterarSenhaSetVisivel(visibilidade)),  
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainLayout))

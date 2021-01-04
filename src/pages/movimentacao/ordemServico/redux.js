@@ -37,16 +37,22 @@ export const request = (state) => state.merge({ fetching: true })
 export const success = (state, { dados }) =>  {
 
   let data = {
-    list:                  get(dados, ['list'], get(state.data, ['list'], [])),
-    message:               get(dados, ['message'], get(state.data, ['message'], [])),
-    clienteList:           get(dados, ['clienteList'], get(state.data, ['clienteList'], [])),
-    funcionarioList:       get(dados, ['funcionarioList'], get(state.data, ['funcionarioList'], [])),    
-    produtoList:           get(dados, ['produtoList'], get(state.data, ['produtoList'], [])),
-    formaCondicaoList:     get(dados, ['formaCondicaoList'], get(state.data, ['formaCondicaoList'], [])),    
-    ufList:                get(dados, ['ufList'], get(state.data, ['ufList'], [])),
-    municipioList:         get(dados, ['municipioList'], get(state.data, ['municipioList'], [])),
-    transportadoraList:    get(dados, ['transportadoraList'], get(state.data, ['transportadoraList'], [])),
-    tabelaPrecoList:       get(dados, ['tabelaPrecoList'], get(state.data, ['tabelaPrecoList'], [])),
+    list:                       get(dados, ['list'], get(state.data, ['list'], [])),
+    message:                    get(dados, ['message'], get(state.data, ['message'], [])),
+    clienteList:                get(dados, ['clienteList'], get(state.data, ['clienteList'], [])),
+    funcionarioList:            get(dados, ['funcionarioList'], get(state.data, ['funcionarioList'], [])),    
+    produtoList:                get(dados, ['produtoList'], get(state.data, ['produtoList'], [])),
+    formaCondicaoList:          get(dados, ['formaCondicaoList'], get(state.data, ['formaCondicaoList'], [])),    
+    ufList:                     get(dados, ['ufList'], get(state.data, ['ufList'], [])),
+    municipioList:              get(dados, ['municipioList'], get(state.data, ['municipioList'], [])),
+    transportadoraList:         get(dados, ['transportadoraList'], get(state.data, ['transportadoraList'], [])),
+    tabelaPrecoList:            get(dados, ['tabelaPrecoList'], get(state.data, ['tabelaPrecoList'], [])),
+    tabelaPrecoProdutoList:     get(dados, ['tabelaPrecoProdutoList'], get(state.data, ['tabelaPrecoProdutoList'], [])),
+    clienteRazaoList:           get(dados, ['clienteRazaoList'], get(state.data, ['clienteRazaoList'], [])),
+    planoContaList:             get(dados, ['planoContaList'], get(state.data, ['planoContaList'], [])),
+    clienteEnderecoList:        get(dados, ['clienteEnderecoList'], get(state.data, ['clienteEnderecoList'], [])),
+    transportadoraEnderecoList: get(dados, ['transportadoraEnderecoList'], get(state.data, ['transportadoraEnderecoList'], [])),
+    configuracaoList:           get(dados, ['configuracaoList'], get(state.data, ['configuracaoList'], [])),
   }
 
    state = state.merge({fetching: false, data})

@@ -125,6 +125,28 @@ export default class TabForma extends React.Component {
         setFieldsValue(fields)
     }   
 
+    getExtra() {
+        const { viewStateTab } = this.state
+        const { stateView, } = this.props
+        return (
+            <>
+                <Button 
+                    type={"primary"} 
+                    onClick={() => this.adicionar()}
+                    disabled= { isEqual(stateView, VIEWING) }>
+                    { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } Forma de Pagamento
+                </Button>
+                &nbsp;
+                <Button 
+                    type={"primary"} 
+                    onClick={this.limpar} 
+                    disabled= {isEqual(stateView, VIEWING)}>
+                    Limpar
+                </Button>
+            </>
+        )
+    }
+
     render() {
         const { viewStateTab, formaCondicaoDescricao } = this.state
         const { 
@@ -155,7 +177,7 @@ export default class TabForma extends React.Component {
         const condicaoPagamentoNome = getFieldValue("osForma.formaCondicaoPagamento.condicaoPagamento.nome") || formaCondicaoDescricao
         
         return (<div>
-            <Card title={"Informe os dados referente as formas de pagamento da Ordem de Serviço"}>
+            <Card title={"Informe os dados referente as formas de pagamento da Ordem de Serviço"} extra={this.getExtra()}>
                 { getFieldDecorator("osForma.id", { initialValue: id })(<Input type="hidden" />) }
                 { getFieldDecorator("osForma.nomeFormaPagamento", { initialValue: formaPagamentoNome })(<Input type="hidden" />) }        
                 { getFieldDecorator("osForma.nomeCondicaoPagamento", { initialValue: condicaoPagamentoNome })(<Input type="hidden" />) }        
@@ -246,7 +268,7 @@ export default class TabForma extends React.Component {
                         </Form.Item>
                     </Col> 
                 </Row>             
-                <Row gutter = { 12 }>
+                {/* <Row gutter = { 12 }>
                     <Col span={ 5 }>
                         <Form.Item label={<span style={{height: '3px'}} />}>
                             {
@@ -271,7 +293,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                </Row>
+                </Row> */}
                 {/* <Row gutter={12}>
                     <Col span={ 24 }>
                         <Form.Item label={"Observação"} >

@@ -63,6 +63,7 @@ export default class TabProduto extends React.Component {
         osProduto.cancelado = false;
         osProduto.valorNf = produtoForm.valorNf;
         osProduto.quantidadeCaixa = produtoForm.quantidadeCaixa;
+        osProduto.peso = produtoForm.peso;
         osProduto.quantidade = qtdCaixaCalc * produtoForm.quantidadeCaixa;
 
         // if (this.state.produtoDescricao && this.state.produtoDescricao != ''){
@@ -103,19 +104,27 @@ export default class TabProduto extends React.Component {
     }
 
     handleChangeProduto = (idProduto) => {    
-        const { form: { getFieldsValue, setFieldsValue }, produtoList = [], } = this.props    
+        const { form: { getFieldsValue, setFieldsValue, getFieldValue }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props    
         const { osProduto } = getFieldsValue() 
-        let tabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")      
+        let produtoForm = produtoList.find(c=> c.id == idProduto);
+        let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")    
+        let valorVenda = produtoForm.valorVenda
         const { percDesconto } = osProduto 
 
-        let produtoForm = produtoList.find(c=> c.id == idProduto);
+        if (!isNil(idTabelaPreco)){
+            let tabelaPrecoProduto = tabelaPrecoProdutoList.find(c=> c.idTabelaPreco == idTabelaPreco && c.produto.id == idProduto);
 
-        let vValorDesconto = obterValorDesconto(percDesconto, produtoForm.valorVenda);
-        let vPercDesconto = obterPercentualDesconto(vValorDesconto, produtoForm.valorVenda);
+            if (!isNil(tabelaPrecoProduto)){
+                valorVenda = tabelaPrecoProduto.valor
+            }
+        }
+
+        let vValorDesconto = obterValorDesconto(percDesconto, valorVenda);
+        let vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVenda);
 
         setFieldsValue({osProduto: {
                 ...osProduto, 
-                valor: produtoForm.valorVenda,
+                valor: valorVenda,
                 desconto: vValorDesconto,
                 percDesconto: vPercDesconto,
                 quantidade: produtoForm.quantidadeCaixa,
@@ -171,6 +180,30 @@ export default class TabProduto extends React.Component {
         setFieldsValue(fields)
     }   
 
+    getExtra() {
+        const { viewStateTab } = this.state
+        const { stateView, form: { getFieldValue } } = this.props
+        let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
+        
+        return (
+            <>
+                <Button 
+                    type={"primary"} 
+                    onClick={() => this.adicionar()}
+                    disabled= {isEqual(stateView, VIEWING) || isNil(idTabelaPreco) }>
+                    { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } Produto
+                </Button>
+                &nbsp;
+                <Button 
+                    type={"primary"} 
+                    onClick={this.limpar} 
+                    disabled= {isEqual(stateView, VIEWING)}>
+                    Limpar
+                </Button>
+            </>
+        )
+    }
+
     render() {
         const { viewStateTab, produtoDescricao } = this.state
         const { 
@@ -187,6 +220,7 @@ export default class TabProduto extends React.Component {
         const id = getFieldValue("osProduto.id") || null    
         const idProduto = getFieldValue("osProduto.produto.id") || null
         const quantidade = getFieldValue("osProduto.quantidade") || null
+        let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id") || null
         let produtoListFilter = produtoList.filter(c=> c.tipo == 'P' || c.tipo == 'C')
         let totalProduto = 0;
         let produtoForm = null;  
@@ -203,7 +237,7 @@ export default class TabProduto extends React.Component {
         const produtoNome = getFieldValue("osProduto.produto.nome") || produtoDescricao
         
         return (<div>
-            <Card title={"Informe os dados referente aos produtos da Ordem de Serviço"}>
+            <Card title={"Informe os dados referente aos produtos da Ordem de Serviço"} extra={this.getExtra()}>
                 { getFieldDecorator("osProduto.id", { initialValue: id })(<Input type="hidden" />) }
                 { getFieldDecorator("osProduto.produto.nome", { initialValue: produtoNome })(<Input type="hidden" />) }     
                 { getFieldDecorator("osProduto.quantidadeCaixa", { initialValue: quantidadeCaixa })(<Input type="hidden" />) }    
@@ -344,13 +378,13 @@ export default class TabProduto extends React.Component {
                         </Form.Item>
                     </Col>                        
                 </Row>         
-                <Row gutter = { 12 }>
+                {/* <Row gutter = { 12 }>
                     <Col span={ 3 }>
                         <Form.Item label={<span style={{height: '3px'}} />}>
                             {
                                 <Button type={"primary"} 
                                     onClick={() => this.adicionar(form)}
-                                    disabled= {isEqual(stateView, VIEWING)}>
+                                    disabled= {isEqual(stateView, VIEWING) || isNil(idTabelaPreco) }>
                                     { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } Produto
                                 </Button>
                             }
@@ -367,7 +401,7 @@ export default class TabProduto extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                </Row>
+                </Row> */}
                 {/* <Row gutter={12}>
                     <Col span={ 24 }>
                         <Form.Item label={"Observação"} >
@@ -397,12 +431,15 @@ export default class TabProduto extends React.Component {
                                                 render={(produto = {}) => produto.descricao || produto.nome }/> */}                                            
                                     <Table.Column title={<center>Produto</center>} key={"nomeProduto"} dataIndex={"nomeProduto"} align={"center"} />  
                                     <Table.Column title={<center>Qtd. caixas</center>} key={"qtdCaixaCalc"} dataIndex={"qtdCaixaCalc"} align={"center"}
-                                        render={(text, record) => record.quantidade / record.quantidadeCaixa  } />                                                                              
+                                        render={(text, record) => record.quantidade / record.quantidadeCaixa  } />    
+                                    <Table.Column title={<center>Qtd. unidades</center>} key={"quantidade"} dataIndex={"quantidade"} align={"center"} />                                                                                                                    
                                     {/* <Table.Column title={<center>Qtd. (unds)</center>} key={"quantidade"} dataIndex={"quantidade"} align={"center"} /> */}
                                     <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
                                     <Table.Column title={<center>Valor</center>} key={"valor"} dataIndex={"valor"} align={"center"} />
                                     <Table.Column title={<center>Total</center>} key={"total"} dataIndex={"total"} align={"center"}
                                         render={(text, record) => record.quantidade * (record.valor - record.desconto) } />
+                                    <Table.Column title={<center>Bonificação</center>} key={"bonificacao"} dataIndex={"bonificacao"} align={"center"}
+                                        render={(text, record) => record.bonificacao ? 'SIM' : 'NÃO'} />    
                                     <Table.Column title={<center>Ações</center>} key={"actions"} 
                                                 dataIndex={"actions"} 
                                                 align={"center"} 

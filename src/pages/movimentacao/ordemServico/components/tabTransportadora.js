@@ -54,7 +54,9 @@ export default class TabTransportadora extends React.Component {
             ordemServicoTransportadora: {
                 id: null,
                 transportadora: { id: null},  
+                idTransportadoraDestino: null,
                 idTipoEndereco: 1,
+                ordem: 1,
                 cep: '',
                 logradouro: '',
                 bairro: '',
@@ -64,13 +66,15 @@ export default class TabTransportadora extends React.Component {
                 numero: ''
             }
         })
-        this.setStateView({ viewStateTab: INSERTING })
+        //this.setStateView({ viewStateTab: INSERTING })
+        this.setState({ viewStateTab: INSERTING }) 
     }
 
     prepareUpdate = (ordemServicoTransportadora) => {
         const { form: { setFieldsValue } } = this.props
         setFieldsValue({ ordemServicoTransportadora: {...ordemServicoTransportadora } } )
-        this.setStateView({ viewStateTab: EDITING })
+        //this.setStateView({ viewStateTab: EDITING })
+        this.setState({ viewStateTab: EDITING }) 
     }    
     
     remover = (index) => {
@@ -78,8 +82,25 @@ export default class TabTransportadora extends React.Component {
         let transportadoraItemsList = getFieldValue("ordemServico.transportadoraItemsList")
         transportadoraItemsList = transportadoraItemsList.filter((e, indexx) => indexx != index)
         setFieldsValue({ordemServico: { transportadoraItemsList }})
-        this.setStateView({ viewStateTab: INSERTING })
+        //this.setStateView({ viewStateTab: INSERTING })
+        this.setState({ viewStateTab: INSERTING }) 
     }
+
+    copiarEndereco = () => {
+        const {form: { getFieldsValue, setFieldsValue } } = this.props
+        const fields = getFieldsValue();
+        fields.ordemServicoTransportadora.idTipoEndereco = fields.ordemServico.idTipoEndereco;
+        fields.ordemServicoTransportadora.idTransportadoraDestino = null;
+        fields.ordemServicoTransportadora.cep = fields.ordemServico.cep;
+        fields.ordemServicoTransportadora.logradouro = fields.ordemServico.logradouro;
+        fields.ordemServicoTransportadora.numero = fields.ordemServico.numero;
+        fields.ordemServicoTransportadora.complemento = fields.ordemServico.complemento;
+        fields.ordemServicoTransportadora.bairro = fields.ordemServico.bairro;
+        fields.ordemServicoTransportadora.uf = fields.ordemServico.uf;
+        fields.ordemServicoTransportadora.cidade = fields.ordemServico.cidade;
+        setFieldsValue({...fields})
+        //this.setState({ viewStateTab: EDITING }) 
+    }  
 
     buscarPorCEP = () => {
         const { form: {getFieldsValue, setFieldsValue } } = this.props
@@ -92,7 +113,9 @@ export default class TabTransportadora extends React.Component {
             fields.ordemServicoTransportadora = {
                 id: null,
                 transportadora: { id: null},  
+                idTransportadoraDestino: null,
                 idTipoEndereco: 1,
+                ordem: 1,
                 cep: '',
                 logradouro: '',
                 bairro: '',
@@ -110,7 +133,9 @@ export default class TabTransportadora extends React.Component {
                 if(data.erro) {
                     fields.ordemServicoTransportadora = {
                         transportadora: { id: null},  
+                        idTransportadoraDestino: null,
                         idTipoEndereco: 1,
+                        ordem: 1,
                         id: null,
                         cep: '',
                         logradouro: '',
@@ -142,7 +167,9 @@ export default class TabTransportadora extends React.Component {
         fields.ordemServicoTransportadora = {
             id: null,
             transportadora: { id: null},  
-            idTipoEndereco: 1,          
+            idTransportadoraDestino: null,
+            idTipoEndereco: 1, 
+            ordem: 1,         
             cep: '',
             logradouro: '',
             bairro: '',
@@ -172,8 +199,41 @@ export default class TabTransportadora extends React.Component {
                     onClick={this.limpar} >
                     Limpar
                 </Button>
+                &nbsp;
+                <Button 
+                    type={"primary"} 
+                    onClick={this.copiarEndereco} 
+                    disabled= {isEqual(stateView, VIEWING)}>
+                    Copiar Endereço Cliente
+                </Button>  
             </>
         )
+    }
+
+    handleTransportadoraChange = (value, option) => {
+        const {form: { getFieldsValue, setFieldsValue, getFieldValue }, transportadoraEnderecoList = [] } = this.props
+
+        if (value) {
+            let objEnd = transportadoraEnderecoList.filter(c=> c.idTransportadora == value);
+
+            if (objEnd && objEnd.length > 0) {
+            //if (obj) {
+                const fields = getFieldsValue();
+                let obj = objEnd[0]
+
+                fields.ordemServicoTransportadora.idTipoEndereco = obj.idTipoEndereco;
+                fields.ordemServicoTransportadora.idTransportadoraDestino = null;
+                fields.ordemServicoTransportadora.cep = obj.cep;
+                fields.ordemServicoTransportadora.logradouro = obj.logradouro;
+                fields.ordemServicoTransportadora.numero = obj.numero;
+                fields.ordemServicoTransportadora.complemento = obj.complemento;
+                fields.ordemServicoTransportadora.bairro = obj.bairro;
+                fields.ordemServicoTransportadora.uf = obj.uf;
+                fields.ordemServicoTransportadora.cidade = obj.cidade;
+                setFieldsValue({...fields})
+                //this.setState({ viewStateTab: EDITING }) 
+            }
+        }
     }
 
     render() {
@@ -202,8 +262,8 @@ export default class TabTransportadora extends React.Component {
             <Card title={"Informe os dados referente ao Tranporte de Mercadorias."} extra={this.getExtra()}>
                 { getFieldDecorator("ordemServicoTransportadora.id", { initialValue: id })(<Input type="hidden" />) }
                 <Row gutter = { 12 }>
-                    <Col span={ 12 }>
-                        <Form.Item label={"Transportadora de Endereco"}>
+                    <Col span={ 10 }>
+                        <Form.Item label={"Transportadora"}>
                             {
                                 getFieldDecorator('ordemServicoTransportadora.transportadora.id', {
                                     initialValue: null
@@ -239,7 +299,29 @@ export default class TabTransportadora extends React.Component {
                                 )
                             }
                         </Form.Item>
+                    </Col>                      
+                    <Col span={ 10 }>
+                        <Form.Item label={"Transportadora Destino"}>
+                            {
+                                getFieldDecorator('ordemServicoTransportadora.idTransportadoraDestino', {
+                                    initialValue: null
+                                })(
+                                <Select 
+                                    showSearch
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    disabled= {isEqual(stateView, VIEWING)}
+                                    onChange={(value, option) => this.handleTransportadoraChange(value, option)}
+                                    >
+                                    {
+                                        generateOptions(transportadoraList)
+                                    }
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
                     </Col>                    
+                   
                 </Row>
                 <Row gutter = { 12 }>
                     <Col span={ 4 }>

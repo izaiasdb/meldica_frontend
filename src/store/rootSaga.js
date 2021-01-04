@@ -14,9 +14,9 @@ import * as Dashboard from '../pages/dashboard/sagas';
 import * as BuscaRapida from '../pages/buscaRapida/sagas';
 
 //************************************ Configuração ************************************/
-import { MensagemDashboardTypes } from '../pages/configuracao/mensagemDashboard/redux';
+import { ConfiguracaoTypes } from '../pages/configuracao/redux';
 
-import * as MensagemDashboard from '../pages/configuracao/mensagemDashboard/sagas';
+import * as Configuracao from '../pages/configuracao/sagas';
 
 //************************************ Controle usuário ************************************/
 import { SistemaTypes } from '../pages/controleUsuario/sistema/redux';
@@ -44,6 +44,7 @@ import { FuncionarioTypes } from '../pages/cadastro/funcionario/redux';
 import { CargoTypes } from '../pages/cadastro/cargo/redux';
 import { TransportadoraTypes } from '../pages/cadastro/transportadora/redux';
 import { TabelaPrecoTypes } from '../pages/cadastro/tabelaPreco/redux';
+import { EmpresaTypes } from '../pages/cadastro/empresa/redux';
 
 import * as UnidadeMedida from '../pages/cadastro/unidadeMedida/sagas';
 import * as Produto from '../pages/cadastro/produto/sagas';
@@ -57,6 +58,7 @@ import * as Funcionario from '../pages/cadastro/funcionario/sagas';
 import * as Cargo from '../pages/cadastro/cargo/sagas';
 import * as Transportadora from '../pages/cadastro/transportadora/sagas';
 import * as TabelaPreco from '../pages/cadastro/tabelaPreco/sagas';
+import * as Empresa from '../pages/cadastro/empresa/sagas';
 
 //************************************ Movimentações ************************************/
 import { OrdemServicoTypes } from '../pages/movimentacao/ordemServico/redux';
@@ -90,10 +92,10 @@ export default function * root () {
         takeLatest(BuscaRapidaTypes.BUSCA_RAPIDA_SEARCH, BuscaRapida.search, api),
 
         //************************************ Configuração ************************************/
-        takeLatest(MensagemDashboardTypes.MENSAGEM_DASHBOARD_INIT, MensagemDashboard.fetch, api),
-        takeLatest(MensagemDashboardTypes.MENSAGEM_DASHBOARD_SALVAR, MensagemDashboard.salvar, api),
-        takeLatest(MensagemDashboardTypes.MENSAGEM_DASHBOARD_PESQUISAR, MensagemDashboard.pesquisar, api),           
-        takeLatest(MensagemDashboardTypes.MENSAGEM_DASHBOARD_DELETAR, MensagemDashboard.salvar, api),       
+        takeLatest(ConfiguracaoTypes.CONFIGURACAO_INIT, Configuracao.fetch, api),
+        takeLatest(ConfiguracaoTypes.CONFIGURACAO_SALVAR, Configuracao.salvar, api),
+        takeLatest(ConfiguracaoTypes.CONFIGURACAO_PESQUISAR, Configuracao.pesquisar, api),           
+        //takeLatest(ConfiguracaoTypes.CONFIGURACAO_DELETAR, Configuracao.salvar, api),       
 
         //************************************ Controle usuário ************************************/
         takeLatest(SistemaTypes.SISTEMA_SALVAR, Sistema.salvar, api),
@@ -164,6 +166,10 @@ export default function * root () {
         takeLatest(TabelaPrecoTypes.TABELA_PRECO_SALVAR, TabelaPreco.salvar, api),
         takeLatest(TabelaPrecoTypes.TABELA_PRECO_PESQUISAR, TabelaPreco.pesquisar, api),
         takeLatest(TabelaPrecoTypes.TABELA_PRECO_PESQUISAR_PRODUTO, TabelaPreco.pesquisarProduto, api),   
+
+        takeLatest(EmpresaTypes.EMPRESA_INIT, Empresa.fetch, api),
+        takeLatest(EmpresaTypes.EMPRESA_SALVAR, Empresa.salvar, api),
+        takeLatest(EmpresaTypes.EMPRESA_PESQUISAR, Empresa.pesquisar, api),
 
         //************************************ Movimentação ************************************/
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_INIT, OrdemServico.fetch, api),

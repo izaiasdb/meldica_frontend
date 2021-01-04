@@ -19,13 +19,13 @@ class Tabela extends Component {
         if (length && length > 0) {
             return (
                 <div>
-                    <Workbook filename='produtos.xlsx'
+                    <Workbook filename='empresas.xlsx'
                         element={
                             <Tooltip title='Click para baixar os registros.' placement='left'>
                                 <Button type='primary' shape='circle' size='small' icon='download' />
                             </Tooltip>
                         }>
-                        <Sheet data={this.props.list || []} name='produtos'>
+                        <Sheet data={this.props.list || []} name='empresas'>
                             <Column label='Nome' value={row => row.nome ?  row.nome : '' } />
                             <Column label='Valor' value={row => row.valorVenda ? row.valorVenda : ''} />
                         </Sheet>
@@ -34,17 +34,17 @@ class Tabela extends Component {
         } 
     }
    
-    prepareUpdate = (produto) => {
+    prepareUpdate = (empresa) => {
         this.props.setStateView(EDITING)
-        this.props.setProduto(produto)
+        this.props.setEmpresa(empresa)
     }
 
     getAcoes = (record) => {
         return (
             <div>
-                {hasAnyAuthority("PRODUTOS_ALTERAR") && 
+                {hasAnyAuthority("CLIENTES_ALTERAR") && 
                 <>
-                <Tooltip title="Editar produto">
+                <Tooltip title="Editar empresa">
                     <Icon style={{cursor: 'pointer'}} type={ 'edit' } onClick={(e) => this.prepareUpdate(record)}></Icon>
                 </Tooltip>
                 <Divider type="vertical"/>
@@ -67,15 +67,6 @@ class Tabela extends Component {
                                     dataIndex={'nome'} 
                                     title={'Nome'} 
                                     align={ "left" }/>
-                    <Table.Column key={'tipoProdutoEnum'} 
-                                    dataIndex={'tipoProdutoEnum'} 
-                                    title={'Tipo Produto'} 
-                                    align={ "left" }
-                                    render={ (text, record) => text}/>
-                    <Table.Column key={'valorVenda'} 
-                                    dataIndex={'valorVenda'} 
-                                    title={'Valor Venda'} 
-                                    align={ "left" }/>
                     <Table.Column key={'acoes'} 
                                     dataIndex={'acoes'} 
                                     title={'Ações'} 
@@ -91,17 +82,17 @@ class Tabela extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ...state.produto.data,
-        fetching: state.produto.fetching,
-        stateView: state.produto.stateView,
-        produto: state.produto.visita
+        ...state.empresa.data,
+        fetching: state.empresa.fetching,
+        stateView: state.empresa.stateView,
+        empresa: state.empresa.visita
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    remover: (id) => dispatch(Actions.produtoRemover(id)),
-    setStateView: (stateView) => dispatch(Actions.produtoSetStateView(stateView)),
-    setProduto: (produto) => dispatch(Actions.produtoSetProduto(produto)),
+    remover: (id) => dispatch(Actions.empresaRemover(id)),
+    setStateView: (stateView) => dispatch(Actions.empresaSetStateView(stateView)),
+    setEmpresa: (empresa) => dispatch(Actions.empresaSetEmpresa(empresa)),
 })
 
 export default connect(

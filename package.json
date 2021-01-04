@@ -67,7 +67,7 @@
   "scripts": {
     "heroku-postbuild": "webpack --config webpack.prod.js -p --env.NODE_ENV=production",
     "start": "node ./server.js",
-    "devstart": "webpack-dev-server --watch --config webpack.dev.js --env.NODE_ENV=development",
+    "dev": "webpack-dev-server --watch --config webpack.dev.js --env.NODE_ENV=development",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "server": "node ./server.js"

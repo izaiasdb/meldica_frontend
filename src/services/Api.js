@@ -64,9 +64,10 @@ const create = () => {
 
   //************************************ Configuração ************************************/
 
-  const MensagemDashboard = {
-    salvar: (obj) => api.post('/mensagemdashboard/salvar', obj),
-    pesquisar: (obj) => api.post('/mensagemdashboard/pesquisar', {...obj}),      
+  const Configuracao = {
+    init: () => api.post('/configuracao/init'),
+    salvar: (obj) => api.post('/configuracao/salvar', obj),
+    pesquisar: (obj) => api.post('/configuracao/pesquisar', {...obj}),      
   }
 
   //************************************ Controle usuário ************************************/
@@ -174,6 +175,11 @@ const create = () => {
     salvar: (obj) => api.post('/tabelaPreco/salvar', obj),
   }
   
+  const Empresa = {
+    init: () => api.post('/empresa/init'),
+    pesquisar: (obj) => api.post('/empresa/pesquisar', obj),
+    salvar: (obj) => api.post('/empresa/salvar', obj),
+  } 
 
   //************************************ Movimentações ************************************/
   const OrdemServico = {
@@ -198,7 +204,7 @@ const create = () => {
     Login,
     AlterarSenha,
     Dashboard,
-    MensagemDashboard,
+    Configuracao,
     BuscaRapida,    
     Sistema,
     Modulo,
@@ -218,6 +224,7 @@ const create = () => {
     OrdemServico,
     Transportadora,
     TabelaPreco,
+    Empresa,
     ContasReceber,
   }
 }

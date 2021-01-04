@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Card, Row, Col, Input, Button, Select, Form, DatePicker, Divider } from 'antd'
 import { connect } from 'react-redux'
 import { get, isEmpty, isEqual } from 'lodash'
+import moment from 'moment'
+
 import { generateOptions, getTitle } from '../../../util/helper'
 import { hasAnyAuthority } from '../../../../services/authenticationService'
 import { openNotification } from '../../../util/notification'
@@ -78,14 +80,27 @@ class Pesquisa extends Component {
         });
     };
 
+    handleCleanTable() {
+        //const { cleanTable } = this.props
+        //cleanTable()
+    }
+
     render() {
-        const { form, clienteList = [], } = this.props
+        const { form, 
+            clienteList = [], 
+            funcionarioList = [],   
+            tabelaPrecoList = [],   
+        } = this.props
         const { getFieldDecorator, getFieldValue } = form
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
 
+        const primeiroDiaMes = moment().clone().startOf('month').format('DD/MM/YYYY');
+        const ultimoDiaMes   = moment().clone().endOf('month').format('DD/MM/YYYY');
+        const dateFormat = 'DD/MM/YYYY';
+
         return (
             <Form onSubmit={this.handleSubmit}>
-            <Card title={getTitle("Pesquisa Ordem de Serviço")}
+            <Card title={getTitle("Pesquisa Pedido")}
                 extra={this.getExtra()}
                 style={{ marginBottom: '10px' }}
                 >
@@ -103,9 +118,9 @@ class Pesquisa extends Component {
                         </Form.Item>
                     </Col>     */}
                     <Col span={4}>
-                        <Form.Item label={"Tipo Ordem de Serviço"}>
+                        <Form.Item label={"Tipo Pedido"}>
                             {
-                                getFieldDecorator('ordemServico.tipo', {
+                                getFieldDecorator('ordemServico.statusNota', {
                                     initialValue: null
                                 })(
                                     <Select showSearch
@@ -114,6 +129,8 @@ class Pesquisa extends Component {
                                     >
                                         <Option key={1} value={null}>{"Selecione"}</Option>
                                         <Option key={2} value={'A'}>{"ABERTA"}</Option>
+                                        <Option key={2} value={'N'}>{"CONCLUÍDA"}</Option>
+                                        <Option key={2} value={'O'}>{"APROVADA"}</Option>
                                         <Option key={3} value={'P'}>{"PAGA"}</Option>
                                         <Option key={3} value={'C'}>{"CANCELADA"}</Option>
                                         <Option key={3} value={'G'}>{"GRÁTIS"}</Option>
@@ -121,8 +138,27 @@ class Pesquisa extends Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>  
-                    <Col span={ 16 }>
+                    </Col> 
+                    <Col span={6}>
+                        <Form.Item label={"Período"} >
+                            {
+                                getFieldDecorator('ordemServico.periodoVenda', {
+                                    initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
+                                    rules: [{required: true, message: 'Por favor, informe um período.'}],
+                                })(
+                                    <DatePicker.RangePicker 
+                                        format={'DD/MM/YYYY'} 
+                                        moment='YYYY-MM-DD'
+                                        //defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+                                        //onChange={() => this.handleCleanTable()} 
+                                        />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row gutter={12}>                    
+                    <Col span={ 12 }>
                         <Form.Item label={"Cliente"}>
                             {
                                 getFieldDecorator('ordemServico.cliente.id', {
@@ -140,7 +176,45 @@ class Pesquisa extends Component {
                             }
                         </Form.Item>
                     </Col>                                                      
+                    <Col span={ 12 }>
+                        <Form.Item label={"Funcionário"}>
+                            {
+                                getFieldDecorator('ordemServico.funcionario.id', {
+                                    rules: [{required: false, message: 'Por favor, informe o funcionario.'}],
+                                    //initialValue: isNil(cliente) ? null : cliente.id
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        {generateOptions(funcionarioList)}
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                    </Col> 
                 </Row>
+                <Row gutter={12}>                    
+                    <Col span={ 12 }>
+                        <Form.Item label={"Tabela de preço"}>
+                            {
+                                getFieldDecorator('ordemServico.tabelaPreco.id', {
+                                    rules: [{required: false, message: 'Por favor, informe o cliente.'}],
+                                    //initialValue: isNil(cliente) ? null : cliente.id
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        {generateOptions(tabelaPrecoList)}
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                    </Col>        
+                </Row>           
             </Card>
             </Form>
         )

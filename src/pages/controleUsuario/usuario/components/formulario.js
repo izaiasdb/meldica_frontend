@@ -132,10 +132,10 @@ class Formulario extends Component {
             if (!err) {
                 const { checkedKeys = [], unidadeIds = [] } = this.props
 
-                if (isNil(checkedKeys) || checkedKeys.length == 0) {
-                    openNotification({tipo: 'warning', descricao: 'Por favor, informe pelo menos uma permissão de acesso.'})
-                    return
-                }                                                         
+                // if (isNil(checkedKeys) || checkedKeys.length == 0) {
+                //     openNotification({tipo: 'warning', descricao: 'Por favor, informe pelo menos uma permissão de acesso.'})
+                //     return
+                // }                                                         
 
                 this.props.setUsuario(usuario)
                 this.props.salvar(usuario)                

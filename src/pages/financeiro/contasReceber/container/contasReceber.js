@@ -13,8 +13,13 @@ class ContasReceber extends Component {
     
     componentDidMount() {
         this.props.init()
+        // this.props.cleanTable();
         //this.props.setTipoTela('RECEBER')
     }
+
+    UNSAFE_componentWillMount() {
+        this.props.cleanTable();
+    }   
 
     render() {
         const { fetching, stateView } = this.props
@@ -54,6 +59,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     init: ()  => dispatch(Actions.contasReceberInitReceber()),
+    cleanTable: () => dispatch(Actions.contasReceberCleanTable()),
     //setTipoTela: (tipoTela) => dispatch(Actions.contasReceberSetTipoTela(tipoTela)),
 })
 

@@ -77,7 +77,7 @@ class Tabela extends Component {
             <div>
                 {hasAnyAuthority("VENDAS_ALTERAR") && 
                 <>
-                    {record.statusNota == 'A' &&
+                    {record.statusNota == 'A' && //ABERTA
                     <Tooltip title="Editar Ordem Servico">
                         <Icon style={{cursor: 'pointer'}} 
                             type={ 'edit' } 
@@ -85,7 +85,7 @@ class Tabela extends Component {
                             onClick={(e) => this.setModo(record, EDITING)}></Icon>
                     </Tooltip>
                     }
-                    {record.statusNota == 'A' &&
+                    {record.statusNota == 'A' && //ABERTA
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Concluir Ordem Serviço">
@@ -96,7 +96,7 @@ class Tabela extends Component {
                     </Tooltip>
                     </>
                     }
-                    {record.statusNota == 'N' &&
+                    {record.statusNota == 'N' && hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
                     <>                
                     <Divider type="vertical"/>
                     <Tooltip title="Aprovar Ordem Serviço">
@@ -107,7 +107,7 @@ class Tabela extends Component {
                     </Tooltip>
                     </>
                     }  
-                    {record.statusNota == 'N' &&
+                    {record.statusNota == 'N' && hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Reabrir Ordem Serviço">
@@ -116,7 +116,29 @@ class Tabela extends Component {
                     </Tooltip>
                     </>
                     }
-                    {(record.statusNota == 'N' || record.statusNota == 'O' || record.statusNota == 'P') &&
+                    {record.statusNota == 'O' && hasAnyAuthority("VENDAS_-_LIBERAR_ALTERAR") && //APROVADA
+                    <>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Liberar mercadoria">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'car' } onClick={(e) => this.alterarStatusTabela(record, 'L', 'LIBERAR')}></Icon>
+                    </Tooltip>
+                    </>
+                    }
+                    {record.statusNota == 'L' && hasAnyAuthority("VENDAS_-_ENTREGAR_ALTERAR") && //LIBERADA
+                    <>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Entregar mercadoria">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'car' } onClick={(e) => this.alterarStatusTabela(record, 'E', 'ENTREGAR')}></Icon>
+                    </Tooltip>
+                    </>
+                    }                     
+                    {
+                    // CONCLUÍDA(N) APROVADA(O) PAGA(P) LIBERADA (L)
+                    (record.statusNota == 'N' || record.statusNota == 'O'
+                    // || record.statusNota == 'P' || record.statusNota == 'L'
+                    ) && hasAnyAuthority("VENDAS_-_CANCELAR_ALTERAR") &&
                     <>                
                     <Divider type="vertical"/>
                     <Tooltip title="Cancelar Ordem Serviço">
@@ -170,7 +192,7 @@ class Tabela extends Component {
                                     align={ "left" }/>
                     <Table.Column key={'funcionario.nome'} 
                                     dataIndex={'funcionario.nome'} 
-                                    title={'Funcionário'} 
+                                    title={'Vendedor'} 
                                     align={ "left" }/>                                    
                     <Table.Column key={'acoes'} 
                                     dataIndex={'acoes'} 
