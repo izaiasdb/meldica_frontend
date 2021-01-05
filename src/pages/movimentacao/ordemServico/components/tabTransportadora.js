@@ -27,7 +27,7 @@ export default class TabTransportadora extends React.Component {
         let ordemServicoTransportadora = getFieldValue("ordemServicoTransportadora")
         let error = false
         Object.keys(ordemServicoTransportadora).forEach(key => {
-            if(key != "id" && key != "complemento" && key != "cep" &&
+            if(key != "id" && key != "complemento" && key != "cep" && key != "idTransportadoraDestino" && 
                 (isNil(ordemServicoTransportadora[key]) || isEmpty(trim(ordemServicoTransportadora[key])))) {
                 openNotification({tipo: 'warning', descricao: `Por favor, preencha o(a) ${key.toUpperCase()}.`})
                 error = true
@@ -57,6 +57,7 @@ export default class TabTransportadora extends React.Component {
                 idTransportadoraDestino: null,
                 idTipoEndereco: 1,
                 ordem: 1,
+                valorFrete: 0,
                 cep: '',
                 logradouro: '',
                 bairro: '',
@@ -72,6 +73,7 @@ export default class TabTransportadora extends React.Component {
 
     prepareUpdate = (ordemServicoTransportadora) => {
         const { form: { setFieldsValue } } = this.props
+        this.limpar()
         setFieldsValue({ ordemServicoTransportadora: {...ordemServicoTransportadora } } )
         //this.setStateView({ viewStateTab: EDITING })
         this.setState({ viewStateTab: EDITING }) 
@@ -116,6 +118,7 @@ export default class TabTransportadora extends React.Component {
                 idTransportadoraDestino: null,
                 idTipoEndereco: 1,
                 ordem: 1,
+                valorFrete: 0,
                 cep: '',
                 logradouro: '',
                 bairro: '',
@@ -136,6 +139,7 @@ export default class TabTransportadora extends React.Component {
                         idTransportadoraDestino: null,
                         idTipoEndereco: 1,
                         ordem: 1,
+                        valorFrete: 0,
                         id: null,
                         cep: '',
                         logradouro: '',
@@ -169,7 +173,8 @@ export default class TabTransportadora extends React.Component {
             transportadora: { id: null},  
             idTransportadoraDestino: null,
             idTipoEndereco: 1, 
-            ordem: 1,         
+            ordem: 1,
+            valorFrete: 0,    
             cep: '',
             logradouro: '',
             bairro: '',
@@ -262,7 +267,7 @@ export default class TabTransportadora extends React.Component {
             <Card title={"Informe os dados referente ao Tranporte de Mercadorias."} extra={this.getExtra()}>
                 { getFieldDecorator("ordemServicoTransportadora.id", { initialValue: id })(<Input type="hidden" />) }
                 <Row gutter = { 12 }>
-                    <Col span={ 10 }>
+                    <Col span={ 9 }>
                         <Form.Item label={"Transportadora"}>
                             {
                                 getFieldDecorator('ordemServicoTransportadora.transportadora.id', {
@@ -282,12 +287,12 @@ export default class TabTransportadora extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                    <Col span={ 4 }>
+                    <Col span={ 3 }>
                         <Form.Item label={"Ordem Transportadora"}>
                             {
                                 getFieldDecorator('ordemServicoTransportadora.ordem', {
                                     //rules: [{required: true, message: 'Por favor, informe a quantidade em uma caixa.'}],
-                                    initialValue: null
+                                    initialValue: 1
                                 })(
                                     <InputNumber 
                                         style={{ width: "150" }}                                                         
@@ -299,8 +304,26 @@ export default class TabTransportadora extends React.Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>                      
-                    <Col span={ 10 }>
+                    </Col>  
+                    <Col span={ 3 }>
+                        <Form.Item label={"Valor frete"}>
+                            {
+                                getFieldDecorator('ordemServicoTransportadora.valorFrete', {
+                                    initialValue: 0
+                                })(
+                                    <InputNumber 
+                                        style={{ width: "150" }}
+                                        min={0}
+                                        precision={2}
+                                        step={1}
+                                        disabled= {isEqual(stateView, VIEWING)}
+                                    />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>  
+                                        
+                    <Col span={ 9 }>
                         <Form.Item label={"Transportadora Destino"}>
                             {
                                 getFieldDecorator('ordemServicoTransportadora.idTransportadoraDestino', {
@@ -461,58 +484,58 @@ export default class TabTransportadora extends React.Component {
                         </Form.Item>
                     </Col>
                 </Row>                          
-            </Card>
-            <Card title={getTitle("Endereços")} style={{marginTop: '10px'}}>
+            {/* </Card>
+            <Card title={getTitle("Endereços")} style={{marginTop: '10px'}}> */}
                 <Row gutter = { 12 }>
-                    <Form.Item>
-                        {
-                            getFieldDecorator('ordemServico.transportadoraItemsList', {
-                                initialValue: [...transportadoraItemsList],
-                                valuePropName: 'dataSource'
-                            })(
-                                <Table rowKey={(row) => row.id || row.cep} 
-                                    size={"small"} 
-                                    pagination={false}
-                                    bordered>
-                                    <Table.Column title={<center>Transportadora</center>} 
-                                                key={"transportadora.id"} 
-                                                dataIndex={"transportadora.id"} 
-                                                align={"center"} 
-                                                render={ (text) => transportadoraList.map(d => { if(d.id == text) return d.nome }) }
-                                                />                                        
-                                    <Table.Column title={<center>Tipo</center>} 
-                                                key={"idTipoEndereco"} 
-                                                dataIndex={"idTipoEndereco"} 
-                                                align={"center"} 
-                                                render={ (text) => tipoEndereco.map(d => { if(d.id == text) return d.descricao }) }
+                    <Form.Item label={"Transportadoras endereço"}>
+                    {
+                        getFieldDecorator('ordemServico.transportadoraItemsList', {
+                            initialValue: [...transportadoraItemsList],
+                            valuePropName: 'dataSource'
+                        })(
+                            <Table rowKey={(row) => row.id || row.cep} 
+                                size={"small"} 
+                                pagination={false}
+                                bordered>
+                                <Table.Column title={<center>Transportadora</center>} 
+                                            key={"transportadora.id"} 
+                                            dataIndex={"transportadora.id"} 
+                                            align={"center"} 
+                                            render={ (text) => transportadoraList.map(d => { if(d.id == text) return d.nome }) }
+                                            />                                        
+                                <Table.Column title={<center>Tipo</center>} 
+                                            key={"idTipoEndereco"} 
+                                            dataIndex={"idTipoEndereco"} 
+                                            align={"center"} 
+                                            render={ (text) => tipoEndereco.map(d => { if(d.id == text) return d.descricao }) }
+                                            />
+                                <Table.Column title={<center>CEP</center>} key={"cep"} dataIndex={"cep"} align={"center"} />
+                                <Table.Column title={<center>Logradouro</center>} key={"logradouro"} dataIndex={"logradouro"} align={"center"} />
+                                <Table.Column title={<center>Número</center>} key={"numero"} dataIndex={"numero"} align={"center"} />
+                                <Table.Column title={<center>Complemento</center>} key={"complemento"} dataIndex={"complemento"} align={"center"} />
+                                <Table.Column title={<center>Bairro</center>} key={"bairro"} dataIndex={"bairro"} align={"center"} />
+                                <Table.Column title={<center>Cidade</center>} key={"cidade"} dataIndex={"cidade"} align={"center"} 
+                                            render={(text, record) => `${text ? text : ''}${isNil(record.uf) ? '' : ' - '+record.uf}`}
                                                 />
-                                    <Table.Column title={<center>CEP</center>} key={"cep"} dataIndex={"cep"} align={"center"} />
-                                    <Table.Column title={<center>Logradouro</center>} key={"logradouro"} dataIndex={"logradouro"} align={"center"} />
-                                    <Table.Column title={<center>Número</center>} key={"numero"} dataIndex={"numero"} align={"center"} />
-                                    <Table.Column title={<center>Complemento</center>} key={"complemento"} dataIndex={"complemento"} align={"center"} />
-                                    <Table.Column title={<center>Bairro</center>} key={"bairro"} dataIndex={"bairro"} align={"center"} />
-                                    <Table.Column title={<center>Cidade</center>} key={"cidade"} dataIndex={"cidade"} align={"center"} 
-                                                render={(text, record) => `${text ? text : ''}${isNil(record.uf) ? '' : ' - '+record.uf}`}
-                                                    />
-                                    <Table.Column title={<center>Ações</center>} key={"actions"} 
-                                                dataIndex={"actions"} 
-                                                align={"center"} 
-                                                render={ (text, record, index) => {
-                                                    return <>
-                                                            {
-                                                                record.id && !isEqual(stateView, VIEWING) &&
-                                                                <Icon style={{cursor: 'pointer'}} type={ 'edit' } onClick={(e) => this.prepareUpdate(record)}></Icon> 
-                                                            }
-                                                            <Divider type="vertical"/>                                                    
-                                                            {   !isEqual(stateView, VIEWING) &&
-                                                                <Icon style={{cursor: 'pointer'}} type={"delete"} onClick={ () => this.remover(index) }/>
-                                                            }
-                                                        </>
-                                                    }
-                                                }/>
-                                </Table>
-                            )
-                        }
+                                <Table.Column title={<center>Ações</center>} key={"actions"} 
+                                            dataIndex={"actions"} 
+                                            align={"center"} 
+                                            render={ (text, record, index) => {
+                                                return <>
+                                                        {
+                                                            record.id && !isEqual(stateView, VIEWING) &&
+                                                            <Icon style={{cursor: 'pointer'}} type={ 'edit' } onClick={(e) => this.prepareUpdate(record)}></Icon> 
+                                                        }
+                                                        <Divider type="vertical"/>                                                    
+                                                        {   !isEqual(stateView, VIEWING) &&
+                                                            <Icon style={{cursor: 'pointer'}} type={"delete"} onClick={ () => this.remover(index) }/>
+                                                        }
+                                                    </>
+                                                }
+                                            }/>
+                            </Table>
+                        )
+                    }
                     </Form.Item>
                 </Row>
             </Card>

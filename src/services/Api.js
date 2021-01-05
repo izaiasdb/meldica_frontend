@@ -180,7 +180,14 @@ const create = () => {
     pesquisar: (obj) => api.post('/empresa/pesquisar', obj),
     salvar: (obj) => api.post('/empresa/salvar', obj),
   } 
+  
+  const GrupoProduto = {
+    init: () => api.post('/grupoProduto/init'),
+    pesquisar: (obj) => api.post('/grupoProduto/pesquisar', obj),
+    salvar: (obj) => api.post('/grupoProduto/salvar', obj),
+  } 
 
+  
   //************************************ Movimentações ************************************/
   const OrdemServico = {
     init: () => api.post('/ordemServico/init'),
@@ -225,6 +232,7 @@ const create = () => {
     Transportadora,
     TabelaPreco,
     Empresa,
+    GrupoProduto,
     ContasReceber,
   }
 }

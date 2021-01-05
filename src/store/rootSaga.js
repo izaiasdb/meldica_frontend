@@ -45,6 +45,8 @@ import { CargoTypes } from '../pages/cadastro/cargo/redux';
 import { TransportadoraTypes } from '../pages/cadastro/transportadora/redux';
 import { TabelaPrecoTypes } from '../pages/cadastro/tabelaPreco/redux';
 import { EmpresaTypes } from '../pages/cadastro/empresa/redux';
+import { GrupoProdutoTypes } from '../pages/cadastro/grupoProduto/redux';
+
 
 import * as UnidadeMedida from '../pages/cadastro/unidadeMedida/sagas';
 import * as Produto from '../pages/cadastro/produto/sagas';
@@ -59,6 +61,7 @@ import * as Cargo from '../pages/cadastro/cargo/sagas';
 import * as Transportadora from '../pages/cadastro/transportadora/sagas';
 import * as TabelaPreco from '../pages/cadastro/tabelaPreco/sagas';
 import * as Empresa from '../pages/cadastro/empresa/sagas';
+import * as GrupoProduto from '../pages/cadastro/grupoProduto/sagas';
 
 //************************************ Movimentações ************************************/
 import { OrdemServicoTypes } from '../pages/movimentacao/ordemServico/redux';
@@ -170,6 +173,10 @@ export default function * root () {
         takeLatest(EmpresaTypes.EMPRESA_INIT, Empresa.fetch, api),
         takeLatest(EmpresaTypes.EMPRESA_SALVAR, Empresa.salvar, api),
         takeLatest(EmpresaTypes.EMPRESA_PESQUISAR, Empresa.pesquisar, api),
+
+        takeLatest(GrupoProdutoTypes.GRUPO_PRODUTO_INIT, GrupoProduto.fetch, api),
+        takeLatest(GrupoProdutoTypes.GRUPO_PRODUTO_SALVAR, GrupoProduto.salvar, api),
+        takeLatest(GrupoProdutoTypes.GRUPO_PRODUTO_PESQUISAR, GrupoProduto.pesquisar, api),
 
         //************************************ Movimentação ************************************/
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_INIT, OrdemServico.fetch, api),

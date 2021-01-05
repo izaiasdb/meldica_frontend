@@ -113,12 +113,27 @@ class Formulario extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, { produto }) => {
             if (!err) {
-                const {tipo, produtoItemsList = []} = produto
+                const {tipo, produtoItemsList = [], valorVenda, quantidadeCaixa, peso } = produto
 
                 if (tipo == 'C' && (produtoItemsList && produtoItemsList.length == 0)) {
                     openNotification({tipo: 'warning', descricao: 'Produto do tipo "COMBINADO" precisa informar itens.'})    
                     return 
                 }
+
+                if (valorVenda == 0) {
+                    openNotification({tipo: 'warning', descricao: 'Valor venda precisa ser informado.'})    
+                    return 
+                }
+
+                if (peso == 0) {
+                    openNotification({tipo: 'warning', descricao: 'Peso precisa ser informado.'})    
+                    return 
+                }
+                
+                if (quantidadeCaixa == 0) {
+                    openNotification({tipo: 'warning', descricao: 'Qtd. caixa precisa ser informado.'})    
+                    return 
+                }                
 
                 this.props.setProduto(produto)
                 this.props.salvar(produto)

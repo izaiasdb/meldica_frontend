@@ -46,16 +46,16 @@ export function * salvar (api, { obj })  {
       obj.idUsuarioInclusao = id;
     }    
 
-    const checkedKeys = yield select((state) => state.usuario.checkedKeys )
-    const unidadeIds = yield select((state) => state.usuario.unidadeIds )
-    const { unidadeAtual: unidade } = yield select((state) => state.login.data.profile )
+    //const checkedKeys = yield select((state) => state.usuario.checkedKeys )
+    //const unidadeIds = yield select((state) => state.usuario.unidadeIds )
+    //const { unidadeAtual: unidade } = yield select((state) => state.login.data.profile )
     const response = yield call(api.Usuario.salvar, {
       ...obj, 
       dataInclusao: null, 
       dataAlteracao: null, 
-      permissoes: checkedKeys, 
-      unidadeIds: unidadeIds, 
-      unidade 
+      //permissoes: checkedKeys, 
+      //unidadeIds: unidadeIds, 
+      //unidade 
     })      
 
     if (response.ok) {

@@ -43,6 +43,7 @@ export const success = (state, { dados }) =>  {
     produtoList:           get(dados, ['produtoList'], get(state.data, ['produtoList'], [])),
     unidadeMedidaList:     get(dados, ['unidadeMedidaList'], get(state.data, ['unidadeMedidaList'], [])),
     empresaList:           get(dados, ['empresaList'], get(state.data, ['empresaList'], [])),
+    grupoProdutoList:      get(dados, ['grupoProdutoList'], get(state.data, ['grupoProdutoList'], [])),
   }
 
    state = state.merge({fetching: false, data})

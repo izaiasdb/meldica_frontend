@@ -12,14 +12,17 @@ const TabDados = (props) => {
     const { 
         form: { getFieldDecorator, getFieldValue },
         unidadeMedidaList = [],
+        grupoProdutoList = [],
         empresaList = [],
         produto = {}
     } = props
     const {
         unidadeMedida = {},
         empresa = {},
+        grupoProduto = {},
         nome,        
         ativo,
+        fracionado,
         tipo,
         valorCompra,
         valorVenda,
@@ -36,7 +39,7 @@ const TabDados = (props) => {
 
     return (<div>
         <Row gutter={ 12 }>
-            <Col span={ 16 }>
+            <Col span={ 14 }>
                 <Form.Item label={"Nome"}>
                     {
                         getFieldDecorator('produto.nome', {
@@ -70,7 +73,7 @@ const TabDados = (props) => {
                 </Form.Item>
                 </Tooltip>
             </Col> 
-            <Col span={ 4 }>            
+            <Col span={ 3 }>            
                 <Form.Item label={"Ativo"}>
                 {
                     getFieldDecorator('produto.ativo', {
@@ -81,7 +84,21 @@ const TabDados = (props) => {
                     )
                 }
                 </Form.Item>
-            </Col>                              
+            </Col>   
+            <Col span={ 3 }>            
+                <Tooltip title='Se o produto pode ser vendido por unidades.' placement='left'>
+                <Form.Item label={"Fracionado"}>
+                {
+                    getFieldDecorator('produto.fracionado', {
+                        initialValue: isNil(fracionado) ? true : fracionado,
+                        valuePropName: 'checked'                                    
+                    })(
+                        <Switch checkedChildren="SIM" unCheckedChildren="NÃO"/>
+                    )
+                }
+                </Form.Item>
+                </Tooltip>
+            </Col> 
         </Row>
         <Row gutter={ 12 }>
             <Col span={ 6 }>
@@ -101,7 +118,26 @@ const TabDados = (props) => {
                         )
                     }
                 </Form.Item>
-            </Col>        
+            </Col> 
+            <Col span={ 6 }>
+                <Form.Item label={"Grupo Produto"}>
+                    {
+                        getFieldDecorator('produto.grupoProduto.id', {
+                            rules: [{required: true, message: 'Por favor, informe o grupo do produto.'}],
+                            initialValue: grupoProduto && grupoProduto.id ? grupoProduto.id : null
+                        })(
+                        <Select showSearch
+                                optionFilterProp="children"
+                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                >
+                                <Option key={1} value={null}>{"Selecione"}</Option>
+                                {generateOptions(grupoProdutoList.map(({id, nome: descricao}) => ({id, descricao})))}
+                        </Select>
+                        )
+                    }
+                </Form.Item>
+            </Col>             
+                   
             <Col span={ 6 }>
                 <Form.Item label={"Empresa"}>
                     {
@@ -120,8 +156,10 @@ const TabDados = (props) => {
                     }
                 </Form.Item>
             </Col> 
+        </Row>
+        <Row gutter={ 12 }>            
             <Col span={ 3 }>
-                <Form.Item label={"Valor Compra"}>
+                <Form.Item label={"Valor Compra(Unit.)"}>
                     {
                         getFieldDecorator('produto.valorCompra', {
                             rules: [{required: true, message: 'Por favor, informe o valor de compra.'}],
@@ -137,7 +175,7 @@ const TabDados = (props) => {
                 </Form.Item>
             </Col> 
             <Col span={ 3 }>
-                <Form.Item label={"Valor Venda"}>
+                <Form.Item label={"Valor Venda(Unit.)"}>
                     {
                         getFieldDecorator('produto.valorVenda', {
                             rules: [{required: true, message: 'Por favor, informe o valor de venda.'}],
@@ -153,7 +191,7 @@ const TabDados = (props) => {
                 </Form.Item>
             </Col>
             <Col span={ 3 }>
-                <Form.Item label={"Valor Produção"}>
+                <Form.Item label={"Valor Produção(Unit.)"}>
                     {
                         getFieldDecorator('produto.valorProducao', {
                             rules: [{required: true, message: 'Por favor, informe o valor de produção.'}],
@@ -172,7 +210,7 @@ const TabDados = (props) => {
                 </Form.Item>
             </Col>  
             <Col span={ 3 }>
-                <Form.Item label={"Valor NF"}>
+                <Form.Item label={"Valor NF(Unit.)"}>
                     {
                         getFieldDecorator('produto.valorNf', {
                             rules: [{required: true, message: 'Por favor, informe o valor de NF.'}],
@@ -186,9 +224,7 @@ const TabDados = (props) => {
                         )
                     }
                 </Form.Item>
-            </Col>                         
-        </Row>
-        <Row gutter={ 12 }>     
+            </Col>  
             <Col span={ 5 }>
                 <Tooltip title='Máximo de desconto que pode ser dado para esse produto.' placement='left'>                            
                 <Form.Item label={"Perc.(%) máx. de Desconto"}>
@@ -207,10 +243,11 @@ const TabDados = (props) => {
                     }
                 </Form.Item>
                 </Tooltip>
-            </Col>                 
- 
+            </Col>                                   
+        </Row>
+        <Row gutter={ 12 }>     
             <Col span={ 3 }>
-                <Form.Item label={"Peso"}>
+                <Form.Item label={"Peso(Unit. em g)"}>
                     {
                         getFieldDecorator('produto.peso', {
                             rules: [{required: true, message: 'Por favor, informe o peso.'}],
@@ -226,7 +263,7 @@ const TabDados = (props) => {
                 </Form.Item>
             </Col> 
             <Col span={ 3 }>
-                <Form.Item label={"Estoque"}>
+                <Form.Item label={"Estoque(Unit.)"}>
                     {
                         getFieldDecorator('produto.qtdEstoque', {
                             rules: [{ required: false }],
@@ -247,7 +284,7 @@ const TabDados = (props) => {
                     {
                         getFieldDecorator('produto.quantidadeCaixa', {
                             rules: [{required: true, message: 'Por favor, informe a quantidade em uma caixa.'}],
-                            initialValue: quantidadeCaixa || 0
+                            initialValue: quantidadeCaixa || 12
                         })(
                             <InputNumber style={{ width: "150" }}                                                         
                             min={0}

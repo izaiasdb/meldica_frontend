@@ -9,7 +9,8 @@ export const getCard = (nome, color, icon, value, formata = true) => {
         currency: 'BRL',
       });          
     
-    return (<Col span={6}>
+    return (
+    // <Col span={4}>
         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} id="cardVenda" >
             <Meta avatar = { 
                     <Avatar size={72} 
@@ -29,5 +30,6 @@ export const getCard = (nome, color, icon, value, formata = true) => {
                   }
             />
         </Card>
-    </Col>)
+    // </Col>
+    )
 }   

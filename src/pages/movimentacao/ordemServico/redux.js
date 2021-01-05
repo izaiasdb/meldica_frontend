@@ -17,6 +17,7 @@ const { Types, Creators } = createActions({
    ordemServicoSetOrdemServico: ['ordemServico'],
    ordemServicoCleanTable: null,
    ordemServicoAlterarStatus: ['obj'],
+   ordemServicoSetDrawerVisivel: ['drawerVisivel'],
 });
 
 export const OrdemServicoTypes = Types;
@@ -29,6 +30,7 @@ export const INITIAL_STATE = Immutable({
     fetching: false,
     stateView: SEARCHING,
     ordemServico: null,
+    drawerVisivel: false,
 });
 
 /* ------------- Reducers ------------- */
@@ -78,6 +80,8 @@ export const setOrdemServicoItems = (state, { ordemServicoItems }) => state.merg
 
 export const finalizarOrdemServico = (state, { ordemServico }) => state.merge({fetching: true})
 
+export const setDrawerVisivel = (state, { drawerVisivel }) => state.merge( { drawerVisivel } )
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -91,4 +95,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ORDEM_SERVICO_SET_ORDEM_SERVICO] : setOrdemServico,
   [Types.ORDEM_SERVICO_CLEAN_TABLE]       : cleanTable,
   [Types.ORDEM_SERVICO_ALTERAR_STATUS]    : request,
+  [Types.ORDEM_SERVICO_SET_DRAWER_VISIVEL]: setDrawerVisivel,
 })

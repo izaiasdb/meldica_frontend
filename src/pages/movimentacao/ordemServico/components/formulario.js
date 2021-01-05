@@ -12,6 +12,7 @@ import TabTransportadora from './tabTransportadora'
 import { getTitle } from '../../../util/helper'
 import { openNotification } from '../../../util/notification'
 import { getCard } from '../../../util/miniCard'
+import DrawerTabelaPreco from './drawerTabelaPreco'
 
 const { Meta } = Card
 
@@ -74,7 +75,7 @@ class Formulario extends Component {
 
     render() {
         const { activeKey } = this.state
-        const { fetching, ordemServico, form, stateView} = this.props
+        const { fetching, ordemServico, form, stateView, drawerVisivel} = this.props
         const { getFieldDecorator, getFieldValue } = form
         const { 
             id, 
@@ -82,20 +83,26 @@ class Formulario extends Component {
             statusNota, 
             statusNovaDescricao, 
             cancelado, 
+            estoqueGerado,
+            formaGerada,
             valorPago, 
             desconto,
-            produtoItemsList = [], formaItemsList = []
+            produtoItemsList = [], formaItemsList = [], transportadoraItemsList = []
         } = isNil(ordemServico) ? {} : ordemServico
 
+        let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
         let produtoItemsListForm = getFieldValue("ordemServico.produtoItemsList") || produtoItemsList
         let formaItemsListForm = getFieldValue("ordemServico.formaItemsList") || formaItemsList
+        let transportadoraItemsListForm = getFieldValue("ordemServico.transportadoraItemsList") || transportadoraItemsList
 
         let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
         let totalPeso = produtoItemsListForm.reduce((acum,{peso, quantidade}) => acum + (Number(quantidade) * Number(peso)), 0);
         let totalVolume = produtoItemsListForm.reduce((acum,{quantidade, quantidadeCaixa}) => acum + (Number(quantidade) / Number(quantidadeCaixa)), 0);
         let totalForma = formaItemsListForm.reduce((acum,{valor}) => acum + Number(valor), 0);
+        let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
         let faltaReceber = totalProduto - (valorPago ? valorPago : 0);
-        let faltaFormaPgto = totalProduto - totalForma;
+        let totalNota = (totalProduto ? totalProduto : 0) +  (totalFrete ? totalFrete : 0);
+        let faltaFormaPgto = totalNota - totalForma;
 
         return (
             <Spin spinning={fetching}>
@@ -106,43 +113,71 @@ class Formulario extends Component {
                     { getFieldDecorator("ordemServico.statusNota", { initialValue: isNil(statusNota) ? 'A' : statusNota})(<Input type="hidden" />) }
                     { getFieldDecorator("ordemServico.cancelado", { initialValue: isNil(cancelado) ? false : cancelado})(<Input type="hidden" />) }
                     { getFieldDecorator("ordemServico.valorPago", { initialValue: isNil(valorPago) ? 0 : valorPago})(<Input type="hidden" />) }                    
-                    { getFieldDecorator("ordemServico.desconto", { initialValue: isNil(desconto) ? 0 : desconto})(<Input type="hidden" />) }                    
+                    { getFieldDecorator("ordemServico.desconto", { initialValue: isNil(desconto) ? 0 : desconto})(<Input type="hidden" />) }       
+                    { getFieldDecorator("ordemServico.estoqueGerado", { initialValue: isNil(estoqueGerado) ? false : estoqueGerado})(<Input type="hidden" />) }             
+                    { getFieldDecorator("ordemServico.formaGerada", { initialValue: isNil(formaGerada) ? false : formaGerada})(<Input type="hidden" />) }             
                     <Row gutter={12}>
                         {/* { id &&
                             this.getCard('Número Nota', '#6BD098', 'file-protect', id, false)
                             //dollar, global, solution, safety
                             //#51BCDA
                         } */}
+                        <Col span={ 4 }>
                         {
                             getCard(`${id ? 'Nota: ' + id : 'Status Nota'}`, '#6BD098', 'file-protect', statusNovaDescricao ? statusNovaDescricao : 'ABERTA', false)
-                        }                                               
+                        }   
+                        </Col>          
+                        <Col span={ 4 }>
                         {
                             getCard('Total produtos', '#FBC658', 'code-sandbox', totalProduto)
                         }
+                        </Col>
+                        <Col span={ 4 }>
                         {
                             getCard('Forma pgto.', '#6BD098', 'sketch', totalForma)
                         }
+                        </Col>
+                        <Col span={ 4 }>
+                        {
+                            getCard('Total frete', '#6BD098', 'car', totalFrete ? totalFrete : 0)
+                        }
+                        </Col>
+                        <Col span={ 4 }>
+                        {
+                            getCard('Total nota', '#6BD098', 'dollar', totalNota ? totalNota : 0)
+                        }
+                        </Col>                            
+                        <Col span={ 4 }>
                         {
                             getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago : 0)
                         }
+                        </Col>                        
                     </Row>   
                     <Row gutter={12}>
+                        <Col span={ 4 }>
                         {
                             getCard('Total peso', '#FBC658', 'arrow-down', totalPeso ? totalPeso : 0, false)
                         } 
+                        </Col>
+                        <Col span={ 4 }>
                         {
                             getCard('Total volume', '#FBC658', 'appstore', totalVolume, false)
                         }  
+                        </Col>
+                        <Col span={ 4 }>
                         {
                             getCard('Falta forma.', '#DA120B', 'sketch', faltaFormaPgto)
                         }
+                        </Col>
+                        <Col span={ 4 }>
                         {
                             getCard('Falta receber', '#DA120B', 'dollar', faltaReceber)
-                        }                                                                    
+                        }   
+                        </Col>                                                                 
                     </Row>                 
                     {/* <Divider /> */}
                     <Row>
-                        <TabDados {...this.props} />
+                        <TabDados {...this.props} showDrawer={this.showDrawer} onCloseDrawer={this.onCloseDrawer} />
                     </Row>
                     <Row>
                         <TabEndereco {...this.props} />
@@ -173,6 +208,7 @@ class Formulario extends Component {
                     </Row>
                 </Card>
             </Form>
+            <DrawerTabelaPreco {...this.props} onCloseDrawer={this.onCloseDrawer} drawerVisivel={drawerVisivel} idTabelaPreco={idTabelaPreco} />
         </Spin>
         )
     }
@@ -199,16 +235,25 @@ class Formulario extends Component {
         this.props.form.resetFields()
     }
 
+    showDrawer = () => {
+        this.props.setDrawerVisivel(true);
+    };
+
+    onCloseDrawer = () => {
+        this.props.setDrawerVisivel(false);
+    };
+
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, { ordemServico }) => {
             if (!err) {         
-                const { produtoItemsList = [], formaItemsList = [] } = ordemServico
+                const { produtoItemsList = [], formaItemsList = [], transportadoraItemsListForm = [] } = ordemServico
                 let totalProduto = produtoItemsList.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
                 let totalForma = formaItemsList.reduce((acum,{valor}) => acum + Number(valor), 0);
+                let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
             
-                if (totalProduto < totalForma){
-                    openNotification({tipo: 'warning', descricao: 'Total de forma de pagamento não pode ser maior que o total de produtos.'})
+                if ((totalProduto + totalFrete) < totalForma){
+                    openNotification({tipo: 'warning', descricao: 'Total de forma de pagamento não pode ser menor que o total de produtos e frete.'})
                     return 
                 }                
 
@@ -229,7 +274,8 @@ const mapStateToProps = (state) => {
         ...state.ordemServico.data,
         ordemServico: state.ordemServico.ordemServico,
         stateView: state.ordemServico.stateView,
-        fetching: state.ordemServico.fetching,   
+        fetching: state.ordemServico.fetching,  
+        drawerVisivel: state.ordemServico.drawerVisivel,  
         profile: state.login.data.profile,      
     }
 }
@@ -240,6 +286,7 @@ const mapDispatchToProps = (dispatch) => ({
     setStateView: (stateView) => dispatch(Actions.ordemServicoSetStateView(stateView)),
     setOrdemServico: (ordemServico) => dispatch(Actions.ordemServicoSetOrdemServico(ordemServico)),    
     salvar: (obj) => dispatch(Actions.ordemServicoSalvar(obj)),
+    setDrawerVisivel: (drawerVisivel) => dispatch(Actions.ordemServicoSetDrawerVisivel(drawerVisivel)),
 })
 
 const wrapedFormulario = Form.create()(Formulario)

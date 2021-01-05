@@ -31,6 +31,8 @@ const rootReducer = combineReducers({
     transportadora: require('../pages/cadastro/transportadora/redux').reducer,
     tabelaPreco: require('../pages/cadastro/tabelaPreco/redux').reducer,
     empresa: require('../pages/cadastro/empresa/redux').reducer,
+    grupoProduto: require('../pages/cadastro/grupoProduto/redux').reducer,
+    
 
     //************************************ Movimentação ************************************/      
     ordemServico: require('../pages/movimentacao/ordemServico/redux').reducer,    

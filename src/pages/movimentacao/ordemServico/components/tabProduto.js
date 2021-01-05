@@ -35,7 +35,7 @@ export default class TabProduto extends React.Component {
             return null
         }     
 
-        let recordInserido = produtoItemsList.find(c=> c.produto.id == produto.id)
+        let recordInserido = produtoItemsList.find(c=> c.produto.id == produto.id && c.bonificacao == bonificacao)
 
         if ((isEqual(viewStateTab, INSERTING) && recordInserido) || 
             (isEqual(viewStateTab, EDITING) && recordInserido && recordInserido.id != id)) {
@@ -64,7 +64,10 @@ export default class TabProduto extends React.Component {
         osProduto.valorNf = produtoForm.valorNf;
         osProduto.quantidadeCaixa = produtoForm.quantidadeCaixa;
         osProduto.peso = produtoForm.peso;
-        osProduto.quantidade = qtdCaixaCalc * produtoForm.quantidadeCaixa;
+
+        if (!produtoForm.fracionado) {
+            osProduto.quantidade = qtdCaixaCalc * produtoForm.quantidadeCaixa;
+        }
 
         // if (this.state.produtoDescricao && this.state.produtoDescricao != ''){
         //     produto.nome = this.state.produtoDescricao              
@@ -182,7 +185,8 @@ export default class TabProduto extends React.Component {
 
     getExtra() {
         const { viewStateTab } = this.state
-        const { stateView, form: { getFieldValue } } = this.props
+        const { stateView, form: { getFieldValue }, ordemServico = {}, } = this.props
+        const { estoqueGerado } = ordemServico || {}        
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
         
         return (
@@ -190,7 +194,7 @@ export default class TabProduto extends React.Component {
                 <Button 
                     type={"primary"} 
                     onClick={() => this.adicionar()}
-                    disabled= {isEqual(stateView, VIEWING) || isNil(idTabelaPreco) }>
+                    disabled= {isEqual(stateView, VIEWING) || isNil(idTabelaPreco) || estoqueGerado == true }>
                     { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } Produto
                 </Button>
                 &nbsp;
@@ -225,13 +229,15 @@ export default class TabProduto extends React.Component {
         let totalProduto = 0;
         let produtoForm = null;  
         let percDescontoMaximo = 0;      
-        let quantidadeCaixa = 0;     
+        let quantidadeCaixa = 0;
+        let fracionado = false;     
 
         if (idProduto && quantidade) {        
             produtoForm = produtoList.find(c=> c.id == idProduto);
             totalProduto = produtoForm.valorVenda * quantidade;
             percDescontoMaximo = produtoForm.percDescontoMaximo;
             quantidadeCaixa = produtoForm.quantidadeCaixa;
+            fracionado = produtoForm.fracionado;
         }
 
         const produtoNome = getFieldValue("osProduto.produto.nome") || produtoDescricao
@@ -287,7 +293,7 @@ export default class TabProduto extends React.Component {
                                 })(
                                     <InputNumber 
                                         style={{ width: "150" }} 
-                                        disabled
+                                        disabled = {!fracionado}
                                         min={0}
                                         precision={0}
                                         step={1} 
@@ -309,7 +315,8 @@ export default class TabProduto extends React.Component {
                                         max={percDescontoMaximo} //5
                                         onChange={(value) => this.onChangePercDesconto(value)}                                
                                         //value={percentualDesconto ? percentualDesconto : 0}
-                                        disabled= {isEqual(stateView, VIEWING)}
+                                        //disabled= {isEqual(stateView, VIEWING)}
+                                        disabled
                                     />
                                 )
                             }

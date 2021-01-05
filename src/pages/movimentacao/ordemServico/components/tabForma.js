@@ -127,13 +127,14 @@ export default class TabForma extends React.Component {
 
     getExtra() {
         const { viewStateTab } = this.state
-        const { stateView, } = this.props
+        const { stateView, ordemServico = {}, } = this.props
+        const { formaGerada } = ordemServico || {}
         return (
             <>
                 <Button 
                     type={"primary"} 
                     onClick={() => this.adicionar()}
-                    disabled= { isEqual(stateView, VIEWING) }>
+                    disabled= { isEqual(stateView, VIEWING) || formaGerada == true }>
                     { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } Forma de Pagamento
                 </Button>
                 &nbsp;
@@ -177,7 +178,7 @@ export default class TabForma extends React.Component {
         const condicaoPagamentoNome = getFieldValue("osForma.formaCondicaoPagamento.condicaoPagamento.nome") || formaCondicaoDescricao
         
         return (<div>
-            <Card title={"Informe os dados referente as formas de pagamento da Ordem de Serviço"} extra={this.getExtra()}>
+            <Card title={"Informe os dados referente as formas de pagamento do pedido"} extra={this.getExtra()}>
                 { getFieldDecorator("osForma.id", { initialValue: id })(<Input type="hidden" />) }
                 { getFieldDecorator("osForma.nomeFormaPagamento", { initialValue: formaPagamentoNome })(<Input type="hidden" />) }        
                 { getFieldDecorator("osForma.nomeCondicaoPagamento", { initialValue: condicaoPagamentoNome })(<Input type="hidden" />) }        

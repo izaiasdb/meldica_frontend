@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, DatePicker, InputNumber, Switch, Card  } from 'antd'
+import { Row, Col, Form, Select, Input, DatePicker, InputNumber, Switch, Card, Button, Icon  } from 'antd'
 import { generateOptions } from '../../../util/helper'
 import { isNil, isEqual } from 'lodash'
 import moment from 'moment'
@@ -42,6 +42,7 @@ const TabDados = (props) => {
         planoContaList = [],
         configuracaoList = [],
         stateView,
+        showDrawer,
     } = props
     const {
         cliente = {},
@@ -53,7 +54,9 @@ const TabDados = (props) => {
         dataLiberacao,
         dataPrevisaoEntrega,
         dataEntrega,
-        observacao,        
+        observacao, 
+        nfMeldica,
+        nfCosmetico,       
     } = ordemServico || {}
 
     const idCliente = getFieldValue("ordemServico.cliente.id") || (isNil(cliente) ? null : cliente.id)
@@ -127,7 +130,7 @@ const TabDados = (props) => {
                             })(
                                 <DatePicker 
                                     style = {{ width: '98%' }}
-                                    disabled//= {isEqual(stateView, VIEWING)}
+                                    disabled= {isEqual(stateView, VIEWING)}
                                     format={'DD/MM/YYYY'}/>
                             )
                         }
@@ -143,7 +146,8 @@ const TabDados = (props) => {
                             })(
                                 <DatePicker 
                                     style = {{ width: '98%' }}
-                                    disabled
+                                    //disabled
+                                    disabled= {isEqual(stateView, VIEWING)}
                                     format={'DD/MM/YYYY'}/>
                             )
                         }
@@ -192,10 +196,22 @@ const TabDados = (props) => {
                             )
                         }
                     </Form.Item>
-                </Col>                
+                </Col>  
+                <Col span={ 4 }>
+                    <Form.Item label={"NF Méldica"}>
+                        {
+                            getFieldDecorator('ordemServico.nfMeldica', {
+                                rules: [{ required: false, whitespace: true, message: 'Por favor, informe o nome.' }],
+                                initialValue: nfMeldica || null
+                            })(
+                                <Input maxLength={ 20 } onInput={toInputUppercase} />
+                            )
+                        }
+                    </Form.Item>
+                </Col>                               
             </Row>   
             <Row gutter={12}>
-                <Col span={ 10 }>
+                <Col span={ 8 }>
                     <Form.Item label={"Vendedor"}>
                         {
                             getFieldDecorator('ordemServico.funcionario.id', {
@@ -215,7 +231,7 @@ const TabDados = (props) => {
                         } 
                     </Form.Item>
                 </Col> 
-                <Col span={ 10 }>
+                <Col span={ 8 }>
                     <Form.Item label={"Tabela de Preço"}>
                         {
                             getFieldDecorator('ordemServico.tabelaPreco.id', {
@@ -234,7 +250,24 @@ const TabDados = (props) => {
                             )
                         }
                     </Form.Item>
-                </Col>                
+                </Col> 
+                <Col span={ 4 }>
+                    <Button type="primary" onClick={showDrawer} style={{ marginTop: "40px" }}>
+                        <Icon type="plus" /> Ver tabela Preço
+                    </Button>
+                </Col>
+                <Col span={ 4 }>
+                    <Form.Item label={"NF Cosmético"}>
+                        {
+                            getFieldDecorator('ordemServico.nfCosmetico', {
+                                rules: [{ required: false, whitespace: true, message: 'Por favor, informe o nome.' }],
+                                initialValue: nfCosmetico || null
+                            })(
+                                <Input maxLength={ 20 } onInput={toInputUppercase} />
+                            )
+                        }
+                    </Form.Item>
+                </Col>                               
             </Row>   
             <Row gutter={12}>
                 <Col span={24}>
