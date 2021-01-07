@@ -34,11 +34,15 @@ class TabDados extends Component {
             state,
             form: { getFieldDecorator },
             perfis = [],
+            funcionarioList = [],
             profile = {},
             form: { getFieldValue },
             usuario = {}
         } = this.props
-        const { nome, ativo, login, senha, email, dataInclusao, perfil = {}, unidade = {} } = usuario || {}
+        const { nome, ativo, login, senha, email, dataInclusao, perfil = {}, 
+            unidade = {},
+            funcioario = {},
+        } = usuario || {}
         const { id : idPerfil } = isNil(perfil) ? {} : perfil
         const { id : idUnidade } = isNil(unidade) ? {} : unidade
         const { perfil : { id : idPerfilLocal } } = getUser()
@@ -67,6 +71,23 @@ class TabDados extends Component {
                             }                               
                         </Form.Item>
                     </Col>
+                    <Col span={ 8 }>                        
+                        <Form.Item label={"Funcionário"}>
+                            {
+                                getFieldDecorator('usuario.funcionario.id', {
+                                    rules: [{required: true, message: 'Informe o perfil.'}],
+                                    initialValue: isNil(funcioario) ? null : funcioario.id
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}                                            >
+                                        <Select.Option key={1} value={null}>{"Selecione"}</Select.Option>
+                                        {generateOptions(funcionarioList.map(({id, nome: descricao}) => ({id, descricao})))}
+                                </Select>
+                                )
+                            }                               
+                        </Form.Item>
+                    </Col>                    
                     {/* <Col span={ 4 }>
                         <Button type={ "primary"} 
                                 onClick={this.copiarPermissoes}

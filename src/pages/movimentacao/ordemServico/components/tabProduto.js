@@ -135,16 +135,80 @@ export default class TabProduto extends React.Component {
     }
 
     handleChangeProduto = (idProduto) => {    
+        // const { form: { getFieldsValue, setFieldsValue, getFieldValue }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props    
+        // const { osProduto } = getFieldsValue() 
+        // let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")    
+        
+        // let produto = produtoList.find(c=> c.id == idProduto);
+        // let valorVendaUnidade = produto.valorVendaUnidade
+        // let valorVendaCaixa = produto.valorVendaCaixa
+        // let fracionado = produto.fracionado
+        
+        // const { percDesconto, quantidadeUnidade, quantidadeCaixa } = osProduto 
+
+        // if (!isNil(idTabelaPreco)){
+        //     let tabelaPrecoProduto = tabelaPrecoProdutoList.find(c=> c.idTabelaPreco == idTabelaPreco && c.produto.id == idProduto);
+
+        //     if (!isNil(tabelaPrecoProduto)){
+        //         valorVendaUnidade = tabelaPrecoProduto.valorUnidade
+        //         valorVendaCaixa = tabelaPrecoProduto.valorCaixa
+        //     }
+        // }
+
+        // let vValorDesconto = 0;
+        // let vPercDesconto = 0;
+        // let totalProduto = 0;
+
+        // if (fracionado) {
+        //     vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade);
+        //     vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaUnidade);
+        //     //totalProduto = produto.valorVendaUnidade * quantidade;
+        // } else {
+        //     vValorDesconto = obterValorDesconto(percDesconto, valorVendaCaixa);
+        //     vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaCaixa);
+        //     //totalProduto = produto.valorVendaUnidade * (produto.quantidadeCaixa * quantidade); 
+        // }
+        
+        // totalProduto = this.getTotal(idProduto, quantidadeUnidade ? quantidadeUnidade : quantidadeCaixa * produto.quantidadeCaixa, 
+        //     quantidadeCaixa, vValorDesconto, fracionado, valorVendaUnidade, valorVendaCaixa);
+
+        // setFieldsValue({osProduto: {
+        //         ...osProduto, 
+        //         quantidadeUnidade: produto.quantidadeCaixa,
+        //         quantidadeCaixa: quantidadeCaixa,
+        //         valorUnidade: valorVendaUnidade,
+        //         valorCaixa: valorVendaCaixa,
+        //         desconto: vValorDesconto,
+        //         percDesconto: vPercDesconto,
+        //         // desconto: 0,
+        //         // percDesconto: 0,
+        //         qtdEstoqueCaixa: produto.qtdEstoqueCaixa,
+        //         qtdEstoqueUnidade: produto.qtdEstoqueUnidade,
+        //         fracionado: fracionado,
+        //         total: totalProduto,
+        //     } 
+        // })
+
+        // this.setState({produtoDescricao: produto.nome})
+
         const { form: { getFieldsValue, setFieldsValue, getFieldValue }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props    
         const { osProduto } = getFieldsValue() 
-        let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")    
-        
-        let produto = produtoList.find(c=> c.id == idProduto);
-        let valorVendaUnidade = produto.valorVendaUnidade
-        let valorVendaCaixa = produto.valorVendaCaixa
-        let fracionado = produto.fracionado
-        
         const { percDesconto, quantidadeUnidade, quantidadeCaixa } = osProduto 
+
+        this.alterandoValores(idProduto, percDesconto)
+    }  
+
+    alterandoValores = (idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa) => {
+        const { form: { getFieldsValue, setFieldsValue, getFieldValue }, 
+            produtoList = [], tabelaPrecoProdutoList = [] 
+        } = this.props 
+        const { osProduto } = getFieldsValue()
+
+        let produto = produtoList.find(c=> c.id == idProduto);
+        let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id") 
+        let fracionado = produto.fracionado
+        let valorVendaUnidade = produto.valorVendaUnidade
+        let valorVendaCaixa = produto.valorVendaCaixa   
 
         if (!isNil(idTabelaPreco)){
             let tabelaPrecoProduto = tabelaPrecoProdutoList.find(c=> c.idTabelaPreco == idTabelaPreco && c.produto.id == idProduto);
@@ -156,21 +220,18 @@ export default class TabProduto extends React.Component {
         }
 
         let vValorDesconto = 0;
-        let vPercDesconto = 0;
+        //let vPercDesconto = 0;
         let totalProduto = 0;
 
         if (fracionado) {
             vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade);
-            vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaUnidade);
-            //totalProduto = produto.valorVendaUnidade * quantidade;
+            //vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaUnidade);
+            totalProduto = (valorVendaUnidade - vValorDesconto) * quantidadeUnidade;
         } else {
             vValorDesconto = obterValorDesconto(percDesconto, valorVendaCaixa);
-            vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaCaixa);
-            //totalProduto = produto.valorVendaUnidade * (produto.quantidadeCaixa * quantidade); 
+            //vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaCaixa);
+            totalProduto = (valorVendaCaixa - vValorDesconto) * quantidadeCaixa; 
         }
-        
-        totalProduto = this.getTotal(idProduto, quantidadeUnidade ? quantidadeUnidade : quantidadeCaixa * produto.quantidadeCaixa, 
-            quantidadeCaixa, vValorDesconto);
 
         setFieldsValue({osProduto: {
                 ...osProduto, 
@@ -179,9 +240,8 @@ export default class TabProduto extends React.Component {
                 valorUnidade: valorVendaUnidade,
                 valorCaixa: valorVendaCaixa,
                 desconto: vValorDesconto,
-                percDesconto: vPercDesconto,
-                // desconto: 0,
-                // percDesconto: 0,
+                //percDesconto: vPercDesconto,
+                percDesconto: percDesconto,
                 qtdEstoqueCaixa: produto.qtdEstoqueCaixa,
                 qtdEstoqueUnidade: produto.qtdEstoqueUnidade,
                 fracionado: fracionado,
@@ -190,18 +250,29 @@ export default class TabProduto extends React.Component {
         })
 
         this.setState({produtoDescricao: produto.nome})
-    }  
+    }
 
-    getTotal = (idProduto, quantidadeUnidade, quantidadeCaixa, desconto) => {
-        const { form: { getFieldsValue, }, produtoList = [], } = this.props
-        //const { osProduto } = getFieldsValue() 
-        //const { quantidade } = osProduto 
+    getTotal = (idProduto, quantidadeUnidade, quantidadeCaixa, desconto, fracionado, valorVendaUnidade, valorVendaCaixa) => {
+        const { form: { getFieldsValue, }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props
+        const { osProduto } = getFieldsValue() 
+        //const { tabelaPrecoProduto } = osProduto 
 
         let produto = produtoList.find(c=> c.id == idProduto);
+        let tabelaPrecoProduto = null;
         let totalProduto = 0;
+
+        // if (tabelaPrecoProduto) {
+        //     tabelaPrecoProduto = tabelaPrecoProdutoList.find(c=> c.id == idProduto);
+        // }
 
         if (produto.fracionado) {
             totalProduto = (produto.valorVendaUnidade - desconto) * quantidadeUnidade;
+
+            // if (tabelaPrecoProduto) {
+                
+            // } else {
+            //     totalProduto = (produto.valorVendaUnidade - desconto) * quantidadeUnidade;
+            // }
         } else {
             totalProduto = (produto.valorVendaCaixa - desconto) * quantidadeCaixa; 
         }
@@ -209,23 +280,26 @@ export default class TabProduto extends React.Component {
         return totalProduto;
     }
     
-    onChangePercDesconto = (percDesconto) => {    
+    onChangePercDesconto = (percDesconto) => {   
         const { form: { getFieldsValue, setFieldsValue } } = this.props    
         const { osProduto } = getFieldsValue()     
-        const { produto: {id: idProduto}, quantidadeUnidade, quantidadeCaixa, valorUnidade, valorCaixa, fracionado } = osProduto
+        const { produto: {id: idProduto}, quantidadeUnidade, quantidadeCaixa
+        //, valorUnidade, valorCaixa, fracionado 
+        } = osProduto
+       
+        // let valorDesconto = 0;
 
-        let valorDesconto = 0;
+        // if (fracionado) {
+        //     valorDesconto = obterValorDesconto(percDesconto, valorUnidade);
+        // } else {
+        //     valorDesconto = obterValorDesconto(percDesconto, valorCaixa);
+        // }
 
-        if (fracionado) {
-            valorDesconto = obterValorDesconto(percDesconto, valorUnidade);
-        } else {
-            valorDesconto = obterValorDesconto(percDesconto, valorCaixa);
-        }
-
-        setFieldsValue({osProduto: {...osProduto, 
-            desconto: valorDesconto, 
-            total: this.getTotal(idProduto, quantidadeUnidade, quantidadeCaixa, valorDesconto) 
-        } })        
+        // setFieldsValue({osProduto: {...osProduto, 
+        //     desconto: valorDesconto, 
+        //     total: this.getTotal(idProduto, quantidadeUnidade, quantidadeCaixa, valorDesconto) 
+        // } })       
+        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa) 
     }  
     
     onChangeDesconto = (desconto) => {    
@@ -241,38 +315,43 @@ export default class TabProduto extends React.Component {
             percDesconto = obterPercentualDesconto(desconto, valorCaixa);
         }
 
-        setFieldsValue({osProduto: {...osProduto, 
-            percDesconto: percDesconto,
-            total: this.getTotal(idProduto, quantidadeUnidade, quantidadeCaixa, desconto) 
-        } })        
+        // setFieldsValue({osProduto: {...osProduto, 
+        //     percDesconto: percDesconto,
+        //     total: this.getTotal(idProduto, quantidadeUnidade, quantidadeCaixa, desconto) 
+        // } })   
+        
+        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa) 
     }   
     
     onChangeQtdCaixa = (qtdCaixa) => {    
         const { form: { getFieldsValue, setFieldsValue }, produtoList = [], } = this.props    
         const { osProduto } = getFieldsValue()     
-        const { produto: {id: idProduto}, quantidadeCaixa, desconto } = osProduto
+        const { produto: {id: idProduto}, quantidadeCaixa, quantidadeUnidade, desconto, percDesconto } = osProduto
 
-        let produto = produtoList.find(c=> c.id == idProduto); //osProduto.produto.id);
-        let quantidadeUnidade = qtdCaixa * produto.quantidadeCaixa;
+        // let produto = produtoList.find(c=> c.id == idProduto); //osProduto.produto.id);
+        // let quantidadeUnidade = qtdCaixa * produto.quantidadeCaixa;
                 
-        setFieldsValue({osProduto: {...osProduto, 
-            quantidadeUnidade: quantidadeUnidade,
-            total: this.getTotal(idProduto, quantidadeUnidade, qtdCaixa, desconto)
-        } })        
+        // setFieldsValue({osProduto: {...osProduto, 
+        //     quantidadeUnidade: quantidadeUnidade,
+        //     total: this.getTotal(idProduto, quantidadeUnidade, qtdCaixa, desconto)
+        // } })  
+        
+        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, qtdCaixa)
     }
 
     onChangeQtdUnidade = (quantidadeUnidade) => {    
         const { form: { getFieldsValue, setFieldsValue }, produtoList = [], } = this.props    
         const { osProduto } = getFieldsValue()     
-        const { produto: {id: idProduto} , desconto} = osProduto
+        const { produto: {id: idProduto}, percDesconto, quantidadeCaixa} = osProduto
 
-        let produto = produtoList.find(c=> c.id == osProduto.produto.id);
-        let qtdCaixa = quantidadeUnidade / produto.quantidadeCaixa;
+        // let produto = produtoList.find(c=> c.id == osProduto.produto.id);
+        // let qtdCaixa = quantidadeUnidade / produto.quantidadeCaixa;
                 
-        setFieldsValue({osProduto: {...osProduto, 
-            quantidadeCaixa: qtdCaixa,
-            total: this.getTotal(idProduto, quantidadeUnidade, qtdCaixa, desconto)
-        } })        
+        // setFieldsValue({osProduto: {...osProduto, 
+        //     quantidadeCaixa: qtdCaixa,
+        //     total: this.getTotal(idProduto, quantidadeUnidade, qtdCaixa, desconto)
+        // } })
+        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa)     
     } 
 
     limpar = () => {

@@ -19,7 +19,7 @@ export const getTitleTable = (text) => <span style={{ fontSize: '14px', fontWeig
 
 export const getHeader = (text) => 
 <div>
-    <Card style={{ backgroundColor: '#5AB57E', height: 50}}>
+    <Card style={{ backgroundColor: '#5AB57E', height: 30}}>
     {/* <Card style={{ backgroundColor: '#fc6836', height: 50}}>              */}
         {/* <h1 style={{ color: '#fff'}}>{props.titulo}</h1> */}
         <Breadcrumb separator="" style={{ color: '#fff'}}>

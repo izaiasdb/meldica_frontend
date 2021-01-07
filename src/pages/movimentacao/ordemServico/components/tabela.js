@@ -7,7 +7,7 @@ import Pagination from '../../../util/Pagination'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import { getTitle } from '../../../util/helper'
-import { hasAnyAuthority } from '../../../../services/authenticationService'
+import { hasAnyAuthority, getUser } from '../../../../services/authenticationService'
 import Workbook from 'react-excel-workbook'
 import { openNotification } from '../../../util/notification'
 import { isEqual, isEmpty, get } from 'lodash'
@@ -73,12 +73,21 @@ class Tabela extends Component {
     }    
 
     getAcoes = (record) => {
+        console.log(getUser())
+        const { funcionario = {}} = getUser()
+        const { id: idFuncionario } = funcionario || {}
+
         return (
             <div>
-                {hasAnyAuthority("VENDAS_ALTERAR") && 
+                {
                 <>
-                    {
-                    (record.statusNota == 'A' || record.statusNota == 'R' || record.statusNota == 'L') && //ABERTA
+                    {hasAnyAuthority("VENDAS_ALTERAR") && (
+                    // Se for o vendedor que fez ou se estiver em 'A'
+                    (record.funcionario.id == idFuncionario &&  record.statusNota == 'A') || // Só perfil vendedor
+                    // Se for o vendedor que fez ou se estiver em 'R'
+                    (record.funcionario.id == idFuncionario && record.statusNota == 'R' ) || 
+                    // Se tiver permissão para 'REABRIR', sinal que é da LOGÍSTICA
+                    (record.statusNota == 'L' && hasAnyAuthority("VENDAS_-_REABRIR_ALTERAR")) ) &&
                     <Tooltip title="Editar Pedido">
                         <Icon style={{cursor: 'pointer'}} 
                             type={ 'edit' } 
@@ -87,7 +96,7 @@ class Tabela extends Component {
                     </Tooltip>
                     }
                     {
-                    record.statusNota == 'A' && //ABERTA
+                    record.funcionario.id == idFuncionario && record.statusNota == 'A' && hasAnyAuthority("VENDAS_-_LOGISTICA_ALTERAR") &&
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Logística">
@@ -99,8 +108,8 @@ class Tabela extends Component {
                     </>
                     }
                     {
-                    record.statusNota == 'L' && //LÓGISTICA
-                    // record.statusNota == 'N' && hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
+                    record.statusNota == 'L' && hasAnyAuthority("VENDAS_-_REABRIR_ALTERAR") && //LÓGISTICA
+                    // record.statusNota == 'N'  //CONCLUÍDA
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Reabrir Pedido">
@@ -112,7 +121,7 @@ class Tabela extends Component {
                     </>
                     }                    
                     {
-                    record.statusNota == 'R' && // REABERTA
+                    record.statusNota == 'R' && hasAnyAuthority("VENDAS_-_REABRIR_ALTERAR") && // REABERTA
                     // record.statusNota != 'C' && record.formaGerada == false &&
                     // hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
                     <>                

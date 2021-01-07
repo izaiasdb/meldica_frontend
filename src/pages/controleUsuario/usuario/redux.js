@@ -50,6 +50,7 @@ export const success = (state, { dados }) =>  {
     unidades:        get(dados, ['unidades'], get(state.data, ['unidades'], [])),
     permissoes:      get(dados, ['permissoes'], get(state.data, ['permissoes'], [])),
     usuariounidades: get(dados, ['usuariounidades'], get(state.data, ['usuariounidades'], [])),
+    funcionarioList: get(dados, ['funcionarioList'], get(state.data, ['funcionarioList'], [])),
   }
 
   state = state.merge({fetching: false, data})
