@@ -26,7 +26,7 @@ export default class TabForma extends React.Component {
 
         let { osForma } = getFieldsValue(['osForma'])
         let formaItemsList = getFieldValue("ordemServico.formaItemsList")
-        let { id, formaCondicaoPagamento, valor } = osForma      
+        let { id, formaCondicaoPagamento, valor, desconto, total } = osForma      
         
         if(!(formaCondicaoPagamento && formaCondicaoPagamento.id && valor)){
             openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes a forma.'})
@@ -57,8 +57,8 @@ export default class TabForma extends React.Component {
         osForma.nomeCondicaoPagamento = formaCondicaoForm.condicaoPagamento.nome;
         osForma.cancelado = false;
         osForma.gerado = false;
-        //osForma.desconto = 0;
-        osForma.percDesconto = formaCondicaoForm.percDesconto;
+        osForma.percDescontoFormaCondicao = formaCondicaoForm.percDesconto;
+        //osForma.descontoFormaCondicao = obterValorDesconto(formaCondicaoForm.percDesconto, valor - desconto);
                
         formaItemsList.push({...osForma})
 
@@ -68,7 +68,10 @@ export default class TabForma extends React.Component {
                     formaCondicaoPagamento: { id: null},
                     valor: 0,
                     percDesconto: 0,
-                    desconto: 0,                    
+                    desconto: 0,
+                    percDescontoFormaCondicao: 0,
+                    descontoFormaCondicao: 0,
+                    total: 0                   
                 }
             })
         })
@@ -102,11 +105,19 @@ export default class TabForma extends React.Component {
 
         let formaCondicaoForm = formaCondicaoList.find(c=> c.id == idForma);
         let vValorDesconto = obterValorDesconto(formaCondicaoForm.percDesconto, valor);        
+        let descontoFormaCondicao = 0;
 
+        if (formaCondicaoForm && formaCondicaoForm.percDesconto != 0){
+            descontoFormaCondicao = obterValorDesconto(formaCondicaoForm.percDesconto, valor - vValorDesconto);
+        }
+        
         setFieldsValue({osForma: {
                 ...osForma,                 
                 desconto: vValorDesconto,
-                percDesconto: formaCondicaoForm.percDesconto,
+                percDesconto: 0,
+                percDescontoFormaCondicao: formaCondicaoForm.percDesconto,
+                descontoFormaCondicao: descontoFormaCondicao,
+                total: valor - vValorDesconto - descontoFormaCondicao,
             } 
         })
         //this.setState({produtoDescricao: produtoForm.nome})
@@ -120,6 +131,9 @@ export default class TabForma extends React.Component {
             valor: 0,
             percDesconto: 0,
             desconto: 0,
+            percDescontoFormaCondicao: 0,
+            descontoFormaCondicao: 0,
+            total: 0
         }
 
         setFieldsValue(fields)
@@ -148,6 +162,67 @@ export default class TabForma extends React.Component {
         )
     }
 
+    onChangePercDesconto = (percDesconto) => {    
+        const { form: { getFieldsValue, setFieldsValue }, formaCondicaoList = []} = this.props    
+        const { osForma } = getFieldsValue()     
+        const { valor, formaCondicaoPagamento } = osForma
+
+        let valorDesconto = obterValorDesconto(percDesconto, valor);
+        let descontoFormaCondicao = 0;
+
+        let formaCondicaoForm = formaCondicaoList.find(c=> c.id == formaCondicaoPagamento.id);
+
+        if (formaCondicaoForm.percDesconto != 0){
+            descontoFormaCondicao = obterValorDesconto(formaCondicaoForm.percDesconto, valor - valorDesconto); 
+        }
+
+        setFieldsValue({osForma: {...osForma, 
+            desconto: valorDesconto, 
+            total: valor - valorDesconto - descontoFormaCondicao,
+            descontoFormaCondicao: descontoFormaCondicao
+        } })        
+    }  
+    
+    onChangeDesconto = (desconto) => {    
+        const { form: { getFieldsValue, setFieldsValue }, formaCondicaoList = []} = this.props    
+        const { osForma } = getFieldsValue()     
+        const { valor, formaCondicaoPagamento } = osForma
+        
+        let percDesconto = obterPercentualDesconto(desconto, valor);
+        let descontoFormaCondicao = 0;
+
+        let formaCondicaoForm = formaCondicaoList.find(c=> c.id == formaCondicaoPagamento.id);
+
+        if (formaCondicaoForm.percDesconto != 0){
+            descontoFormaCondicao = obterValorDesconto(formaCondicaoForm.percDesconto, valor - desconto); 
+        }
+
+        setFieldsValue({osForma: {...osForma, 
+            percDesconto: percDesconto,
+            total: valor - desconto - descontoFormaCondicao,
+            descontoFormaCondicao: descontoFormaCondicao
+        } })        
+    } 
+
+    onChangeValor = (valor) => {    
+        const { form: { getFieldsValue, setFieldsValue }, formaCondicaoList = [] } = this.props    
+        const { osForma } = getFieldsValue()     
+        const { desconto, formaCondicaoPagamento } = osForma
+
+        let descontoFormaCondicao = 0;
+
+        let formaCondicaoForm = formaCondicaoList.find(c=> c.id == formaCondicaoPagamento.id);
+
+        if (formaCondicaoForm.percDesconto != 0){
+            descontoFormaCondicao = obterValorDesconto(formaCondicaoForm.percDesconto, valor - desconto); 
+        }
+        
+        setFieldsValue({osForma: {...osForma, 
+            total: valor - desconto - descontoFormaCondicao,
+            descontoFormaCondicao: descontoFormaCondicao
+        } })        
+    }
+
     render() {
         const { viewStateTab, formaCondicaoDescricao } = this.state
         const { 
@@ -162,17 +237,17 @@ export default class TabForma extends React.Component {
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };        
 
         let id = getFieldValue("osForma.id") || null    
-        let idForma = getFieldValue("osForma.formaCondicaoPagamento.id") || null
-        let valorForm = getFieldValue("osForma.valor") || null
-        let formaPagamentoForm = null;
-        let valorDesconto = 0;
-        let percentualDesconto = 0;
+        // let idForma = getFieldValue("osForma.formaCondicaoPagamento.id") || null
+        // let valorForm = getFieldValue("osForma.valor") || null
+        // let formaPagamentoForm = null;
+        // let valorDesconto = 0;
+        // let percentualDesconto = 0;
 
-        if (idForma && valorForm) {        
-            formaPagamentoForm = formaCondicaoList.find(c=> c.id == idForma);
-            percentualDesconto = formaPagamentoForm.percDesconto;
-            valorDesconto = (formaPagamentoForm.percDesconto * valorForm) / 100;
-        }
+        // if (idForma && valorForm) {        
+        //     formaPagamentoForm = formaCondicaoList.find(c=> c.id == idForma);
+        //     percentualDesconto = formaPagamentoForm.percDesconto;
+        //     valorDesconto = (formaPagamentoForm.percDesconto * valorForm) / 100;
+        // }
 
         const formaPagamentoNome = getFieldValue("osForma.formaCondicaoPagamento.formaPagamento.nome") || formaCondicaoDescricao
         const condicaoPagamentoNome = getFieldValue("osForma.formaCondicaoPagamento.condicaoPagamento.nome") || formaCondicaoDescricao
@@ -183,7 +258,7 @@ export default class TabForma extends React.Component {
                 { getFieldDecorator("osForma.nomeFormaPagamento", { initialValue: formaPagamentoNome })(<Input type="hidden" />) }        
                 { getFieldDecorator("osForma.nomeCondicaoPagamento", { initialValue: condicaoPagamentoNome })(<Input type="hidden" />) }        
                 <Row gutter = { 12 }>
-                    <Col span = { 9 }>
+                    <Col span = { 8 }>
                         <Form.Item label={"Forma condição de pagamento"}>
                             {
                                 getFieldDecorator('osForma.formaCondicaoPagamento.id', {})(
@@ -201,7 +276,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>               
                     </Col>              
-                    <Col span={3}>
+                    <Col span={2}>
                         <Form.Item label={"Valor"}>
                             {
                                 getFieldDecorator('osForma.valor', {
@@ -213,12 +288,13 @@ export default class TabForma extends React.Component {
                                         precision={2}
                                         step={1}
                                         disabled= {isEqual(stateView, VIEWING)}
+                                        onChange={(value) => this.onChangeValor(value)}
                                     />
                                 )
                             }
                         </Form.Item>
                     </Col> 
-                    <Col span={3}>
+                    <Col span={2}>
                         <Form.Item label={"Perc. desconto"}>
                             {
                                 getFieldDecorator('osForma.percDesconto', {
@@ -226,17 +302,18 @@ export default class TabForma extends React.Component {
                                 })(                            
                                     <InputNumber 
                                         style={{ width: "150" }}
-                                        disabled
+                                        //disabled
                                         min={0}
                                         precision={2}
                                         step={1}
                                         //value={percentualDesconto ? percentualDesconto : 0}
+                                        onChange={(value) => this.onChangePercDesconto(value)}
                                 />
                                 )
                             }
                         </Form.Item>
                     </Col> 
-                    <Col span={3}>
+                    <Col span={2}>
                         <Form.Item label={"Desconto"}>
                             {
                                 getFieldDecorator('osForma.desconto', {
@@ -249,22 +326,60 @@ export default class TabForma extends React.Component {
                                         step={1}
                                         disabled
                                         //value={valorDesconto ? valorDesconto : 0}
+                                        onChange={(value) => this.onChangeDesconto(value)}
                                         />
                                 )
                             }
                         </Form.Item>
                     </Col>
                     <Col span={3}>
-                        <Form.Item label={"Total a redeceber"}>
+                        <Form.Item label={"Perc. desc. da forma"}>
                             {
+                                getFieldDecorator('osForma.percDescontoFormaCondicao', {
+                                    initialValue: 0
+                                })(
+                                    <InputNumber 
+                                        style={{ width: "150" }}
+                                        min={0}
+                                        precision={2}
+                                        step={1}
+                                        disabled
+                                        />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={3}>
+                        <Form.Item label={"Desconto da forma"}>
+                            {
+                                getFieldDecorator('osForma.descontoFormaCondicao', {
+                                    initialValue: 0
+                                })(
+                                    <InputNumber 
+                                        style={{ width: "150" }}
+                                        min={0}
+                                        precision={2}
+                                        step={1}
+                                        disabled
+                                        />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={3}>
+                        <Form.Item label={"Total"}>
+                            {
+                                getFieldDecorator('osForma.total', {
+                                    initialValue: 0
+                                })(                                
                                 <InputNumber 
                                     style={{ width: "150" }}
                                     disabled
                                     min={0}
                                     precision={2}
                                     step={1}
-                                    value={valorForm && valorDesconto ? valorForm - valorDesconto : 0}
-                                />
+                                    //value={valorForm && valorDesconto ? valorForm - valorDesconto : 0}
+                                />)
                             }
                         </Form.Item>
                     </Col> 
@@ -323,6 +438,11 @@ export default class TabForma extends React.Component {
                                     <Table.Column title={<center>Forma pagamento</center>} key={"nomeFormaPagamento"} dataIndex={"nomeFormaPagamento"} align={"center"} />
                                     <Table.Column title={<center>Condição pagamento</center>} key={"nomeCondicaoPagamento"} dataIndex={"nomeCondicaoPagamento"} align={"center"} />
                                     <Table.Column title={<center>Valor</center>} key={"valor"} dataIndex={"valor"} align={"center"} />
+                                    <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
+                                    <Table.Column title={<center>Perc. Desc. Forma Condição</center>} key={"percDescontoFormaCondicao"} dataIndex={"percDescontoFormaCondicao"} align={"center"} />
+                                    <Table.Column title={<center>Desconto Forma Condição</center>} key={"descontoFormaCondicao"} dataIndex={"descontoFormaCondicao"} align={"center"} />
+                                    <Table.Column title={<center>Total</center>} key={"total"} dataIndex={"total"} align={"center"}
+                                        render={(text, record) => record.valor - record.desconto - record.descontoFormaCondicao } />
                                     <Table.Column title={<center>Ações</center>} key={"actions"} 
                                                 dataIndex={"actions"} 
                                                 align={"center"} 

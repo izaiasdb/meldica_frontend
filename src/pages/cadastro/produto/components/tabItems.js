@@ -142,13 +142,13 @@ class TabItems extends React.Component {
                 </Form.Item>
             </Col>
             <Col span={4}>
-                <Form.Item label={"Quantidade"}>
+                <Form.Item label={"Quantidade (Unid / g)"}>
                     {
                         getFieldDecorator('produtoItem.quantidade', {                            
                         })(
                             <InputNumber style={{ width: "150" }}
-                            min={1}
-                            precision={0}
+                            min={0}
+                            precision={3}
                             step={1}
                             />                            
                         )

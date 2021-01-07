@@ -78,8 +78,7 @@ class Tabela extends Component {
                 {hasAnyAuthority("VENDAS_ALTERAR") && 
                 <>
                     {
-                    record.statusNota != 'C' && //ABERTA
-
+                    (record.statusNota == 'A' || record.statusNota == 'R' || record.statusNota == 'L') && //ABERTA
                     <Tooltip title="Editar Pedido">
                         <Icon style={{cursor: 'pointer'}} 
                             type={ 'edit' } 
@@ -88,83 +87,85 @@ class Tabela extends Component {
                     </Tooltip>
                     }
                     {
-                    // record.statusNota == 'A' && //ABERTA
-                    // <>
-                    // <Divider type="vertical"/>
-                    // <Tooltip title="Concluir Pedido">
-                    //     <Icon style={{cursor: 'pointer'}} 
-                    //         type={ 'check' } 
-                    //         className={'tabela-icone'}
-                    //         onClick={(e) => this.alterarStatusTabela(record, 'N', 'CONCLUIR')}></Icon>
-                    // </Tooltip>
-                    // </>
+                    record.statusNota == 'A' && //ABERTA
+                    <>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Logística">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'check' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.alterarStatusTabela(record, 'L', 'LÓGISTICA')}></Icon>
+                    </Tooltip>
+                    </>
                     }
                     {
-                    //record.statusNota == 'N' && 
+                    record.statusNota == 'L' && //LÓGISTICA
+                    // record.statusNota == 'N' && hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
+                    <>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Reabrir Pedido">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'redo' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.alterarStatusTabela(record, 'R', 'REABRIR')}></Icon>
+                    </Tooltip>
+                    </>
+                    }                    
+                    {
+                    record.statusNota == 'R' && // REABERTA
                     // record.statusNota != 'C' && record.formaGerada == false &&
                     // hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
-                    // <>                
-                    // <Divider type="vertical"/>
-                    // <Tooltip title="Gerar formas de pagamento financeiro">
-                    //     <Icon style={{cursor: 'pointer'}} 
-                    //         type={ 'check-circle' } 
-                    //         className={'tabela-icone'}
-                    //         onClick={(e) => this.alterarStatusTabela(record, 'O', 'APROVAR')}></Icon>
-                    // </Tooltip>
-                    // </>
+                    <>                
+                    <Divider type="vertical"/>
+                    <Tooltip title="Fechar. Serar gerada as formas de pagamento do financeiro!">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'check-circle' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.alterarStatusTabela(record, 'F', 'FECHAR')}></Icon>
+                    </Tooltip>
+                    </>
                     }  
-                    {
-                    // record.statusNota == 'N' && hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
-                    // <>
-                    // <Divider type="vertical"/>
-                    // <Tooltip title="Reabrir Pedido">
-                    //     <Icon style={{cursor: 'pointer'}} 
-                    // className={'tabela-icone'}
-                    //         type={ 'redo' } onClick={(e) => this.alterarStatusTabela(record, 'A', 'REABRIR')}></Icon>
-                    // </Tooltip>
-                    // </>
-                    }
                     { 
-                    //record.statusNota == 'O' && hasAnyAuthority("VENDAS_-_LIBERAR_ALTERAR") && //APROVADA
+                    record.statusNota == 'F' && hasAnyAuthority("VENDAS_-_LIBERAR_ALTERAR") && 
                     // record.statusNota != 'C' && record.estoqueGerado == false &&
                     // hasAnyAuthority("VENDAS_-_LIBERAR_ALTERAR") && //APROVADA
-                    // <>
-                    // <Divider type="vertical"/>
-                    // <Tooltip title="Liberar mercadoria">
-                    //     <Icon style={{cursor: 'pointer'}} 
-                    //         className={'tabela-icone'}
-                    //         type={ 'car' } onClick={(e) => this.alterarStatusTabela(record, 'L', 'LIBERAR')}></Icon>
-                    // </Tooltip>
-                    // </>
+                    <>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Liberar mercadoria">
+                        <Icon style={{cursor: 'pointer'}} 
+                            className={'tabela-icone'}
+                            type={ 'car' } onClick={(e) => this.alterarStatusTabela(record, 'T', 'LIBERAR')}></Icon>
+                    </Tooltip>
+                    </>
                     }
                     {
-                        // record.statusNota != 'C' && record.estoqueGerado == true && 
-                        // hasAnyAuthority("VENDAS_-_ENTREGAR_ALTERAR") && //LIBERADA
-                        // <>
-                        // <Divider type="vertical"/>
-                        // <Tooltip title="Entregar mercadoria">
-                        //     <Icon style={{cursor: 'pointer'}} 
-                        //         className={'tabela-icone'}
-                        //         type={ 'audit' } onClick={(e) => this.alterarStatusTabela(record, 'E', 'ENTREGAR')}></Icon>
-                        // </Tooltip>
-                        // </>
+                        record.statusNota == 'T' && //record.estoqueGerado == true && 
+                        hasAnyAuthority("VENDAS_-_ENTREGAR_ALTERAR") && //LIBERADA
+                        <>
+                        <Divider type="vertical"/>
+                        <Tooltip title="Entregar mercadoria">
+                            <Icon style={{cursor: 'pointer'}} 
+                                className={'tabela-icone'}
+                                type={ 'audit' } onClick={(e) => this.alterarStatusTabela(record, 'E', 'ENTREGAR')}></Icon>
+                        </Tooltip>
+                        </>
                     }                     
                     {
                     // CONCLUÍDA(N) APROVADA(O) PAGA(P) LIBERADA (L)
                     //(record.statusNota == 'N' || record.statusNota == 'O'
                     // || record.statusNota == 'P' || record.statusNota == 'L'
                     // Cancela caso esteja diferente de LIBERADA e ENTREGUE
-                    //(record.statusNota != 'L' && record.statusNota != 'E') && 
-                    // hasAnyAuthority("VENDAS_-_CANCELAR_ALTERAR") &&
-                    // <>                
-                    // <Divider type="vertical"/>
-                    // <Tooltip title="Cancelar Pedido">
-                    //     <Icon style={{cursor: 'pointer'}} 
-                    //         type={ 'close-circle' } 
-                    //         className={'tabela-icone'}
-                    //         onClick={(e) => this.alterarStatusTabela(record, 'C', 'CANCELAR')}></Icon>
-                    // </Tooltip>                                
-                    // </>
+                    record.statusNota != 'C' && 
+                    hasAnyAuthority("VENDAS_-_CANCELAR_ALTERAR") &&
+                    <>                
+                    <Divider type="vertical"/>
+                    <Tooltip title="Cancelar Pedido">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'close-circle' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.alterarStatusTabela(record, 'C', 'CANCELAR')}></Icon>
+                    </Tooltip>                                
+                    </>
                     }  
                     <Divider type="vertical"/>
                     <Tooltip title="Visualizar">

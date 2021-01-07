@@ -44,7 +44,7 @@ class Formulario extends Component {
         const { activeKey } = this.state
         const { fetching, produto, form } = this.props
         const { getFieldDecorator, getFieldValue } = form
-        const { id, idUsuarioInclusao, qtdEstoqueMinimo, tipo, atualizaEstoque} = isNil(produto) ? {} : produto
+        const { id, idUsuarioInclusao, estoqueMinimoUnidade, estoqueMinimoCaixa, tipo, atualizaEstoque} = isNil(produto) ? {} : produto
         let tipoProdutoForm = getFieldValue("produto.tipo") || tipo
         let obrigaItems = (//tipoProdutoForm == 'P' || 
         tipoProdutoForm == 'C') ? true : false;
@@ -55,7 +55,8 @@ class Formulario extends Component {
                 <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'}  produto`) } >                    
                     { getFieldDecorator("produto.id", { initialValue: id })(<Input type="hidden" />) }
                     { getFieldDecorator("produto.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
-                    { getFieldDecorator("produto.qtdEstoqueMinimo", { initialValue: qtdEstoqueMinimo || 0})(<Input type="hidden" />) }
+                    { getFieldDecorator("produto.estoqueMinimoUnidade", { initialValue: estoqueMinimoUnidade || 0})(<Input type="hidden" />) }
+                    { getFieldDecorator("produto.estoqueMinimoCaixa", { initialValue: estoqueMinimoCaixa || 0})(<Input type="hidden" />) }
                     { getFieldDecorator("produto.atualizaEstoque", { initialValue: isNil(atualizaEstoque) ? true : atualizaEstoque})(<Input type="hidden" />) }
                     
                     <Row>

@@ -24,6 +24,7 @@ export default class DrawerTabelaPreco extends React.Component {
         } = this.props
 
         let tabelaPreco = tabelaPrecoList.find(c=> c.id == idTabelaPreco)
+        let tabelaPrecoProdutoFilterList = tabelaPrecoProdutoList.filter(c=> c.idTabelaPreco == idTabelaPreco)
 
         return (<div>
             <Drawer
@@ -47,10 +48,11 @@ export default class DrawerTabelaPreco extends React.Component {
                             {
                                 <Table rowKey={(row) => row.id || row.produto && row.produto.id} size={"small"} 
                                     pagination={false} bordered
-                                    dataSource={tabelaPrecoProdutoList}>
+                                    dataSource={tabelaPrecoProdutoFilterList}>
                                     <Table.Column title={<center>Produto</center>} key={"produto"} dataIndex={"produto"} align={"center"} 
                                                 render={(produto = {}) => produto.descricao || produto.nome }/>
-                                    <Table.Column title={<center>Valor</center>} key={"valor"} dataIndex={"valor"} align={"center"} />
+                                    <Table.Column title={<center>Valor Unidade</center>} key={"valorUnidade"} dataIndex={"valorUnidade"} align={"center"} />
+                                    <Table.Column title={<center>Valor Caixa</center>} key={"valorCaixa"} dataIndex={"valorCaixa"} align={"center"} />
                                 </Table>
                             }
                         </Form.Item>

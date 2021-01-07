@@ -12,7 +12,7 @@ const Option = Select.Option
 const TabDados = (props) => {
     const validateDataOrdemServico = function(rule, value, callback) {
         const { form } = this.props
-        //const dataMovimentacao = form.getFieldValue("ordemServico.dataOrdemServico")
+        //const dataMovimentacao = form.getFieldValue("ordemServico.dataVenda")
         let now = moment();
 
         if(isNil(value)){
@@ -50,7 +50,7 @@ const TabDados = (props) => {
         funcionario = {},
         tabelaPreco = {},
         idClienteRazao,
-        dataOrdemServico,
+        dataVenda,
         dataLiberacao,
         dataPrevisaoEntrega,
         dataEntrega,
@@ -94,7 +94,7 @@ const TabDados = (props) => {
                             getFieldDecorator('ordemServico.dataVenda', {
                                 rules: [{required: true, message: "Por favor, informe a data da venda."}
                                 //{ validator: validateDataOrdemServico}
-                            ], initialValue: isNil(dataOrdemServico) ? moment() : new moment(dataOrdemServico)
+                            ], initialValue: isNil(dataVenda) ? moment() : new moment(dataVenda)
                             })(
                                 <DatePicker 
                                     style = {{ width: '98%' }}
@@ -155,7 +155,7 @@ const TabDados = (props) => {
                 </Col>                   
             </Row>              
             <Row gutter={ 12 }>
-                <Col span={ 10 }>
+                <Col span={ 8 }>
                     <Form.Item label={"Cliente"}>
                         {
                             getFieldDecorator('ordemServico.cliente.id', {
@@ -176,7 +176,7 @@ const TabDados = (props) => {
                         }
                     </Form.Item>
                 </Col>
-                <Col span={ 10 }>
+                <Col span={ 8 }>
                     <Form.Item label={"Cliente Razão Social"}>
                         {
                             getFieldDecorator('ordemServico.idClienteRazao', {
@@ -196,7 +196,13 @@ const TabDados = (props) => {
                             )
                         }
                     </Form.Item>
-                </Col>  
+                </Col>
+                <Col span={ 4 }>
+                    <Button type="primary" //onClick={showDrawer} 
+                        style={{ marginTop: "40px" }}>
+                        <Icon type="plus" /> Última compra cliente
+                    </Button>
+                </Col>
                 <Col span={ 4 }>
                     <Form.Item label={"NF Méldica"}>
                         {
@@ -208,7 +214,7 @@ const TabDados = (props) => {
                             )
                         }
                     </Form.Item>
-                </Col>                               
+                </Col>                             
             </Row>   
             <Row gutter={12}>
                 <Col span={ 8 }>

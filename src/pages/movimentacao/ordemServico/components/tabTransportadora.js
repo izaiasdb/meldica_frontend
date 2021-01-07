@@ -517,6 +517,7 @@ export default class TabTransportadora extends React.Component {
                                 <Table.Column title={<center>Cidade</center>} key={"cidade"} dataIndex={"cidade"} align={"center"} 
                                             render={(text, record) => `${text ? text : ''}${isNil(record.uf) ? '' : ' - '+record.uf}`}
                                                 />
+                                <Table.Column title={<center>Vl. Frete</center>} key={"valorFrete"} dataIndex={"valorFrete"} align={"center"} />
                                 <Table.Column title={<center>Ações</center>} key={"actions"} 
                                             dataIndex={"actions"} 
                                             align={"center"} 

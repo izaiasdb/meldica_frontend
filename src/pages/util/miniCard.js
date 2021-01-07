@@ -3,11 +3,17 @@ import { Card, Col, Avatar, } from 'antd'
 
 const { Meta } = Card
 
-export const getCard = (nome, color, icon, value, formata = true) => {
+export const getCard = (nome, color, icon, value, formata = true, currency = true) => {
     var formatter = new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL',
-      });          
+      });     
+      
+    let valorFormatado = value;
+
+    if (formata) {
+        valorFormatado = value.toFixed(2)
+    }
     
     return (
     // <Col span={4}>
@@ -21,7 +27,8 @@ export const getCard = (nome, color, icon, value, formata = true) => {
                   description = {
                         <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '1.6em', 'color' : '#000'}}>
                             { formata &&
-                                formatter.format(value)
+                                //formatter.format(value.toFixed(3))
+                                (currency ? "R$ " : "") + valorFormatado
                             }
                             { !formata &&                                
                                 value

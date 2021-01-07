@@ -95,14 +95,19 @@ class Formulario extends Component {
         let formaItemsListForm = getFieldValue("ordemServico.formaItemsList") || formaItemsList
         let transportadoraItemsListForm = getFieldValue("ordemServico.transportadoraItemsList") || transportadoraItemsList
 
-        let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
-        let totalPeso = produtoItemsListForm.reduce((acum,{peso, quantidade}) => acum + (Number(quantidade) * Number(peso)), 0);
-        let totalVolume = produtoItemsListForm.reduce((acum,{quantidade, quantidadeCaixa}) => acum + (Number(quantidade) / Number(quantidadeCaixa)), 0);
-        let totalForma = formaItemsListForm.reduce((acum,{valor}) => acum + Number(valor), 0);
+        //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
+        let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
+        let totalPeso = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
+        let totalVolume = produtoItemsListForm.reduce((acum,{quantidadeUnidade, quantidadeNaCaixa}) => acum + (Number(quantidadeUnidade) / Number(quantidadeNaCaixa)), 0);
+        let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);
+        let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
         let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
-        let faltaReceber = totalProduto - (valorPago ? valorPago : 0);
-        let totalNota = (totalProduto ? totalProduto : 0) +  (totalFrete ? totalFrete : 0);
-        let faltaFormaPgto = totalNota - totalForma;
+        let totalPedido = (totalProduto ? totalProduto : 0) +  (totalFrete ? totalFrete : 0);
+        let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalFormaDescontos ? totalFormaDescontos : 0);
+        let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfCaixa)), 0);
+        let totalNFUnidade = produtoItemsListForm.filter(c=> c.fracionado == true).reduce((acum,{ valorNfUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfUnidade)), 0);
+        let totalNF = totalNFUnidade + totalNFCaixa;
+        let faltaFormaPgto = totalPedido - totalForma;
 
         return (
             <Spin spinning={fetching}>
@@ -116,7 +121,7 @@ class Formulario extends Component {
                     { getFieldDecorator("ordemServico.desconto", { initialValue: isNil(desconto) ? 0 : desconto})(<Input type="hidden" />) }       
                     { getFieldDecorator("ordemServico.estoqueGerado", { initialValue: isNil(estoqueGerado) ? false : estoqueGerado})(<Input type="hidden" />) }             
                     { getFieldDecorator("ordemServico.formaGerada", { initialValue: isNil(formaGerada) ? false : formaGerada})(<Input type="hidden" />) }             
-                    <Row gutter={12}>
+                    <Row gutter={2}>
                         {/* { id &&
                             this.getCard('Número Nota', '#6BD098', 'file-protect', id, false)
                             //dollar, global, solution, safety
@@ -134,36 +139,44 @@ class Formulario extends Component {
                         </Col>
                         <Col span={ 4 }>
                         {
-                            getCard('Forma pgto.', '#6BD098', 'sketch', totalForma)
-                        }
-                        </Col>
-                        <Col span={ 4 }>
-                        {
                             getCard('Total frete', '#6BD098', 'car', totalFrete ? totalFrete : 0)
                         }
                         </Col>
                         <Col span={ 4 }>
                         {
-                            getCard('Total nota', '#6BD098', 'dollar', totalNota ? totalNota : 0)
+                            getCard('Total pedido', '#6BD098', 'dollar', totalPedido ? totalPedido : 0)
                         }
                         </Col>                            
                         <Col span={ 4 }>
                         {
-                            getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago : 0)
+                            getCard('Forma pgto.', '#6BD098', 'sketch', totalForma)
                         }
-                        </Col>                        
-                    </Row>   
-                    <Row gutter={12}>
+                        </Col>
                         <Col span={ 4 }>
                         {
-                            getCard('Total peso', '#FBC658', 'arrow-down', totalPeso ? totalPeso : 0, false)
+                            getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago : 0)
+                        }
+                        </Col>                          
+                      
+                    </Row>   
+                    <Row gutter={2}>
+                        <Col span={ 4 }>
+                        {
+                            getCard('Total peso', '#FBC658', 'arrow-down', totalPeso ? totalPeso : 0, true, false)
                         } 
                         </Col>
                         <Col span={ 4 }>
                         {
-                            getCard('Total volume', '#FBC658', 'appstore', totalVolume, false)
+                            getCard('Total volume', '#FBC658', 'appstore', totalVolume, true, false)
                         }  
                         </Col>
+                        <Col span={ 4 }>
+                        </Col>                           
+                        <Col span={ 4 }>                            
+                        {
+                            getCard('Total Nota Fiscal', '#6BD098', 'dollar', totalNF ? totalNF : 0)
+                        }
+                        </Col>                            
                         <Col span={ 4 }>
                         {
                             getCard('Falta forma.', '#DA120B', 'sketch', faltaFormaPgto)
@@ -173,7 +186,7 @@ class Formulario extends Component {
                         {
                             getCard('Falta receber', '#DA120B', 'dollar', faltaReceber)
                         }   
-                        </Col>                                                                 
+                        </Col>   
                     </Row>                 
                     {/* <Divider /> */}
                     <Row>

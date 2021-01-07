@@ -24,16 +24,24 @@ const TabDados = (props) => {
         ativo,
         fracionado,
         tipo,
-        valorCompra,
-        valorVenda,
-        valorProducao,
-        valorNf,
-        peso,
-        qtdEstoque,        
+        valorCompraUnidade,
+        valorCompraCaixa,
+        valorVendaUnidade,
+        valorVendaCaixa,
+        valorProducaoUnidade,
+        valorProducaoCaixa,
+        valorNfUnidade,
+        valorNfCaixa, 
+        pesoUnidade,
+        pesoCaixa,
+        qtdEstoqueUnidade,
+        qtdEstoqueCaixa,      
         percDescontoMaximo,  
         atualizaEstoque,
         quantidadeCaixa   
     } = produto || {}
+
+    let fracionadoForm = getFieldValue("produto.fracionado")
 
     const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
 
@@ -161,13 +169,13 @@ const TabDados = (props) => {
             <Col span={ 3 }>
                 <Form.Item label={"Valor Compra(Unit.)"}>
                     {
-                        getFieldDecorator('produto.valorCompra', {
+                        getFieldDecorator('produto.valorCompraUnidade', {
                             rules: [{required: true, message: 'Por favor, informe o valor de compra.'}],
-                            initialValue: valorCompra || 0
+                            initialValue: valorCompraUnidade || 0
                         })(
                             <InputNumber style={{ width: "150" }}
                             min={0}
-                            precision={2}
+                            precision={3}
                             step={1}
                             />
                         )
@@ -177,30 +185,30 @@ const TabDados = (props) => {
             <Col span={ 3 }>
                 <Form.Item label={"Valor Venda(Unit.)"}>
                     {
-                        getFieldDecorator('produto.valorVenda', {
+                        getFieldDecorator('produto.valorVendaUnidade', {
                             rules: [{required: true, message: 'Por favor, informe o valor de venda.'}],
-                            initialValue: valorVenda || 0
+                            initialValue: valorVendaUnidade || 0
                         })(
                             <InputNumber style={{ width: "150" }}
                             min={0}
-                            precision={2}
+                            precision={3}
                             step={1}
                             />
                         )
                     }
                 </Form.Item>
             </Col>
-            <Col span={ 3 }>
+            <Col span={ 4 }>
                 <Form.Item label={"Valor Produção(Unit.)"}>
                     {
-                        getFieldDecorator('produto.valorProducao', {
+                        getFieldDecorator('produto.valorProducaoUnidade', {
                             rules: [{required: true, message: 'Por favor, informe o valor de produção.'}],
-                            initialValue: valorProducao || 0
+                            initialValue: valorProducaoUnidade || 0
                         })(
                             <InputNumber style={{ width: "150" }} 
                             disabled
                             min={0}
-                            precision={2}
+                            precision={3}
                             step={1}                            
                             //formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                             //parser={value => value.replace(/\$\s?|(,*)/g, '')}
@@ -212,19 +220,156 @@ const TabDados = (props) => {
             <Col span={ 3 }>
                 <Form.Item label={"Valor NF(Unit.)"}>
                     {
-                        getFieldDecorator('produto.valorNf', {
+                        getFieldDecorator('produto.valorNfUnidade', {
                             rules: [{required: true, message: 'Por favor, informe o valor de NF.'}],
-                            initialValue: valorNf || 0
+                            initialValue: valorNfUnidade || 0
                         })(
                             <InputNumber style={{ width: "150" }}                                                         
                             min={0}
-                            precision={2}
+                            precision={3}
                             step={1}                            
                             />
                         )
                     }
                 </Form.Item>
             </Col>  
+            <Col span={ 3 }>
+                <Form.Item label={"Peso(Unit. em g)"}>
+                    {
+                        getFieldDecorator('produto.pesoUnidade', {
+                            rules: [{required: true, message: 'Por favor, informe o peso.'}],
+                            initialValue: pesoUnidade || 0
+                        })(
+                            <InputNumber style={{ width: "150" }}                                                         
+                            min={0}
+                            precision={3}
+                            step={1}                            
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>
+            <Col span={ 3 }>
+                <Form.Item label={"Estoque(Unit.)"}>
+                    {
+                        getFieldDecorator('produto.qtdEstoqueUnidade', {
+                            rules: [{ required: false }],
+                            initialValue: qtdEstoqueUnidade || 0
+                        })(
+                            <InputNumber style={{ width: "150" }} 
+                            disabled
+                            min={0}
+                            precision={3}
+                            step={1}                            
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>                                                      
+        </Row>
+        <Row gutter={ 12 }>     
+            <Col span={ 3 }>
+                <Form.Item label={"Valor Compra(Caixa)"}>
+                    {
+                        getFieldDecorator('produto.valorCompraCaixa', {
+                            rules: [{required: true, message: 'Por favor, informe o valor de compra da caixa.'}],
+                            initialValue: valorCompraCaixa || 0
+                        })(
+                            <InputNumber style={{ width: "150" }}
+                            min={0}
+                            precision={3}
+                            step={1}
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>   
+            <Col span={ 3 }>
+                <Form.Item label={"Valor Venda(caixa)"}>
+                    {
+                        getFieldDecorator('produto.valorVendaCaixa', {
+                            rules: [{required: true, message: 'Por favor, informe o valor de venda da caixa.'}],
+                            initialValue: valorVendaCaixa || 0
+                        })(
+                            <InputNumber style={{ width: "150" }}
+                            min={0}
+                            precision={3}
+                            step={1}
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>
+            <Col span={ 4 }>
+                <Form.Item label={"Valor Produção(Caixa)"}>
+                    {
+                        getFieldDecorator('produto.valorProducaoCaixa', {
+                            rules: [{required: true, message: 'Por favor, informe o valor de produção.'}],
+                            initialValue: valorProducaoCaixa || 0
+                        })(
+                            <InputNumber style={{ width: "150" }} 
+                            disabled
+                            min={0}
+                            precision={3}
+                            step={1}                            
+                            //formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            //parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>
+            <Col span={ 3 }>
+                <Form.Item label={"Valor NF(Caixa)"}>
+                    {
+                        getFieldDecorator('produto.valorNfCaixa', {
+                            rules: [{required: true, message: 'Por favor, informe o valor de NF.'}],
+                            initialValue: valorNfCaixa || 0
+                        })(
+                            <InputNumber style={{ width: "150" }}                                                         
+                            min={0}
+                            precision={3}
+                            step={1}                            
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>
+            <Col span={ 3 }>
+                <Form.Item label={"Peso(Caixa em g)"}>
+                    {
+                        getFieldDecorator('produto.pesoCaixa', {
+                            rules: [{required: true, message: 'Por favor, informe o peso.'}],
+                            initialValue: pesoCaixa || 0
+                        })(
+                            <InputNumber style={{ width: "150" }}                                                         
+                            min={0}
+                            precision={3}
+                            step={1}                            
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>
+            <Col span={ 3 }>
+                <Form.Item label={"Estoque(Caixa)"}>
+                    {
+                        getFieldDecorator('produto.qtdEstoqueCaixa', {
+                            rules: [{ required: false }],
+                            initialValue: qtdEstoqueCaixa || 0
+                        })(
+                            <InputNumber style={{ width: "150" }} 
+                            disabled
+                            min={0}
+                            precision={3}
+                            step={1}                            
+                            />
+                        )
+                    }
+                </Form.Item>
+            </Col>                                                                  
+        </Row>
+        <Row gutter={ 12 }>   
             <Col span={ 5 }>
                 <Tooltip title='Máximo de desconto que pode ser dado para esse produto.' placement='left'>                            
                 <Form.Item label={"Perc.(%) máx. de Desconto"}>
@@ -236,49 +381,16 @@ const TabDados = (props) => {
                             <InputNumber //style={{ width: "150" }}                                                         
                             min={0}
                             max={100}
-                            precision={2}
-                            step={1}                            
-                            />
-                        )
-                    }
-                </Form.Item>
-                </Tooltip>
-            </Col>                                   
-        </Row>
-        <Row gutter={ 12 }>     
-            <Col span={ 3 }>
-                <Form.Item label={"Peso(Unit. em g)"}>
-                    {
-                        getFieldDecorator('produto.peso', {
-                            rules: [{required: true, message: 'Por favor, informe o peso.'}],
-                            initialValue: peso || 0
-                        })(
-                            <InputNumber style={{ width: "150" }}                                                         
-                            min={0}
                             precision={3}
                             step={1}                            
                             />
                         )
                     }
                 </Form.Item>
-            </Col> 
-            <Col span={ 3 }>
-                <Form.Item label={"Estoque(Unit.)"}>
-                    {
-                        getFieldDecorator('produto.qtdEstoque', {
-                            rules: [{ required: false }],
-                            initialValue: qtdEstoque || 0
-                        })(
-                            <InputNumber style={{ width: "150" }} 
-                            disabled
-                            min={0}
-                            precision={2}
-                            step={1}                            
-                            />
-                        )
-                    }
-                </Form.Item>
-            </Col>
+                </Tooltip>
+            </Col>                   
+             
+
             <Col span={ 3 }>
                 <Form.Item label={"Quantidade na Caixa"}>
                     {

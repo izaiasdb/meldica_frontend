@@ -31,6 +31,7 @@ export default class TabEndereco extends React.Component {
             const fields = getFieldsValue()
             fields.ordemServico = {
                 id: null,
+                //idClienteEndereco: fields.idClienteEndereco,        
                 idTipoEndereco: 1,
                 cep: '',
                 logradouro: '',
@@ -48,6 +49,7 @@ export default class TabEndereco extends React.Component {
                 const fields = getFieldsValue()
                 if(data.erro) {
                     fields.ordemServico = {
+                        //idClienteEndereco: fields.idClienteEndereco,
                         idTipoEndereco: 1,
                         id: null,
                         cep: '',
@@ -114,6 +116,7 @@ export default class TabEndereco extends React.Component {
             stateView,
         } = this.props
         const {
+            idClienteEndereco,
             idTipoEndereco,
             cep,
             logradouro,
@@ -137,7 +140,7 @@ export default class TabEndereco extends React.Component {
                             // Só para limpar
                             getFieldDecorator('ordemServico.idClienteEndereco', {
                                 rules: [{required: false, message: 'Por favor, informe o cliente.'}],
-                                initialValue: null//isNil(cliente) ? null : cliente.id
+                                initialValue: isNil(idClienteEndereco) ? null : idClienteEndereco
                             })(                                
                                 <Select 
                                     showSearch

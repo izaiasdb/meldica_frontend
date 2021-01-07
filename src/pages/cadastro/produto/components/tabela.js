@@ -73,9 +73,21 @@ class Tabela extends Component {
                                     align={ "left" }
                                     render={ (text, record) => text}/>
                     <Table.Column key={'valorVenda'} 
-                                    dataIndex={'valorVenda'} 
-                                    title={'Valor Venda'} 
+                                    dataIndex={'valorVendaUnidade'} 
+                                    title={'Valor Venda Unidade'} 
                                     align={ "left" }/>
+                    <Table.Column key={'valorVenda'} 
+                                    dataIndex={'valorVendaCaixa'} 
+                                    title={'Valor Venda Caixa'} 
+                                    align={ "left" }/> 
+                    <Table.Column key={'qtdEstoqueUnidade'} 
+                                    dataIndex={'qtdEstoqueUnidade'} 
+                                    title={'Quantidade Estoque Unidade'} 
+                                    align={ "left" }/> 
+                    <Table.Column key={'qtdEstoqueCaixa'} 
+                                    dataIndex={'qtdEstoqueCaixa'} 
+                                    title={'Quantidade Estoque Caixa'} 
+                                    align={ "left" }/> 
                     <Table.Column key={'acoes'} 
                                     dataIndex={'acoes'} 
                                     title={'Ações'} 

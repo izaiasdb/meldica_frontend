@@ -28,12 +28,21 @@ export default class TabProduto extends React.Component {
 
         let { osProduto } = getFieldsValue(['osProduto'])
         let produtoItemsList = getFieldValue("ordemServico.produtoItemsList")
-        let { id, produto, quantidade, valor, qtdCaixaCalc, bonificacao, quantidadeCaixa } = osProduto      
+        //let { id, produto, quantidade, valor, qtdCaixaCalc, bonificacao, quantidadeCaixa } = osProduto      
+        let { id, produto, quantidadeUnidade, valorUnidade, bonificacao, quantidadeCaixa, valorCaixa, total, fracionado, desconto } = osProduto      
         
-        if(!(produto && produto.id && quantidade && valor && qtdCaixaCalc)){
-            openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao produto.'})
-            return null
-        }     
+        if (fracionado) {
+        //if(!(produto && produto.id && quantidade && valor && qtdCaixaCalc)){
+            if(!(produto && produto.id && quantidadeUnidade && valorUnidade)){
+                openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao produto.'})
+                return null
+            }     
+        } else {
+            if(!(produto && produto.id && quantidadeCaixa, valorCaixa)){
+                openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao produto.'})
+                return null
+            } 
+        }
 
         let recordInserido = produtoItemsList.find(c=> c.produto.id == produto.id && c.bonificacao == bonificacao)
 
@@ -56,17 +65,27 @@ export default class TabProduto extends React.Component {
 
         let produtoForm = produtoList.find(c=> c.id == produto.id);
         osProduto.nomeProduto = produtoForm.nome;
-        osProduto.valorProducao = produtoForm.valorProducao;
-        osProduto.valorCompra = produtoForm.valorCompra;
-        osProduto.valorVenda = produtoForm.valorVenda;        
-        //osProduto.desconto = 0;
+        osProduto.valorProducaoUnidade = produtoForm.valorProducaoUnidade;
+        osProduto.valorProducaoCaixa = produtoForm.valorProducaoCaixa;
+        osProduto.valorCompraUnidade = produtoForm.valorCompraUnidade;
+        osProduto.valorCompraCaixa = produtoForm.valorCompraCaixa;
+        osProduto.valorVendaUnidade = produtoForm.valorVendaUnidade;
+        osProduto.valorVendaCaixa = produtoForm.valorVendaCaixa;        
         osProduto.cancelado = false;
-        osProduto.valorNf = produtoForm.valorNf;
-        osProduto.quantidadeCaixa = produtoForm.quantidadeCaixa;
-        osProduto.peso = produtoForm.peso;
+        osProduto.valorNfUnidade = produtoForm.valorNfUnidade;
+        osProduto.valorNfCaixa = produtoForm.valorNfCaixa;
+        osProduto.pesoUnidade = produtoForm.pesoUnidade;
+        osProduto.pesoCaixa = produtoForm.pesoCaixa;
+        osProduto.qtdEstoqueCaixa = produtoForm.qtdEstoqueCaixa;
+        osProduto.qtdEstoqueUnidade = produtoForm.qtdEstoqueUnidade;
+        osProduto.quantidadeNaCaixa = produtoForm.quantidadeCaixa;
 
-        if (!produtoForm.fracionado) {
-            osProduto.quantidade = qtdCaixaCalc * produtoForm.quantidadeCaixa;
+        if (produtoForm.fracionado) {
+            osProduto.valorCaixa = 0;
+            osProduto.quantidadeCaixa = quantidadeUnidade / produtoForm.quantidadeCaixa;
+        } else {
+            osProduto.valorUnidade = 0;
+            osProduto.quantidadeUnidade = quantidadeCaixa * produtoForm.quantidadeCaixa;
         }
 
         // if (this.state.produtoDescricao && this.state.produtoDescricao != ''){
@@ -80,9 +99,16 @@ export default class TabProduto extends React.Component {
                 osProduto: { id: null,
                     produto: { id: null},
                     bonificacao: false, 
-                    quantidade: 0,
-                    qtdCaixaCalc: 1, 
-                    valor: 0 
+                    quantidadeUnidade: 1,
+                    quantidadeCaixa: 1, 
+                    valorUnidade: 0,
+                    valorCaixa: 0,
+                    desconto: 0,
+                    percDesconto: 0,
+                    qtdEstoqueCaixa: 0,
+                    qtdEstoqueUnidade: 0,
+                    fracionado: false,
+                    total: 0,
                 }
             })
         })
@@ -92,7 +118,9 @@ export default class TabProduto extends React.Component {
 
     prepareUpdate = (record) => {
         const { form: { setFieldsValue } } = this.props
-        setFieldsValue({ osProduto: {...record, qtdCaixaCalc: record.quantidade /record.quantidadeCaixa } } )
+        setFieldsValue({ osProduto: {...record, 
+            //qtdCaixaCalc: record.quantidade /record.quantidadeCaixa 
+        } } )
         this.setState({ viewStateTab: EDITING, produtoDescricao: record.produto.nome })
     }    
     
@@ -109,64 +137,142 @@ export default class TabProduto extends React.Component {
     handleChangeProduto = (idProduto) => {    
         const { form: { getFieldsValue, setFieldsValue, getFieldValue }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props    
         const { osProduto } = getFieldsValue() 
-        let produtoForm = produtoList.find(c=> c.id == idProduto);
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")    
-        let valorVenda = produtoForm.valorVenda
-        const { percDesconto } = osProduto 
+        
+        let produto = produtoList.find(c=> c.id == idProduto);
+        let valorVendaUnidade = produto.valorVendaUnidade
+        let valorVendaCaixa = produto.valorVendaCaixa
+        let fracionado = produto.fracionado
+        
+        const { percDesconto, quantidadeUnidade, quantidadeCaixa } = osProduto 
 
         if (!isNil(idTabelaPreco)){
             let tabelaPrecoProduto = tabelaPrecoProdutoList.find(c=> c.idTabelaPreco == idTabelaPreco && c.produto.id == idProduto);
 
             if (!isNil(tabelaPrecoProduto)){
-                valorVenda = tabelaPrecoProduto.valor
+                valorVendaUnidade = tabelaPrecoProduto.valorUnidade
+                valorVendaCaixa = tabelaPrecoProduto.valorCaixa
             }
         }
 
-        let vValorDesconto = obterValorDesconto(percDesconto, valorVenda);
-        let vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVenda);
+        let vValorDesconto = 0;
+        let vPercDesconto = 0;
+        let totalProduto = 0;
+
+        if (fracionado) {
+            vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade);
+            vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaUnidade);
+            //totalProduto = produto.valorVendaUnidade * quantidade;
+        } else {
+            vValorDesconto = obterValorDesconto(percDesconto, valorVendaCaixa);
+            vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaCaixa);
+            //totalProduto = produto.valorVendaUnidade * (produto.quantidadeCaixa * quantidade); 
+        }
+        
+        totalProduto = this.getTotal(idProduto, quantidadeUnidade ? quantidadeUnidade : quantidadeCaixa * produto.quantidadeCaixa, 
+            quantidadeCaixa, vValorDesconto);
 
         setFieldsValue({osProduto: {
                 ...osProduto, 
-                valor: valorVenda,
+                quantidadeUnidade: produto.quantidadeCaixa,
+                quantidadeCaixa: quantidadeCaixa,
+                valorUnidade: valorVendaUnidade,
+                valorCaixa: valorVendaCaixa,
                 desconto: vValorDesconto,
                 percDesconto: vPercDesconto,
-                quantidade: produtoForm.quantidadeCaixa,
+                // desconto: 0,
+                // percDesconto: 0,
+                qtdEstoqueCaixa: produto.qtdEstoqueCaixa,
+                qtdEstoqueUnidade: produto.qtdEstoqueUnidade,
+                fracionado: fracionado,
+                total: totalProduto,
             } 
         })
-        this.setState({produtoDescricao: produtoForm.nome})
+
+        this.setState({produtoDescricao: produto.nome})
     }  
+
+    getTotal = (idProduto, quantidadeUnidade, quantidadeCaixa, desconto) => {
+        const { form: { getFieldsValue, }, produtoList = [], } = this.props
+        //const { osProduto } = getFieldsValue() 
+        //const { quantidade } = osProduto 
+
+        let produto = produtoList.find(c=> c.id == idProduto);
+        let totalProduto = 0;
+
+        if (produto.fracionado) {
+            totalProduto = (produto.valorVendaUnidade - desconto) * quantidadeUnidade;
+        } else {
+            totalProduto = (produto.valorVendaCaixa - desconto) * quantidadeCaixa; 
+        }
+
+        return totalProduto;
+    }
     
     onChangePercDesconto = (percDesconto) => {    
         const { form: { getFieldsValue, setFieldsValue } } = this.props    
         const { osProduto } = getFieldsValue()     
-        const { valor } = osProduto
-                
-        //let valorDesconto = (percDesconto * valor) / 100;
-        let valorDesconto = obterValorDesconto(percDesconto, valor);
+        const { produto: {id: idProduto}, quantidadeUnidade, quantidadeCaixa, valorUnidade, valorCaixa, fracionado } = osProduto
 
-        setFieldsValue({osProduto: {...osProduto, desconto: valorDesconto} })        
+        let valorDesconto = 0;
+
+        if (fracionado) {
+            valorDesconto = obterValorDesconto(percDesconto, valorUnidade);
+        } else {
+            valorDesconto = obterValorDesconto(percDesconto, valorCaixa);
+        }
+
+        setFieldsValue({osProduto: {...osProduto, 
+            desconto: valorDesconto, 
+            total: this.getTotal(idProduto, quantidadeUnidade, quantidadeCaixa, valorDesconto) 
+        } })        
     }  
     
     onChangeDesconto = (desconto) => {    
         const { form: { getFieldsValue, setFieldsValue } } = this.props    
         const { osProduto } = getFieldsValue()     
-        const { valor } = osProduto
+        const { produto: {id: idProduto}, quantidadeUnidade, quantidadeCaixa, valorUnidade, valorCaixa, fracionado } = osProduto
         
-        //let percDesconto = ((desconto / valor) * 100);
-        let percDesconto = obterPercentualDesconto(desconto, valor);
+        let percDesconto = 0;
 
-        setFieldsValue({osProduto: {...osProduto, percDesconto: percDesconto} })        
+        if (fracionado) {
+            percDesconto = obterPercentualDesconto(desconto, valorUnidade);
+        } else {
+            percDesconto = obterPercentualDesconto(desconto, valorCaixa);
+        }
+
+        setFieldsValue({osProduto: {...osProduto, 
+            percDesconto: percDesconto,
+            total: this.getTotal(idProduto, quantidadeUnidade, quantidadeCaixa, desconto) 
+        } })        
     }   
     
     onChangeQtdCaixa = (qtdCaixa) => {    
         const { form: { getFieldsValue, setFieldsValue }, produtoList = [], } = this.props    
         const { osProduto } = getFieldsValue()     
-        //const { quantidadeCaixa } = osProduto
+        const { produto: {id: idProduto}, quantidadeCaixa, desconto } = osProduto
 
-        let produtoForm = produtoList.find(c=> c.id == osProduto.produto.id);
-        //osProduto.nomeProduto = produtoForm.quantidadeCaixa;
+        let produto = produtoList.find(c=> c.id == idProduto); //osProduto.produto.id);
+        let quantidadeUnidade = qtdCaixa * produto.quantidadeCaixa;
                 
-        setFieldsValue({osProduto: {...osProduto, quantidade: qtdCaixa * produtoForm.quantidadeCaixa} })        
+        setFieldsValue({osProduto: {...osProduto, 
+            quantidadeUnidade: quantidadeUnidade,
+            total: this.getTotal(idProduto, quantidadeUnidade, qtdCaixa, desconto)
+        } })        
+    }
+
+    onChangeQtdUnidade = (quantidadeUnidade) => {    
+        const { form: { getFieldsValue, setFieldsValue }, produtoList = [], } = this.props    
+        const { osProduto } = getFieldsValue()     
+        const { produto: {id: idProduto} , desconto} = osProduto
+
+        let produto = produtoList.find(c=> c.id == osProduto.produto.id);
+        let qtdCaixa = quantidadeUnidade / produto.quantidadeCaixa;
+                
+        setFieldsValue({osProduto: {...osProduto, 
+            quantidadeCaixa: qtdCaixa,
+            total: this.getTotal(idProduto, quantidadeUnidade, qtdCaixa, desconto)
+        } })        
     } 
 
     limpar = () => {
@@ -175,9 +281,16 @@ export default class TabProduto extends React.Component {
         fields.osProduto = {
             produto: { id: null},
             bonificacao: false, 
-            quantidade: 0, 
-            qtdCaixaCalc: 1,
-            valor: 0 
+            quantidadeUnidade: 1, 
+            quantidadeCaixa: 1, 
+            valorUnidade: 0,
+            valorCaixa: 0,
+            desconto: 0,
+            percDesconto: 0,
+            qtdEstoqueCaixa: 0,
+            qtdEstoqueUnidade: 0,
+            fracionado: false,
+            total: 0,
         }
 
         setFieldsValue(fields)
@@ -221,32 +334,53 @@ export default class TabProduto extends React.Component {
 
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };        
 
-        const id = getFieldValue("osProduto.id") || null    
-        const idProduto = getFieldValue("osProduto.produto.id") || null
-        const quantidade = getFieldValue("osProduto.quantidade") || null
-        let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id") || null
         let produtoListFilter = produtoList.filter(c=> c.tipo == 'P' || c.tipo == 'C')
-        let totalProduto = 0;
-        let produtoForm = null;  
+        const idForm = getFieldValue("osProduto.id") || null  
+        const idProdutoForm = getFieldValue("osProduto.produto.id") || null 
+        //const quantidadeForm = getFieldValue("osProduto.quantidade") || null 
+        let fracionado = false; 
+        let produto = null;  
         let percDescontoMaximo = 0;      
-        let quantidadeCaixa = 0;
-        let fracionado = false;     
+        //let totalProduto = 0;
+        //let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id") || null
+        
+        // let quantidadeCaixa = 0;
+        // let valorCaixa = 0;
+        // let valorUnidade = 0;
+        
+        if (idProdutoForm) {        
+            produto = produtoList.find(c=> c.id == idProdutoForm);
+            fracionado = produto.fracionado;
+            percDescontoMaximo = produto.percDescontoMaximo;
 
-        if (idProduto && quantidade) {        
-            produtoForm = produtoList.find(c=> c.id == idProduto);
-            totalProduto = produtoForm.valorVenda * quantidade;
-            percDescontoMaximo = produtoForm.percDescontoMaximo;
-            quantidadeCaixa = produtoForm.quantidadeCaixa;
-            fracionado = produtoForm.fracionado;
+            // if (quantidadeForm) { 
+            //     totalProduto = produto.valorVendaUnidade * quantidadeForm;
+            // }
+            //quantidadeCaixa = produto.quantidadeCaixa;
         }
 
         const produtoNome = getFieldValue("osProduto.produto.nome") || produtoDescricao
         
         return (<div>
             <Card title={"Informe os dados referente aos produtos da Ordem de Serviço"} extra={this.getExtra()}>
-                { getFieldDecorator("osProduto.id", { initialValue: id })(<Input type="hidden" />) }
+                { getFieldDecorator("osProduto.id", { initialValue: idForm })(<Input type="hidden" />) }
                 { getFieldDecorator("osProduto.produto.nome", { initialValue: produtoNome })(<Input type="hidden" />) }     
-                { getFieldDecorator("osProduto.quantidadeCaixa", { initialValue: quantidadeCaixa })(<Input type="hidden" />) }    
+                { getFieldDecorator("osProduto.fracionado", { initialValue: fracionado })(<Input type="hidden" />) } 
+                { getFieldDecorator("osProduto.desconto", { initialValue: 0 })(<Input type="hidden" />) } 
+                { getFieldDecorator("osProduto.percDesconto", { initialValue: 0 })(<Input type="hidden" />) }
+                {/* {fracionado == false &&
+                <>
+                    { getFieldDecorator("osProduto.quantidadeCaixa", { initialValue: quantidadeCaixa })(<Input type="hidden" />) }
+                    { getFieldDecorator("osProduto.valorCaixa", { initialValue: valorCaixa })(<Input type="hidden" />) }
+                    
+                </>
+                }
+                {fracionado == true &&
+                    <>
+                    { getFieldDecorator("osProduto.valor", { initialValue: valorUnidade })(<Input type="hidden" />) }
+                     { getFieldDecorator("osProduto.quantidade", { initialValue: quantidade })(<Input type="hidden" />) }
+                    </>
+                }  */}
                 {/* { getFieldDecorator("osProduto.id", { initialValue: id })(<Input type="hidden" />) } */}        
                 {/* { isEqual(viewStateTab, EDITING) && getFieldDecorator("relacao.pessoaRelacao.id", { initialValue: id })(<Input type="hidden" />) } */}
                 <Row gutter = { 12 }>
@@ -268,10 +402,13 @@ export default class TabProduto extends React.Component {
                             }
                         </Form.Item>               
                     </Col>
+                    {/* {fracionado == false &&
+                    <> */}
                     <Col span={2}>
                         <Form.Item label={"Qtd. caixas"}>
                             {
-                                getFieldDecorator('osProduto.qtdCaixaCalc', {
+                                //getFieldDecorator('osProduto.qtdCaixaCalc', {
+                                getFieldDecorator('osProduto.quantidadeCaixa', {
                                     initialValue: 1
                                 })(
                                     <InputNumber style={{ width: "150" }} 
@@ -279,29 +416,48 @@ export default class TabProduto extends React.Component {
                                         precision={0}
                                         step={1}  
                                         onChange={(value) => this.onChangeQtdCaixa(value)} 
-                                        disabled= {isEqual(stateView, VIEWING)}
+                                        //disabled= {isEqual(stateView, VIEWING)}
+                                        disabled= {isEqual(stateView, VIEWING) || fracionado == true}
                                     />
                                 )
                             }
                         </Form.Item>            
-                    </Col>                     
-                    <Col span={2}>
-                        <Form.Item label={"Qtd. (unds)"}>
+                    </Col> 
+                     <Col span={2}>
+                        <Form.Item label={"Valor(caixa)"}>
                             {
-                                getFieldDecorator('osProduto.quantidade', {
-                                    initialValue: 1
+                                getFieldDecorator('osProduto.valorCaixa', {
+                                    initialValue: 0
                                 })(
                                     <InputNumber 
-                                        style={{ width: "150" }} 
-                                        disabled = {!fracionado}
+                                        style={{ width: "150" }}
                                         min={0}
-                                        precision={0}
-                                        step={1} 
+                                        precision={2}
+                                        step={1}
+                                        //disabled= {isEqual(stateView, VIEWING)}
+                                        disabled
                                     />
                                 )
                             }
-                        </Form.Item>            
-                    </Col>                   
+                        </Form.Item>
+                    </Col>
+                    <Col span={2}>
+                        <Form.Item label={"Estoque(caixa)"}>
+                            {
+                                getFieldDecorator('osProduto.qtdEstoqueCaixa', {
+                                    initialValue: 0
+                                })(
+                                    <InputNumber 
+                                        style={{ width: "150" }}
+                                        min={0}
+                                        precision={2}
+                                        step={1}
+                                        disabled
+                                    />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                     
                     <Col span={2}>
                         <Form.Item label={"Perc. desconto"}>
                             {
@@ -315,8 +471,7 @@ export default class TabProduto extends React.Component {
                                         max={percDescontoMaximo} //5
                                         onChange={(value) => this.onChangePercDesconto(value)}                                
                                         //value={percentualDesconto ? percentualDesconto : 0}
-                                        //disabled= {isEqual(stateView, VIEWING)}
-                                        disabled
+                                        disabled= {isEqual(stateView, VIEWING)}
                                     />
                                 )
                             }
@@ -333,40 +488,25 @@ export default class TabProduto extends React.Component {
                                     precision={2}
                                     step={1}
                                     disabled
-                                    onChange={(value) => this.onChangeDesconto(value)}                                    
+                                    onChange={(value) => this.onChangeDesconto(value)}
                                     />
                                 )
                             }
                         </Form.Item>
                     </Col>                                
-                    <Col span={2}>
-                        <Form.Item label={"Valor(unitário)"}>
-                            {
-                                getFieldDecorator('osProduto.valor', {
-                                    initialValue: 0
-                                })(
-                                    <InputNumber 
-                                        style={{ width: "150" }}
-                                        min={0}
-                                        precision={2}
-                                        step={1}
-                                        disabled= {isEqual(stateView, VIEWING)}
-                                    />
-                                )
-                            }
-                        </Form.Item>
-                    </Col>                              
                     <Col span={3}>
-                        <Form.Item label={"Total"}>
-                            {
+                        <Form.Item label={"Total(c/ Descont.)"}>
+                            {getFieldDecorator('osProduto.total', {
+                                initialValue: 0
+                            })(                                      
                                 <InputNumber style={{ width: "150" }}
                                     disabled
                                     min={0}
                                     precision={2}
                                     step={1}
-                                    value={totalProduto ? totalProduto : 0}
+                                    //value={totalProduto ? totalProduto : 0}
                                 />
-                            }
+                            )}
                         </Form.Item>
                     </Col>  
                     <Col span={ 2 }>            
@@ -384,7 +524,68 @@ export default class TabProduto extends React.Component {
                         }
                         </Form.Item>
                     </Col>                        
-                </Row>         
+                </Row>  
+                <Row gutter = { 12 }>
+                    <Col span = { 6 }>
+                    </Col>
+                  {/* </>}  
+                    {fracionado &&     
+                    <>               */}
+                    <Col span={2}>
+                        <Form.Item label={"Qtd. (unds.)"}>
+                            {
+                                getFieldDecorator('osProduto.quantidadeUnidade', {
+                                    initialValue: 1
+                                })(
+                                    <InputNumber 
+                                        style={{ width: "150" }} 
+                                        min={0}
+                                        precision={0}
+                                        step={1} 
+                                        onChange={(value) => this.onChangeQtdUnidade(value)}
+                                        disabled= {isEqual(stateView, VIEWING) || fracionado == false}
+                                    />
+                                )
+                            }
+                        </Form.Item>            
+                    </Col> 
+                    <Col span={2}>
+                        <Form.Item label={"Valor(unidade)"}>
+                            {
+                                getFieldDecorator('osProduto.valorUnidade', {
+                                    initialValue: 0
+                                })(
+                                    <InputNumber 
+                                        style={{ width: "150" }}
+                                        min={0}
+                                        precision={2}
+                                        step={1}
+                                        //disabled= {isEqual(stateView, VIEWING)}
+                                        disabled
+                                    />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>  
+                    <Col span={2}>
+                        <Form.Item label={"Estoque(unidade)"}>
+                            {
+                                getFieldDecorator('osProduto.qtdEstoqueUnidade', {
+                                    initialValue: 0
+                                })(
+                                    <InputNumber 
+                                        style={{ width: "150" }}
+                                        min={0}
+                                        precision={2}
+                                        step={1}
+                                        disabled
+                                    />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                    
+                    {/* </>}                  */}    
+                </Row>       
                 {/* <Row gutter = { 12 }>
                     <Col span={ 3 }>
                         <Form.Item label={<span style={{height: '3px'}} />}>
@@ -437,14 +638,17 @@ export default class TabProduto extends React.Component {
                                     {/* <Table.Column title={<center>Produto</center>} key={"produto"} dataIndex={"produto"} align={"center"} 
                                                 render={(produto = {}) => produto.descricao || produto.nome }/> */}                                            
                                     <Table.Column title={<center>Produto</center>} key={"nomeProduto"} dataIndex={"nomeProduto"} align={"center"} />  
-                                    <Table.Column title={<center>Qtd. caixas</center>} key={"qtdCaixaCalc"} dataIndex={"qtdCaixaCalc"} align={"center"}
-                                        render={(text, record) => record.quantidade / record.quantidadeCaixa  } />    
-                                    <Table.Column title={<center>Qtd. unidades</center>} key={"quantidade"} dataIndex={"quantidade"} align={"center"} />                                                                                                                    
+                                    {/* <Table.Column title={<center>Qtd. caixas</center>} key={"qtdCaixaCalc"} dataIndex={"qtdCaixaCalc"} align={"center"}
+                                        render={(text, record) => record.quantidade / record.quantidadeCaixa  } />     */}
+                                    <Table.Column title={<center>Qtd. caixas</center>} key={"quantidadeCaixa"} dataIndex={"quantidadeCaixa"} align={"center"} />    
+                                    <Table.Column title={<center>Qtd. unidades</center>} key={"quantidadeUnidade"} dataIndex={"quantidadeUnidade"} align={"center"} />
                                     {/* <Table.Column title={<center>Qtd. (unds)</center>} key={"quantidade"} dataIndex={"quantidade"} align={"center"} /> */}
-                                    <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
-                                    <Table.Column title={<center>Valor</center>} key={"valor"} dataIndex={"valor"} align={"center"} />
-                                    <Table.Column title={<center>Total</center>} key={"total"} dataIndex={"total"} align={"center"}
-                                        render={(text, record) => record.quantidade * (record.valor - record.desconto) } />
+                                    {/* <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} /> */}
+                                    <Table.Column title={<center>Valor(unit)</center>} key={"valorUnidade"} dataIndex={"valorUnidade"} align={"center"} />
+                                    <Table.Column title={<center>Valor(caixa)</center>} key={"valorCaixa"} dataIndex={"valorCaixa"} align={"center"} />
+                                    {/* <Table.Column title={<center>Total</center>} key={"total"} dataIndex={"total"} align={"center"}
+                                        render={(text, record) => record.quantidade * (record.valor - record.desconto) } /> */}
+                                    <Table.Column title={<center>Total</center>} key={"total"} dataIndex={"total"} align={"center"} />                                      
                                     <Table.Column title={<center>Bonificação</center>} key={"bonificacao"} dataIndex={"bonificacao"} align={"center"}
                                         render={(text, record) => record.bonificacao ? 'SIM' : 'NÃO'} />    
                                     <Table.Column title={<center>Ações</center>} key={"actions"} 
