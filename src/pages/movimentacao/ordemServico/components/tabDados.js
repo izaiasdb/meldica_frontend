@@ -6,6 +6,7 @@ import moment from 'moment'
 import { validarCPF } from '../../../util/validacaoUtil'
 import NumericInput from '../../../util/numericInput'
 import { VIEWING } from '../../../util/state'
+import { getUser } from '../../../../services/authenticationService'
 
 const Option = Select.Option
 
@@ -58,6 +59,8 @@ const TabDados = (props) => {
         nfMeldica,
         nfCosmetico,       
     } = ordemServico || {}
+    const { funcionario: funcionarioUser} = getUser()
+    const { id: idFuncionarioUser } = funcionarioUser || {}
 
     const idCliente = getFieldValue("ordemServico.cliente.id") || (isNil(cliente) ? null : cliente.id)
     const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
@@ -222,7 +225,7 @@ const TabDados = (props) => {
                         {
                             getFieldDecorator('ordemServico.funcionario.id', {
                                 rules: [{required: true, message: 'Por favor, informe o Vendedor.'}],
-                                initialValue: isNil(funcionario) ? null : funcionario.id
+                                initialValue: !isNil(funcionario) && !isNil(funcionario.id) ? funcionario.id : idFuncionarioUser
                             })(
                             <Select 
                                 showSearch

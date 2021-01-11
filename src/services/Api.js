@@ -50,6 +50,12 @@ const create = () => {
     salvar: (obj) => api.post('/usuario/alterarsenha', obj),
   }
 
+  const MainLayout = {
+    init: (idUsuario) => api.get('/main/init', { idUsuario: idUsuario }),
+    //inativarAlerta: (obj) => api.post('/main/inativarAlerta', obj),
+    //marcarLido: (obj) => api.post('/main/marcarLido', obj),
+  }
+
   const BuscaRapida = {
     search: (obj) => api.post('/pessoa/buscaRapida', {...obj}),
   }
@@ -210,6 +216,7 @@ const create = () => {
   return {
     Login,
     AlterarSenha,
+    MainLayout,
     Dashboard,
     Configuracao,
     BuscaRapida,    

@@ -384,47 +384,6 @@ export default class TabForma extends React.Component {
                         </Form.Item>
                     </Col> 
                 </Row>             
-                {/* <Row gutter = { 12 }>
-                    <Col span={ 5 }>
-                        <Form.Item label={<span style={{height: '3px'}} />}>
-                            {
-                                <Button 
-                                    type={"primary"} 
-                                    disabled= {isEqual(stateView, VIEWING)}
-                                    onClick={() => this.adicionar(form)}>
-                                    { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } Forma de Pagamento
-                                </Button>
-                            }
-                        </Form.Item>
-                    </Col>
-                    <Col span={ 3 }>
-                        <Form.Item label={<span style={{height: '3px'}} />}>
-                            {
-                                <Button 
-                                    type={"primary"} 
-                                    disabled= {isEqual(stateView, VIEWING)}
-                                    onClick={this.limpar} >
-                                    Limpar
-                                </Button>
-                            }
-                        </Form.Item>
-                    </Col>
-                </Row> */}
-                {/* <Row gutter={12}>
-                    <Col span={ 24 }>
-                        <Form.Item label={"Observação"} >
-                            {
-                                getFieldDecorator('relacao.observacoes', {
-                                    rules: [{ required: false, message: "Por favor, informe a observação."}],
-                                    //initialValue: descricao
-                                })(<Input.TextArea autoSize={{ minRows: 3, maxRows: 5 }}
-                                    onInput={toInputUppercase} 
-                                    //disabled = { isEqual(viewStateTab, INSERTING) && autorizacaoCustodiadoForm != 'S' && autorizacaoUnidadeForm != 'S' } 
-                                />)
-                            }                                
-                        </Form.Item>                            
-                    </Col>                            
-                </Row>          */}
                 <Row gutter = { 12 }>
                     <Form.Item label={"Formas de pagamento"}>
                         {

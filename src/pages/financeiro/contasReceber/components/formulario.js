@@ -87,12 +87,16 @@ class Formulario extends Component {
                     { getFieldDecorator("contasReceber.selecionado", { initialValue: isNil(selecionado) ? false : selecionado})(<Input type="hidden" />) }
                     { getFieldDecorator("contasReceber.valorPago", { initialValue: isNil(valorPago) ? 0 : valorPago})(<Input type="hidden" />) }
                     <Row gutter={12}>
+                        <Col span={ 6 }>
                         {
-                            getCard('Valor Documento', '#FBC658', 'sketch', valor)
+                            getCard('Valor Documento', '#FBC658', 'sketch', valor ? valor : 0, true, true)
                         }
+                        </Col>
+                        <Col span={ 6 }>
                         {
-                            getCard(`Valor ${isEqual(tipoTela, 'PAGAR') ? 'Pago': 'Recebido'}`, '#DA120B', 'dollar', valorPago ? valorPago : 0)
+                            getCard(`Valor ${isEqual(tipoTela, 'PAGAR') ? 'Pago': 'Recebido'}`, '#DA120B', 'dollar', valorPago ? valorPago : 0, true, true)
                         }
+                        </Col>
                     </Row>
                     <Row>
                         <TabDados {...this.props} />

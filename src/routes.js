@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
 
-import MainLayout from './mainLayout'
+import MainLayout from './mainLayout/container/mainLayout'
 import LoginActions from './pages/login/redux'
 import { isAuthenticated } from './services/authenticationService';
 

@@ -82,7 +82,7 @@ class Tabela extends Component {
                                       width={'7%'}
                                       render={(text, record) => (
                                         <span>
-                                            {hasAnyAuthority("PLANO_CONTA_ALTERAR") &&
+                                            {hasAnyAuthority("PLANO_DE_CONTAS_ALTERAR") &&
                                                 <Icon style={{cursor: 'pointer'}} type={ 'edit' } onClick={(e) => this.prepareUpdate(record)}></Icon>
                                             }
                                         </span>

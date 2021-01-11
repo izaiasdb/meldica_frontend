@@ -39,14 +39,14 @@ class Pesquisa extends Component {
                 <Divider type="vertical" />
                 <Button type={ "primary"}
                         htmlType="submit"
-                        disabled = {!hasAnyAuthority("MENU_CONSULTAR")}
+                        disabled = {!hasAnyAuthority("PLANO_DE_CONTAS_CONSULTAR")}
                         onClick={this.handleSubmit}
                         style={{ marginLeft: '10px' }}>
                         Pesquisar
                 </Button>
                 <Divider type="vertical" />
                 <Button type={ "primary"} 
-                            disabled = {!hasAnyAuthority("PRODUTOS_INSERIR")}
+                            disabled = {!hasAnyAuthority("PLANO_DE_CONTAS_INSERIR")}
                             onClick={this.prepareInsert}>
                             Cadastrar
                 </Button>                
@@ -105,6 +105,24 @@ class Pesquisa extends Component {
                             }
                         </Form.Item>
                     </Col> */}
+                    <Col span={4}>
+                        <Form.Item label={"Tipo"}>
+                            {
+                                getFieldDecorator('planoConta.receitaDespesa', {
+                                    initialValue: null
+                                })(
+                                    <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        <Option key={2} value={'R'}>{"RECEITA"}</Option>
+                                        <Option key={2} value={'D'}>{"DDESPESA"}</Option>
+                                    </Select>
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                     
                     <Col span={ 8 }>
                         <Form.Item label={"Nome"}>
                             {

@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 const rootReducer = combineReducers({    
     //************************************ Comum ************************************/
     login: require('../pages/login/redux').reducer,
+    mainLayout: require('../mainLayout/redux').reducer, 
     dashboard: require('../pages/dashboard/redux').reducer,    
     buscaRapida: require('../pages/buscaRapida/redux').reducer,
     alterarSenha: require('../pages/alterarSenha/redux').reducer,    

@@ -104,10 +104,11 @@ class Formulario extends Component {
         let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
         let totalPedido = (totalProduto ? totalProduto : 0) +  (totalFrete ? totalFrete : 0);
         let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalFormaDescontos ? totalFormaDescontos : 0);
-        let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfCaixa)), 0);
+        let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeCaixa}) => acum + (Number(quantidadeCaixa) * Number(valorNfCaixa)), 0);
         let totalNFUnidade = produtoItemsListForm.filter(c=> c.fracionado == true).reduce((acum,{ valorNfUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfUnidade)), 0);
         let totalNF = totalNFUnidade + totalNFCaixa;
         let faltaFormaPgto = totalPedido - totalForma;
+        // A bonificação tem que somar o total de peso, volume e NF
 
         return (
             <Spin spinning={fetching}>

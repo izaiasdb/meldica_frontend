@@ -5,11 +5,13 @@ import API from "../services/Api";
 //************************************ Comum ************************************/
 import { LoginTypes } from '../pages/login/redux';
 import { AlterarSenhaTypes } from '../pages/alterarSenha/redux';
+import { MainLayoutTypes } from '../mainLayout/redux';
 import { DashboardTypes } from '../pages/dashboard/redux';
 import { BuscaRapidaTypes } from '../pages/buscaRapida/redux';
 
 import * as Login from '../pages/login/sagas';
 import * as AlterarSenha from '../pages/alterarSenha/sagas';
+import * as MainLayout from '../mainLayout/sagas';
 import * as Dashboard from '../pages/dashboard/sagas';
 import * as BuscaRapida from '../pages/buscaRapida/sagas';
 
@@ -86,6 +88,10 @@ export default function * root () {
         takeLatest(LoginTypes.LOGIN_ALTERAR_SENHA, Login.alterarSenha, api),
 
         takeLatest(AlterarSenhaTypes.ALTERAR_SENHA_SALVAR, AlterarSenha.salvar, api),
+
+        takeLatest(MainLayoutTypes.MAIN_LAYOUT_INIT, MainLayout.fetch, api),
+        //takeLatest(MainLayoutTypes.MAIN_LAYOUT_INATIVAR_ALERTA, MainLayout.inativarAlerta, api),
+        //takeLatest(MainLayoutTypes.MAIN_LAYOUT_MARCAR_LIDO, MainLayout.marcarLido, api),
 
         takeLatest(DashboardTypes.DASHBOARD_GET_POPULACAO_TOTAL, Dashboard.getPopulacaoTotal, api),
         takeLatest(DashboardTypes.DASHBOARD_GET_TOTAL_COLABORADOR_POR_TIPO, Dashboard.getTotalColaboradorPorTipo, api),

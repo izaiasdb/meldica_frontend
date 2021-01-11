@@ -28,13 +28,15 @@ class Formulario extends Component {
             if (isEqual(message.tipo, 'success')) {
                 const { planoConta } = this.props
                 
-                if (planoConta.id){
-                    this.props.cleanTable()
-                    this.props.setStateView(SEARCHING)
-                } else {
-                    this.handleReset()
-                    this.props.setPlanoConta(null)
-                }
+                this.props.cleanTable()
+                this.props.setStateView(SEARCHING)
+                // if (planoConta.id){
+                //     this.props.cleanTable()
+                //     this.props.setStateView(SEARCHING)
+                // } else {
+                //     this.handleReset()
+                //     this.props.setPlanoConta(null)
+                // }
             }
 
             this.props.cleanMessage()
@@ -55,7 +57,7 @@ class Formulario extends Component {
             ativo,
             dataInclusao, 
             nivel, 
-            planoConta: planoContaPai = {},
+            planoContaPai,
             numeroConta, 
             receitaDespesa
         } = planoConta || {}
@@ -122,7 +124,7 @@ class Formulario extends Component {
                             {
                                 getFieldDecorator('planoConta.planoContaPai.id', {
                                     rules: [{required: planoContaNivel > 1, message: 'Informe o Plano Conta.'}],
-                                    initialValue: idPlanoContaPai || null,
+                                    initialValue: isNil(idPlanoContaPai) ? null : idPlanoContaPai,
                                 })(
                                 <Select showSearch
                                         optionFilterProp="children"

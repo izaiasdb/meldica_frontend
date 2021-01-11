@@ -33,12 +33,12 @@ export default class TabProduto extends React.Component {
         
         if (fracionado) {
         //if(!(produto && produto.id && quantidade && valor && qtdCaixaCalc)){
-            if(!(produto && produto.id && quantidadeUnidade && valorUnidade)){
+            if(!(produto && produto.id && quantidadeUnidade && valorUnidade) || quantidadeUnidade == 0){
                 openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao produto.'})
                 return null
             }     
         } else {
-            if(!(produto && produto.id && quantidadeCaixa, valorCaixa)){
+            if(!(produto && produto.id && quantidadeCaixa, valorCaixa) || quantidadeCaixa == 0){
                 openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao produto.'})
                 return null
             } 
@@ -79,6 +79,7 @@ export default class TabProduto extends React.Component {
         osProduto.qtdEstoqueCaixa = produtoForm.qtdEstoqueCaixa;
         osProduto.qtdEstoqueUnidade = produtoForm.qtdEstoqueUnidade;
         osProduto.quantidadeNaCaixa = produtoForm.quantidadeCaixa;
+        osProduto.idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id");
 
         if (produtoForm.fracionado) {
             osProduto.valorCaixa = 0;
@@ -108,6 +109,7 @@ export default class TabProduto extends React.Component {
                     qtdEstoqueCaixa: 0,
                     qtdEstoqueUnidade: 0,
                     fracionado: false,
+                    valorCaixaDesconto: 0,
                     total: 0,
                 }
             })
@@ -135,60 +137,6 @@ export default class TabProduto extends React.Component {
     }
 
     handleChangeProduto = (idProduto) => {    
-        // const { form: { getFieldsValue, setFieldsValue, getFieldValue }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props    
-        // const { osProduto } = getFieldsValue() 
-        // let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")    
-        
-        // let produto = produtoList.find(c=> c.id == idProduto);
-        // let valorVendaUnidade = produto.valorVendaUnidade
-        // let valorVendaCaixa = produto.valorVendaCaixa
-        // let fracionado = produto.fracionado
-        
-        // const { percDesconto, quantidadeUnidade, quantidadeCaixa } = osProduto 
-
-        // if (!isNil(idTabelaPreco)){
-        //     let tabelaPrecoProduto = tabelaPrecoProdutoList.find(c=> c.idTabelaPreco == idTabelaPreco && c.produto.id == idProduto);
-
-        //     if (!isNil(tabelaPrecoProduto)){
-        //         valorVendaUnidade = tabelaPrecoProduto.valorUnidade
-        //         valorVendaCaixa = tabelaPrecoProduto.valorCaixa
-        //     }
-        // }
-
-        // let vValorDesconto = 0;
-        // let vPercDesconto = 0;
-        // let totalProduto = 0;
-
-        // if (fracionado) {
-        //     vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade);
-        //     vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaUnidade);
-        //     //totalProduto = produto.valorVendaUnidade * quantidade;
-        // } else {
-        //     vValorDesconto = obterValorDesconto(percDesconto, valorVendaCaixa);
-        //     vPercDesconto = obterPercentualDesconto(vValorDesconto, valorVendaCaixa);
-        //     //totalProduto = produto.valorVendaUnidade * (produto.quantidadeCaixa * quantidade); 
-        // }
-        
-        // totalProduto = this.getTotal(idProduto, quantidadeUnidade ? quantidadeUnidade : quantidadeCaixa * produto.quantidadeCaixa, 
-        //     quantidadeCaixa, vValorDesconto, fracionado, valorVendaUnidade, valorVendaCaixa);
-
-        // setFieldsValue({osProduto: {
-        //         ...osProduto, 
-        //         quantidadeUnidade: produto.quantidadeCaixa,
-        //         quantidadeCaixa: quantidadeCaixa,
-        //         valorUnidade: valorVendaUnidade,
-        //         valorCaixa: valorVendaCaixa,
-        //         desconto: vValorDesconto,
-        //         percDesconto: vPercDesconto,
-        //         // desconto: 0,
-        //         // percDesconto: 0,
-        //         qtdEstoqueCaixa: produto.qtdEstoqueCaixa,
-        //         qtdEstoqueUnidade: produto.qtdEstoqueUnidade,
-        //         fracionado: fracionado,
-        //         total: totalProduto,
-        //     } 
-        // })
-
         // this.setState({produtoDescricao: produto.nome})
 
         const { form: { getFieldsValue, setFieldsValue, getFieldValue }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props    
@@ -245,6 +193,7 @@ export default class TabProduto extends React.Component {
                 qtdEstoqueCaixa: produto.qtdEstoqueCaixa,
                 qtdEstoqueUnidade: produto.qtdEstoqueUnidade,
                 fracionado: fracionado,
+                valorCaixaDesconto: valorVendaCaixa - vValorDesconto,
                 total: totalProduto,
             } 
         })
@@ -303,7 +252,7 @@ export default class TabProduto extends React.Component {
     }  
     
     onChangeDesconto = (desconto) => {    
-        const { form: { getFieldsValue, setFieldsValue } } = this.props    
+        const { form: { getFieldsValue, setFieldsValue }, produtoList = [] } = this.props    
         const { osProduto } = getFieldsValue()     
         const { produto: {id: idProduto}, quantidadeUnidade, quantidadeCaixa, valorUnidade, valorCaixa, fracionado } = osProduto
         
@@ -314,6 +263,27 @@ export default class TabProduto extends React.Component {
         } else {
             percDesconto = obterPercentualDesconto(desconto, valorCaixa);
         }
+
+        /*
+        if (idProduto) {        
+            let produto = produtoList.find(c=> c.id == idProduto);
+
+            if (percDesconto > produto.percDescontoMaximo) {
+                percDesconto = 0;
+
+                setFieldsValue({osProduto: {...osProduto, 
+                    desconto: 0
+                }})  
+                return
+            }
+        }*/
+
+        //let totalProduto = 0;
+        //let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id") || null
+        
+        // let quantidadeCaixa = 0;
+        // let valorCaixa = 0;
+        // let valorUnidade = 0;
 
         // setFieldsValue({osProduto: {...osProduto, 
         //     percDesconto: percDesconto,
@@ -369,6 +339,7 @@ export default class TabProduto extends React.Component {
             qtdEstoqueCaixa: 0,
             qtdEstoqueUnidade: 0,
             fracionado: false,
+            valorCaixaDesconto: 0,
             total: 0,
         }
 
@@ -416,10 +387,13 @@ export default class TabProduto extends React.Component {
         let produtoListFilter = produtoList.filter(c=> c.tipo == 'P' || c.tipo == 'C')
         const idForm = getFieldValue("osProduto.id") || null  
         const idProdutoForm = getFieldValue("osProduto.produto.id") || null 
-        //const quantidadeForm = getFieldValue("osProduto.quantidade") || null 
+        const valorCaixaForm = getFieldValue("osProduto.valorCaixa") || 0 
+        const valorUnidadeForm = getFieldValue("osProduto.valorUnidade") || 0 
         let fracionado = false; 
         let produto = null;  
-        let percDescontoMaximo = 0;      
+        let percDescontoMaximo = 0;
+        let descontoMaximo = 0;
+    
         //let totalProduto = 0;
         //let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id") || null
         
@@ -432,6 +406,11 @@ export default class TabProduto extends React.Component {
             fracionado = produto.fracionado;
             percDescontoMaximo = produto.percDescontoMaximo;
 
+            if (fracionado){
+                descontoMaximo = obterValorDesconto(percDescontoMaximo, valorUnidadeForm);
+            } else {
+                descontoMaximo = obterValorDesconto(percDescontoMaximo, valorCaixaForm);
+            }
             // if (quantidadeForm) { 
             //     totalProduto = produto.valorVendaUnidade * quantidadeForm;
             // }
@@ -445,8 +424,8 @@ export default class TabProduto extends React.Component {
                 { getFieldDecorator("osProduto.id", { initialValue: idForm })(<Input type="hidden" />) }
                 { getFieldDecorator("osProduto.produto.nome", { initialValue: produtoNome })(<Input type="hidden" />) }     
                 { getFieldDecorator("osProduto.fracionado", { initialValue: fracionado })(<Input type="hidden" />) } 
-                { getFieldDecorator("osProduto.desconto", { initialValue: 0 })(<Input type="hidden" />) } 
-                { getFieldDecorator("osProduto.percDesconto", { initialValue: 0 })(<Input type="hidden" />) }
+                {/* { getFieldDecorator("osProduto.desconto", { initialValue: 0 })(<Input type="hidden" />) } 
+                { getFieldDecorator("osProduto.percDesconto", { initialValue: 0 })(<Input type="hidden" />) } */}
                 {/* {fracionado == false &&
                 <>
                     { getFieldDecorator("osProduto.quantidadeCaixa", { initialValue: quantidadeCaixa })(<Input type="hidden" />) }
@@ -502,8 +481,8 @@ export default class TabProduto extends React.Component {
                             }
                         </Form.Item>            
                     </Col> 
-                     <Col span={2}>
-                        <Form.Item label={"Valor(caixa)"}>
+                    <Col span={2}>
+                        <Form.Item label={"Valor(cx)"}>
                             {
                                 getFieldDecorator('osProduto.valorCaixa', {
                                     initialValue: 0
@@ -537,8 +516,8 @@ export default class TabProduto extends React.Component {
                             }
                         </Form.Item>
                     </Col>                     
-                    <Col span={2}>
-                        <Form.Item label={"Perc. desconto"}>
+                    <Col span={3}>
+                        <Form.Item label={"Perc. desc." + "(máx "+(percDescontoMaximo ? percDescontoMaximo : 0) +")"}>
                             {
                                 getFieldDecorator('osProduto.percDesconto', {
                                     initialValue: 0
@@ -556,8 +535,8 @@ export default class TabProduto extends React.Component {
                             }
                         </Form.Item>
                     </Col> 
-                    <Col span={2}>
-                        <Form.Item label={"Desconto"}>
+                    <Col span={3}>
+                        <Form.Item label={"Desc." + "(máx "+(descontoMaximo ? descontoMaximo : 0 )+")"}>
                             {
                                 getFieldDecorator('osProduto.desconto', {
                                     initialValue: 0
@@ -566,13 +545,32 @@ export default class TabProduto extends React.Component {
                                     min={0}
                                     precision={2}
                                     step={1}
-                                    disabled
+                                    max={descontoMaximo}
+                                    //disabled
                                     onChange={(value) => this.onChangeDesconto(value)}
                                     />
                                 )
                             }
                         </Form.Item>
-                    </Col>                                
+                    </Col>
+                    {/* <Col span={2}>
+                        <Form.Item label={"Valor(c/ desc.)"}>
+                            {
+                                getFieldDecorator('osProduto.valorCaixaDesconto', {
+                                    initialValue: 0
+                                })(
+                                    <InputNumber 
+                                        style={{ width: "150" }}
+                                        min={0}
+                                        precision={2}
+                                        step={1}
+                                        //disabled= {isEqual(stateView, VIEWING)}
+                                        disabled
+                                    />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                                                    */}
                     <Col span={3}>
                         <Form.Item label={"Total(c/ Descont.)"}>
                             {getFieldDecorator('osProduto.total', {
@@ -719,16 +717,21 @@ export default class TabProduto extends React.Component {
                                     <Table.Column title={<center>Produto</center>} key={"nomeProduto"} dataIndex={"nomeProduto"} align={"center"} />  
                                     {/* <Table.Column title={<center>Qtd. caixas</center>} key={"qtdCaixaCalc"} dataIndex={"qtdCaixaCalc"} align={"center"}
                                         render={(text, record) => record.quantidade / record.quantidadeCaixa  } />     */}
-                                    <Table.Column title={<center>Qtd. caixas</center>} key={"quantidadeCaixa"} dataIndex={"quantidadeCaixa"} align={"center"} />    
-                                    <Table.Column title={<center>Qtd. unidades</center>} key={"quantidadeUnidade"} dataIndex={"quantidadeUnidade"} align={"center"} />
+                                    <Table.Column title={<center>Qtd. cx's</center>} key={"quantidadeCaixa"} dataIndex={"quantidadeCaixa"} align={"center"} />    
+                                    <Table.Column title={<center>Qtd. unids.</center>} key={"quantidadeUnidade"} dataIndex={"quantidadeUnidade"} align={"center"} />
                                     {/* <Table.Column title={<center>Qtd. (unds)</center>} key={"quantidade"} dataIndex={"quantidade"} align={"center"} /> */}
                                     {/* <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} /> */}
                                     <Table.Column title={<center>Valor(unit)</center>} key={"valorUnidade"} dataIndex={"valorUnidade"} align={"center"} />
-                                    <Table.Column title={<center>Valor(caixa)</center>} key={"valorCaixa"} dataIndex={"valorCaixa"} align={"center"} />
-                                    {/* <Table.Column title={<center>Total</center>} key={"total"} dataIndex={"total"} align={"center"}
-                                        render={(text, record) => record.quantidade * (record.valor - record.desconto) } /> */}
-                                    <Table.Column title={<center>Total</center>} key={"total"} dataIndex={"total"} align={"center"} />                                      
-                                    <Table.Column title={<center>Bonificação</center>} key={"bonificacao"} dataIndex={"bonificacao"} align={"center"}
+                                    <Table.Column title={<center>Valor(cx)</center>} key={"valorCaixa"} dataIndex={"valorCaixa"} align={"center"} />
+                                    <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
+                                    <Table.Column title={<center>Valor c/ desc.</center>} key={"total2"} dataIndex={"total2"} align={"center"}
+                                        render={(text, record) => record.fracionado ?
+                                             (record.valorUnidade - record.desconto) : 
+                                             (record.valorCaixa - record.desconto)  } />
+                                    <Table.Column title={<center>NF unit.</center>} key={"valorNfUnidade"} dataIndex={"valorNfUnidade"} align={"center"} />
+                                    <Table.Column title={<center>NF cx</center>} key={"valorNfCaixa"} dataIndex={"valorNfCaixa"} align={"center"} />
+                                    <Table.Column title={<center>Total(C/ Desc.)</center>} key={"total"} dataIndex={"total"} align={"center"} />
+                                    <Table.Column title={<center>Bonif.</center>} key={"bonificacao"} dataIndex={"bonificacao"} align={"center"}
                                         render={(text, record) => record.bonificacao ? 'SIM' : 'NÃO'} />    
                                     <Table.Column title={<center>Ações</center>} key={"actions"} 
                                                 dataIndex={"actions"} 

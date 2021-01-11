@@ -73,7 +73,7 @@ class Tabela extends Component {
     }    
 
     getAcoes = (record) => {
-        console.log(getUser())
+        //console.log(getUser())
         const { funcionario = {}} = getUser()
         const { id: idFuncionario } = funcionario || {}
 
@@ -83,9 +83,11 @@ class Tabela extends Component {
                 <>
                     {hasAnyAuthority("VENDAS_ALTERAR") && (
                     // Se for o vendedor que fez ou se estiver em 'A'
-                    (record.funcionario.id == idFuncionario &&  record.statusNota == 'A') || // Só perfil vendedor
+                    (//record.funcionario.id == idFuncionario &&  
+                        record.statusNota == 'A') || // Só perfil vendedor
                     // Se for o vendedor que fez ou se estiver em 'R'
-                    (record.funcionario.id == idFuncionario && record.statusNota == 'R' ) || 
+                    (//record.funcionario.id == idFuncionario && 
+                        record.statusNota == 'R' ) || 
                     // Se tiver permissão para 'REABRIR', sinal que é da LOGÍSTICA
                     (record.statusNota == 'L' && hasAnyAuthority("VENDAS_-_REABRIR_ALTERAR")) ) &&
                     <Tooltip title="Editar Pedido">
@@ -96,7 +98,8 @@ class Tabela extends Component {
                     </Tooltip>
                     }
                     {
-                    record.funcionario.id == idFuncionario && record.statusNota == 'A' && hasAnyAuthority("VENDAS_-_LOGISTICA_ALTERAR") &&
+                    //record.funcionario.id == idFuncionario && 
+                    record.statusNota == 'A' && hasAnyAuthority("VENDAS_-_LOGISTICA_ALTERAR") &&
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Logística">
@@ -121,7 +124,7 @@ class Tabela extends Component {
                     </>
                     }                    
                     {
-                    record.statusNota == 'R' && hasAnyAuthority("VENDAS_-_REABRIR_ALTERAR") && // REABERTA
+                    record.statusNota == 'R' && hasAnyAuthority("VENDAS_-_FECHAR_ALTERAR") && // REABERTA
                     // record.statusNota != 'C' && record.formaGerada == false &&
                     // hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
                     <>                

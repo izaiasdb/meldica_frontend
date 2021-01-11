@@ -2,15 +2,18 @@ import React, { Component } from 'react'
 import { Layout, Menu, Icon, Popover, Avatar, Select, Modal, Button } from 'antd';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import './assets/css/topo.css'
-import logo from './assets/images/logo.png';
-import { getUser } from './services/authenticationService';
-// import BuscaRapida from './pages/buscaRapida/buscaRapida';
-import LoginActions from './pages/login/redux'
-import { generateOptions } from './pages/util/helper'
 import { Redirect, withRouter } from 'react-router-dom'
-import AlterarSenha from './pages/alterarSenha/alterarSenha'
-import AlterarSenhaActions from './pages/alterarSenha/redux'
+
+import Actions from '../redux'
+import '../../assets/css/topo.css'
+import logo from '../../assets/images/logo.png';
+import { getUser } from '../../services/authenticationService';
+// import BuscaRapida from './pages/buscaRapida/buscaRapida';
+import LoginActions from '../../pages/login/redux'
+import { generateOptions } from '../../pages/util/helper'
+import AlterarSenha from '../../pages/alterarSenha/alterarSenha'
+import AlterarSenhaActions from '../../pages/alterarSenha/redux'
+import AlertaUsuario from '../components/alertaUsuario'
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu
@@ -21,6 +24,10 @@ class MainLayout extends Component {
     selectedKey: '1',
   };  
 
+  componentDidMount() {
+    this.props.init()
+  }
+
   onCollapse = (collapsed) => {
     this.setState({ collapsed });
   }
@@ -30,20 +37,31 @@ class MainLayout extends Component {
 
     return (<div >      
       <Button type="link"
-        onClick = { (e) => this.showModal() }
+        onClick = { (e) => this.showModalAlterarUsuario() }
         icon="edit"
         style={{marginLeft: '-15px'}} >
         Alterar senha        
       </Button>
       <br/>      
-      <Link to="/login" onClick = { () => { logout(); setUnidadeAtual() } }>
+      <Link to="/login" onClick = { () => { 
+          logout(); 
+          //setUnidadeAtual() 
+        } }>
         <Icon type={ 'logout' }></Icon>
         &nbsp;&nbsp;Sair
       </Link>
     </div>)
   }
 
-  showModal = () => {
+  showModalAlterarUsuario = () => {
+    this.props.setVisivel(true);
+  };
+
+  showModalAlertaLogistica = () => {
+    this.props.setVisivel(true);
+  };
+
+  showModalAlertaVendedor = () => {
     this.props.setVisivel(true);
   };
 
@@ -110,10 +128,27 @@ class MainLayout extends Component {
                   subMenu.map(sm => this.getSubMenu(sm))
                } 
       </SubMenu>)  
-  } 
+  }
+  
+  getAlertaLogisticaContent = (pedidoLogisticaList = []) => {
+    return (
+      <div >  
+        {    
+          pedidoLogisticaList.length > 0 &&
+          <Button type="link"
+            onClick = { (e) => this.showModalAlterarUsuario() }
+            icon="eye"
+            style={{marginLeft: '-15px'}} >
+            Visualizar Alertas Lógistica     
+          </Button>
+        }
+      </div>)
+  }
 
   render() {
-    const { nome, login } = getUser()
+    const { nome, login, } = getUser()
+    const { pedidoLogisticaList = [], pedidoReabertoist = [] } = this.props
+    
     return (
       <div>
       <Layout>
@@ -124,8 +159,38 @@ class MainLayout extends Component {
               </Link>
               <div className={"nomeTopo"} >
                 {/* Méldica */}
+              </div>
+              
+              {/* <BuscaRapida /> */}       
+
+              <div style={{ float: "right", width: '8%', height: '65px', display: 'flex'}}>
+                {/* <div style={{ float: "right", marginLeft: '8px'}} >
+                  <Popover placement="bottom" title={"Pendências"} content={this.getPendenciasContent(pendencias)}>
+                    <Badge count={pendencias.length} showZero>
+                      <Icon type="warning" style={{ fontSize: '22px', color: '#08c', marginLeft: '8px' }} theme="outlined" />
+                    </Badge>
+                  </Popover>
+                </div> */}
+                { pedidoLogisticaList.length > 0 &&
+                <div style={{ float: "right", marginLeft: '8px'}} >
+                  <Popover placement="bottom" title={"Alerta logística"} content={this.getAlertaLogisticaContent(pedidoLogisticaList)}>
+                    <Badge count={pedidoLogisticaList.length} showZero>
+                      <Icon type="notification" style={{ fontSize: '22px', color: '#08c', marginLeft: '8px' }} theme="outlined" />
+                    </Badge>
+                  </Popover>
                 </div>
-              {/* <BuscaRapida /> */}              
+                }   
+                { pedidoReabertoist.length > 0 &&
+                <div style={{ float: "right", marginLeft: '8px'}} >
+                  <Popover placement="bottom" title={"Alerta pedidos reaberto"} content={this.getAlertaLogisticaContent(pedidoReabertoist)}>
+                    <Badge count={pedidoReabertoist.length} showZero>
+                      <Icon type="notification" style={{ fontSize: '22px', color: '#08c', marginLeft: '8px' }} theme="outlined" />
+                    </Badge>
+                  </Popover>
+                </div>
+                }             
+              </div>
+
               <div className={"userTopo"} >
                 <Popover placement="bottom" title={nome} content={this.getContent()}>
                   <Avatar size="small" icon="user" style={ { backgroundColor: '#149647'}} />
@@ -169,10 +234,13 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+  init: ()  => dispatch(Actions.mainLayoutInit()),
   cleanMessage: ()  => dispatch(LoginActions.loginCleanMessage()),
   logout: () => dispatch(LoginActions.loginLogout()),
-  setUnidadeAtual: (unidadeAtual) => dispatch(LoginActions.loginSetUnidadeAtual(unidadeAtual)),
+  //setUnidadeAtual: (unidadeAtual) => dispatch(LoginActions.loginSetUnidadeAtual(unidadeAtual)),
   setVisivel: (visibilidade) => dispatch(AlterarSenhaActions.alterarSenhaSetVisivel(visibilidade)),  
+  setModalAlertaLogisticaVisivel: (visibilidade) => dispatch(Actions.mainLayoutSetModalAlertaLogisticaVisivel(visibilidade)), 
+  setModalAlertaVendedorVisivel: (visibilidade) => dispatch(Actions.mainLayoutSetModalAlertaVendedorVisivel(visibilidade)), 
 })
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainLayout))

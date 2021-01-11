@@ -3,7 +3,7 @@ import { Card, Col, Avatar, } from 'antd'
 
 const { Meta } = Card
 
-export const getCard = (nome, color, icon, value, formata = true, currency = true) => {
+export const getCard = (nome, color, icon, value, formata = true, currency = true, realca = false,) => {
     var formatter = new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL',
@@ -25,7 +25,8 @@ export const getCard = (nome, color, icon, value, formata = true, currency = tru
                             style = {{ color, backgroundColor: '#fff', paddingRight: 0, width: '45px'}}/> }
                   title={<span style={{ 'fontSize': '16px', 'fontWeight' : 'bold'}}>{nome}</span>}
                   description = {
-                        <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '1.6em', 'color' : '#000'}}>
+                        <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : 
+                            (realca ? '1.6em' : '1.6em'), 'color' : (realca ? 'blue': '#000')}}>
                             { formata &&
                                 //formatter.format(value.toFixed(3))
                                 (currency ? "R$ " : "") + valorFormatado
