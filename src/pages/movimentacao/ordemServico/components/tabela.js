@@ -54,6 +54,7 @@ class Tabela extends Component {
     setModo = (ordemServico, stateView) => {
         this.props.setStateView(stateView)
         this.props.setOrdemServico(ordemServico)
+        this.props.setKitProdutoList(ordemServico.kitProdutoList)
     }
 
     alterarStatusTabela = (ordemServico, statusNota, titulo) => {
@@ -252,7 +253,8 @@ const mapDispatchToProps = (dispatch) => ({
     setOrdemServico: (ordemServico) => dispatch(Actions.ordemServicoSetOrdemServico(ordemServico)),
     alterarStatus: (obj) => dispatch(Actions.ordemServicoAlterarStatus(obj)),    
     cleanMessage: ()  => dispatch(Actions.ordemServicoCleanMessage()),
-    cleanTable: () => dispatch(Actions.ordemServicoCleanTable()),    
+    cleanTable: () => dispatch(Actions.ordemServicoCleanTable()),
+    setKitProdutoList: (kitProdutoList) => dispatch(Actions.ordemServicoSetKitProdutoList(kitProdutoList)),
 })
 
 export default connect(

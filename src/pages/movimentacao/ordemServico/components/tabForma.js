@@ -127,6 +127,7 @@ export default class TabForma extends React.Component {
         const { form: { getFieldsValue, setFieldsValue }, } = this.props
         const fields = getFieldsValue()
         fields.osForma = {
+            id: null,
             formaCondicaoPagamento: { id: null},
             valor: 0,
             percDesconto: 0,

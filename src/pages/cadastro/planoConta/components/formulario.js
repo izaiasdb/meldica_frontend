@@ -72,7 +72,7 @@ class Formulario extends Component {
         return (
             <Spin spinning={fetching}>
               <Form onSubmit={this.handleSubmit} >
-                <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'} de planoConta`) } >
+                <Card title={ getTitle(`${this.isSaving() ? 'Cadastro' : 'Edição'} de Plano de Conta`) } >
                     { getFieldDecorator("planoConta.id", { initialValue: isNil(id) ? null : id })(<Input type="hidden" />) }
                     { getFieldDecorator("planoConta.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao })(<Input type="hidden" />) }
                     { getFieldDecorator("planoConta.numeroConta", { initialValue: numeroConta })(<Input type="hidden" />) }

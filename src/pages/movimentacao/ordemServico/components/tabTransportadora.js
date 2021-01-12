@@ -264,7 +264,7 @@ export default class TabTransportadora extends React.Component {
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };        
 
         return (<div>
-            <Card title={"Informe os dados referente ao Tranporte de Mercadorias."} extra={this.getExtra()}>
+            <Card title={"Informe os dados referente ao Transporte de Mercadorias."} extra={this.getExtra()}>
                 { getFieldDecorator("ordemServicoTransportadora.id", { initialValue: id })(<Input type="hidden" />) }
                 <Row gutter = { 12 }>
                     <Col span={ 9 }>

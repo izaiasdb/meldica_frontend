@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import Actions from '../redux'
 import TabDados from './tabDados'
 import TabProduto from './tabProduto'
+import TabKit from './tabKit'
 import TabForma from './tabForma'
 import TabEndereco from './tabEndereco'
 import TabTransportadora from './tabTransportadora'
@@ -44,38 +45,9 @@ class Formulario extends Component {
 
     setActiveKey = (activeKey) => this.setState({activeKey})
 
-    // getCard = (nome, color, icon, value, formata = true) => {
-    //     var formatter = new Intl.NumberFormat('pt-BR', {
-    //         style: 'currency',
-    //         currency: 'BRL',
-    //       });          
-        
-    //     return (<Col span={6}>
-    //         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} id="cardVenda" >
-    //             <Meta avatar = { 
-    //                     <Avatar size={72} 
-    //                             //size="large"
-    //                             icon={icon} 
-    //                             style = {{ color, backgroundColor: '#fff', paddingRight: 0, width: '45px'}}/> }
-    //                   title={<span style={{ 'fontSize': '16px', 'fontWeight' : 'bold'}}>{nome}</span>}
-    //                   description = {
-    //                         <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '1.6em', 'color' : '#000'}}>
-    //                             { formata &&
-    //                                 formatter.format(value)
-    //                             }
-    //                             { !formata &&                                
-    //                                 value
-    //                             }
-    //                         </div>
-    //                   }
-    //             />
-    //         </Card>
-    //     </Col>)
-    // }    
-
     render() {
         const { activeKey } = this.state
-        const { fetching, ordemServico, form, stateView, drawerVisivel} = this.props
+        const { fetching, ordemServico, form, stateView, drawerVisivel, drawerKitVisivel, kitProdutoList = []} = this.props
         const { getFieldDecorator, getFieldValue } = form
         const { 
             id, 
@@ -87,7 +59,7 @@ class Formulario extends Component {
             formaGerada,
             valorPago, 
             desconto,
-            produtoItemsList = [], formaItemsList = [], transportadoraItemsList = []
+            produtoItemsList = [], formaItemsList = [], transportadoraItemsList = [], kitList = []
         } = isNil(ordemServico) ? {} : ordemServico
 
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
@@ -97,8 +69,10 @@ class Formulario extends Component {
 
         //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
         let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
-        let totalPeso = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
-        let totalVolume = produtoItemsListForm.reduce((acum,{quantidadeUnidade, quantidadeNaCaixa}) => acum + (Number(quantidadeUnidade) / Number(quantidadeNaCaixa)), 0);
+        let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
+        let totalPesoKit = kitProdutoList.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
+        let totalVolumeProd = produtoItemsListForm.reduce((acum,{quantidadeUnidade, quantidadeNaCaixa}) => acum + (Number(quantidadeUnidade) / Number(quantidadeNaCaixa)), 0);
+        let totalVolumeKit = kitProdutoList.reduce((acum,) => acum + 1, 0);
         let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);
         let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
         let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
@@ -106,8 +80,12 @@ class Formulario extends Component {
         let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalFormaDescontos ? totalFormaDescontos : 0);
         let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeCaixa}) => acum + (Number(quantidadeCaixa) * Number(valorNfCaixa)), 0);
         let totalNFUnidade = produtoItemsListForm.filter(c=> c.fracionado == true).reduce((acum,{ valorNfUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfUnidade)), 0);
-        let totalNF = totalNFUnidade + totalNFCaixa;
+        let totalNFKit = kitList.reduce((acum,{ valorNf}) => acum + valorNf, 0);
+        
+        let totalNF = totalNFUnidade + totalNFCaixa + totalNFKit;
         let faltaFormaPgto = totalPedido - totalForma;
+        let totalVolume = totalVolumeProd + totalVolumeKit;
+        let totalPeso = totalPesoProd + totalPesoKit;
         // A bonificação tem que somar o total de peso, volume e NF
 
         return (
@@ -121,7 +99,8 @@ class Formulario extends Component {
                     { getFieldDecorator("ordemServico.valorPago", { initialValue: isNil(valorPago) ? 0 : valorPago})(<Input type="hidden" />) }                    
                     { getFieldDecorator("ordemServico.desconto", { initialValue: isNil(desconto) ? 0 : desconto})(<Input type="hidden" />) }       
                     { getFieldDecorator("ordemServico.estoqueGerado", { initialValue: isNil(estoqueGerado) ? false : estoqueGerado})(<Input type="hidden" />) }             
-                    { getFieldDecorator("ordemServico.formaGerada", { initialValue: isNil(formaGerada) ? false : formaGerada})(<Input type="hidden" />) }             
+                    { getFieldDecorator("ordemServico.formaGerada", { initialValue: isNil(formaGerada) ? false : formaGerada})(<Input type="hidden" />) }
+                    {/* { getFieldDecorator("ordemServico.kitProdutoList", { initialValue: isNil(kitProdutoList) ? [] : kitProdutoList})(<Input type="hidden" />) }              */}
                     <Row gutter={2}>
                         {/* { id &&
                             this.getCard('Número Nota', '#6BD098', 'file-protect', id, false)
@@ -200,6 +179,13 @@ class Formulario extends Component {
                         <TabProduto {...this.props} />
                     </Row>
                     <Row>
+                        <TabKit {...this.props} 
+                            showDrawerKit={this.showDrawerKit} 
+                            onCloseDrawerKit={this.onCloseDrawerKit} 
+                            setKitProdutoListEvent= {this.setKitProdutoListEvent}
+                            drawerKitVisivel={drawerKitVisivel} />
+                    </Row>
+                    <Row>
                         <TabForma {...this.props} />
                     </Row>  
                     <Row>
@@ -257,7 +243,21 @@ class Formulario extends Component {
         this.props.setDrawerVisivel(false);
     };
 
+    showDrawerKit = () => {
+        this.props.setDrawerKitVisivel(true);
+    };
+
+    onCloseDrawerKit = () => {
+        this.props.setDrawerKitVisivel(false);
+    };
+
+    setKitProdutoListEvent = (kitProdutoList) => {
+        this.props.setKitProdutoList(kitProdutoList);
+    };
+
     handleSubmit = e => {
+        const { kitProdutoList = []} = this.props
+
         e.preventDefault();
         this.props.form.validateFields((err, { ordemServico }) => {
             if (!err) {         
@@ -269,7 +269,11 @@ class Formulario extends Component {
                 if ((totalProduto + totalFrete) < totalForma){
                     openNotification({tipo: 'warning', descricao: 'Total de forma de pagamento não pode ser menor que o total de produtos e frete.'})
                     return 
-                }                
+                }       
+                
+                if (isNil(ordemServico.kitProdutoList)) {
+                    ordemServico.kitProdutoList = kitProdutoList
+                }
 
                 this.props.setOrdemServico(ordemServico)
                 this.props.salvar(ordemServico)
@@ -290,6 +294,8 @@ const mapStateToProps = (state) => {
         stateView: state.ordemServico.stateView,
         fetching: state.ordemServico.fetching,  
         drawerVisivel: state.ordemServico.drawerVisivel,  
+        drawerKitVisivel: state.ordemServico.drawerKitVisivel,  
+        kitProdutoList: state.ordemServico.kitProdutoList,  
         profile: state.login.data.profile,      
     }
 }
@@ -301,6 +307,8 @@ const mapDispatchToProps = (dispatch) => ({
     setOrdemServico: (ordemServico) => dispatch(Actions.ordemServicoSetOrdemServico(ordemServico)),    
     salvar: (obj) => dispatch(Actions.ordemServicoSalvar(obj)),
     setDrawerVisivel: (drawerVisivel) => dispatch(Actions.ordemServicoSetDrawerVisivel(drawerVisivel)),
+    setDrawerKitVisivel: (drawerKitVisivel) => dispatch(Actions.ordemServicoSetDrawerKitVisivel(drawerKitVisivel)),
+    setKitProdutoList: (kitProdutoList) => dispatch(Actions.ordemServicoSetKitProdutoList(kitProdutoList)),
 })
 
 const wrapedFormulario = Form.create()(Formulario)

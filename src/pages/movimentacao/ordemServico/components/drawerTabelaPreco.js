@@ -29,7 +29,8 @@ export default class DrawerTabelaPreco extends React.Component {
         return (<div>
             <Drawer
                 title="Tabela preço"
-                width={720}
+                //width={720}
+                width={"75%"}
                 onClose={onCloseDrawer}
                 visible={drawerVisivel}
                 bodyStyle={{ paddingBottom: 80 }}

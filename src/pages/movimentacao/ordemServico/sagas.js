@@ -44,6 +44,14 @@ export function * salvar (api, { obj })  {
       obj.idUsuarioInclusao = id;
     }
 
+    // const kitProdutoList = yield select((state) => state.ordemServico.kitProdutoList )
+
+    // obj.kitProdutoList = []
+
+    // kitProdutoList.map((item, i)=> {
+    //   obj.kitProdutoList.push(item)
+    // })
+    
     const response = yield call(api.OrdemServico.salvar, {...obj })
     
     if (response.ok) {

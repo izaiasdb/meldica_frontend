@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Form, Select, Button, Table, Icon, Divider, Input, Tag, InputNumber, Card, Switch } from 'antd'
+import { Row, Col, Form, Select, Button, Table, Icon, Divider, Input, Tag, InputNumber, Card, Switch, Drawer } from 'antd'
 import { isEqual, isNil } from 'lodash'
 import { generateOptions } from '../../../util/helper'
 import { openNotification } from '../../../util/notification'
@@ -8,7 +8,7 @@ import { obterPercentualDesconto, obterValorDesconto } from '../../../util/money
 
 const Option = Select.Option
 
-export default class TabProduto extends React.Component {
+export default class DrawerKitProduto extends React.Component {
 
     state = { 
         produtoDescricao: null,
@@ -18,27 +18,21 @@ export default class TabProduto extends React.Component {
     adicionar = () => {
         const { 
             form: { getFieldValue, getFieldsValue, setFieldsValue },
-            produtoList = [], 
+            produtoList = [], codigoPai, ordemServico = {}, setKitProdutoListEvent
         } = this.props
         const { viewStateTab } = this.state
 
-        let { osProduto } = getFieldsValue(['osProduto'])
-        let produtoItemsList = getFieldValue("ordemServico.produtoItemsList")
-        let { id, produto, quantidadeUnidade, valorUnidade, bonificacao, quantidadeCaixa, valorCaixa, total, fracionado, desconto } = osProduto      
+        let { osKitProduto } = getFieldsValue(['osKitProduto'])
+        let kitProdutoList = getFieldValue("ordemServico.kitProdutoList") || []
+        //const { kitProdutoList = [] } = ordemServico || {}
+        let { id, produto, quantidadeUnidade, valorUnidade, bonificacao, total, desconto } = osKitProduto      
         
-        if (fracionado) {
-            if(!(produto && produto.id && quantidadeUnidade && valorUnidade) || quantidadeUnidade == 0){
-                openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao produto.'})
-                return null
-            }     
-        } else {
-            if(!(produto && produto.id && quantidadeCaixa, valorCaixa) || quantidadeCaixa == 0){
-                openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao produto.'})
-                return null
-            } 
-        }
-
-        let recordInserido = produtoItemsList.find(c=> c.produto.id == produto.id && c.bonificacao == bonificacao)
+        if(!(produto && produto.id && quantidadeUnidade && valorUnidade) || quantidadeUnidade == 0){
+            openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao produto.'})
+            return null
+        }     
+        
+        let recordInserido = kitProdutoList.find(c=> c.codigoPai == codigoPai && c.produto.id == produto.id && c.bonificacao == bonificacao)
 
         if ((isEqual(viewStateTab, INSERTING) && recordInserido) || 
             (isEqual(viewStateTab, EDITING) && recordInserido && recordInserido.id != id)) {
@@ -47,60 +41,42 @@ export default class TabProduto extends React.Component {
         }      
 
         if (id){
-            let oldRegistro = produtoItemsList.find(c=> c.id == id)
+            let oldRegistro = kitProdutoList.find(c=> c.id == id)
 
-            const index = produtoItemsList.indexOf(oldRegistro);
+            const index = kitProdutoList.indexOf(oldRegistro);
 
             //Apaga o anterior
             if (index > -1) {
-                produtoItemsList.splice(index, 1);
+                kitProdutoList.splice(index, 1);
             }          
         }   
 
         let produtoForm = produtoList.find(c=> c.id == produto.id);
-        osProduto.nomeProduto = produtoForm.nome;
-        osProduto.valorProducaoUnidade = produtoForm.valorProducaoUnidade;
-        osProduto.valorProducaoCaixa = produtoForm.valorProducaoCaixa;
-        osProduto.valorCompraUnidade = produtoForm.valorCompraUnidade;
-        osProduto.valorCompraCaixa = produtoForm.valorCompraCaixa;
-        osProduto.valorVendaUnidade = produtoForm.valorVendaUnidade;
-        osProduto.valorVendaCaixa = produtoForm.valorVendaCaixa;        
-        osProduto.cancelado = false;
-        osProduto.valorNfUnidade = produtoForm.valorNfUnidade;
-        osProduto.valorNfCaixa = produtoForm.valorNfCaixa;
-        osProduto.pesoUnidade = produtoForm.pesoUnidade;
-        osProduto.pesoCaixa = produtoForm.pesoCaixa;
-        osProduto.qtdEstoqueCaixa = produtoForm.qtdEstoqueCaixa;
-        osProduto.qtdEstoqueUnidade = produtoForm.qtdEstoqueUnidade;
-        osProduto.quantidadeNaCaixa = produtoForm.quantidadeCaixa;
-        osProduto.idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id");
+        osKitProduto.nomeProduto = produtoForm.nome;
+        osKitProduto.valorProducaoUnidade = produtoForm.valorProducaoUnidade;
+        osKitProduto.valorCompraUnidade = produtoForm.valorCompraUnidade;
+        osKitProduto.valorVendaUnidade = produtoForm.valorVendaUnidade;
+        osKitProduto.cancelado = false;
+        osKitProduto.valorNfUnidade = produtoForm.valorNfUnidade;
+        osKitProduto.pesoUnidade = produtoForm.pesoUnidade;
+        osKitProduto.qtdEstoqueUnidade = produtoForm.qtdEstoqueUnidade;
+        osKitProduto.idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id");
+        osKitProduto.codigoPai = codigoPai;
 
-        if (produtoForm.fracionado) {
-            osProduto.valorCaixa = 0;
-            osProduto.quantidadeCaixa = quantidadeUnidade / produtoForm.quantidadeCaixa;
-        } else {
-            osProduto.valorUnidade = 0;
-            osProduto.quantidadeUnidade = quantidadeCaixa * produtoForm.quantidadeCaixa;
-        }
-               
-        produtoItemsList.push({...osProduto})
+        kitProdutoList.push({...osKitProduto})
 
-        setFieldsValue({ordemServico: { produtoItemsList } }, () => {
+        setFieldsValue({ordemServico: { kitProdutoList } }, () => {
             setFieldsValue({
-                osProduto: { 
+                osKitProduto: { 
                     id: null,
+                    codigoPai: codigoPai,
                     produto: { id: null},
                     bonificacao: false, 
                     quantidadeUnidade: 1,
-                    quantidadeCaixa: 1, 
                     valorUnidade: 0,
-                    valorCaixa: 0,
                     desconto: 0,
                     percDesconto: 0,
-                    qtdEstoqueCaixa: 0,
                     qtdEstoqueUnidade: 0,
-                    fracionado: false,
-                    valorCaixaDesconto: 0,
                     total: 0,
                 }
             })
@@ -111,73 +87,61 @@ export default class TabProduto extends React.Component {
 
     prepareUpdate = (record) => {
         const { form: { setFieldsValue } } = this.props
-        setFieldsValue({ osProduto: {...record, 
+        setFieldsValue({ osKitProduto: {...record, 
         } } )
         this.setState({ viewStateTab: EDITING, produtoDescricao: record.produto.nome })
     }    
     
     remover = (record, { getFieldValue, setFieldsValue }) => {
-        let produtoItemsList = getFieldValue("ordemServico.produtoItemsList")
+        let kitProdutoList = getFieldValue("ordemServico.kitProdutoList")
 
-        produtoItemsList.splice(produtoItemsList.findIndex((item) => {            
+        kitProdutoList.splice(kitProdutoList.findIndex((item) => {            
             return (item.produto && item.produto.id === record.produto.id)
         }), 1)
 
-        setFieldsValue({ordemServico: { produtoItemsList } })
+        setFieldsValue({ordemServico: { kitProdutoList } })
     }
 
     handleChangeProduto = (idProduto) => {    
         const { form: { getFieldsValue, setFieldsValue, getFieldValue }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props    
-        const { osProduto } = getFieldsValue() 
-        const { percDesconto, quantidadeUnidade, quantidadeCaixa } = osProduto 
+        const { osKitProduto } = getFieldsValue() 
+        const { percDesconto, quantidadeUnidade, quantidadeCaixa } = osKitProduto 
 
         this.alterandoValores(idProduto, percDesconto)
     }  
 
-    alterandoValores = (idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa) => {
+    alterandoValores = (idProduto, percDesconto, quantidadeUnidade) => {
         const { form: { getFieldsValue, setFieldsValue, getFieldValue }, 
             produtoList = [], tabelaPrecoProdutoList = [] 
         } = this.props 
-        const { osProduto } = getFieldsValue()
+        const { osKitProduto } = getFieldsValue()
 
         let produto = produtoList.find(c=> c.id == idProduto);
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id") 
-        let fracionado = produto.fracionado
         let valorVendaUnidade = produto.valorVendaUnidade
-        let valorVendaCaixa = produto.valorVendaCaixa   
 
         if (!isNil(idTabelaPreco)){
             let tabelaPrecoProduto = tabelaPrecoProdutoList.find(c=> c.idTabelaPreco == idTabelaPreco && c.produto.id == idProduto);
 
             if (!isNil(tabelaPrecoProduto)){
                 valorVendaUnidade = tabelaPrecoProduto.valorUnidade
-                valorVendaCaixa = tabelaPrecoProduto.valorCaixa
             }
         }
 
         let vValorDesconto = 0;
         let totalProduto = 0;
 
-        if (fracionado) {
-            vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade);
-            totalProduto = (valorVendaUnidade - vValorDesconto) * quantidadeUnidade;
-        } else {
-            vValorDesconto = obterValorDesconto(percDesconto, valorVendaCaixa);
-            totalProduto = (valorVendaCaixa - vValorDesconto) * quantidadeCaixa; 
-        }
+        vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade);
+        totalProduto = (valorVendaUnidade - vValorDesconto) * quantidadeUnidade;
 
-        setFieldsValue({osProduto: {
-                ...osProduto, 
-                quantidadeUnidade: produto.quantidadeCaixa,
-                quantidadeCaixa: quantidadeCaixa,
+        setFieldsValue({osKitProduto: {
+                ...osKitProduto, 
+                quantidadeUnidade: quantidadeUnidade,
                 valorUnidade: valorVendaUnidade,
-                valorCaixa: valorVendaCaixa,
                 desconto: vValorDesconto,
                 percDesconto: percDesconto,
-                qtdEstoqueCaixa: produto.qtdEstoqueCaixa,
                 qtdEstoqueUnidade: produto.qtdEstoqueUnidade,
-                fracionado: fracionado,
-                valorCaixaDesconto: valorVendaCaixa - vValorDesconto,
+                valorUnidadeComDesconto: valorVendaUnidade - vValorDesconto,
                 total: totalProduto,
             } 
         })
@@ -185,81 +149,48 @@ export default class TabProduto extends React.Component {
         this.setState({produtoDescricao: produto.nome})
     }
 
-    getTotal = (idProduto, quantidadeUnidade, quantidadeCaixa, desconto, fracionado, valorVendaUnidade, valorVendaCaixa) => {
-        const { form: { getFieldsValue, }, produtoList = [], tabelaPrecoProdutoList = [] } = this.props
-        const { osProduto } = getFieldsValue() 
-
-        let produto = produtoList.find(c=> c.id == idProduto);
-        let tabelaPrecoProduto = null;
-        let totalProduto = 0;
-
-        if (produto.fracionado) {
-            totalProduto = (produto.valorVendaUnidade - desconto) * quantidadeUnidade;
-        } else {
-            totalProduto = (produto.valorVendaCaixa - desconto) * quantidadeCaixa; 
-        }
-
-        return totalProduto;
-    }
-    
     onChangePercDesconto = (percDesconto) => {   
         const { form: { getFieldsValue, setFieldsValue } } = this.props    
-        const { osProduto } = getFieldsValue()     
+        const { osKitProduto } = getFieldsValue()     
         const { produto: {id: idProduto}, quantidadeUnidade, quantidadeCaixa
-        } = osProduto
+        } = osKitProduto
        
-        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa) 
+        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade) 
     }  
     
     onChangeDesconto = (desconto) => {    
         const { form: { getFieldsValue, setFieldsValue }, produtoList = [] } = this.props    
-        const { osProduto } = getFieldsValue()     
-        const { produto: {id: idProduto}, quantidadeUnidade, quantidadeCaixa, valorUnidade, valorCaixa, fracionado } = osProduto
+        const { osKitProduto } = getFieldsValue()     
+        const { produto: {id: idProduto}, quantidadeUnidade, valorUnidade, } = osKitProduto
         
         let percDesconto = 0;
 
-        if (fracionado) {
-            percDesconto = obterPercentualDesconto(desconto, valorUnidade);
-        } else {
-            percDesconto = obterPercentualDesconto(desconto, valorCaixa);
-        }
+        percDesconto = obterPercentualDesconto(desconto, valorUnidade);
 
-        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa) 
+        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade) 
     }   
     
-    onChangeQtdCaixa = (qtdCaixa) => {    
-        const { form: { getFieldsValue, setFieldsValue }, produtoList = [], } = this.props    
-        const { osProduto } = getFieldsValue()     
-        const { produto: {id: idProduto}, quantidadeCaixa, quantidadeUnidade, desconto, percDesconto } = osProduto
-
-        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, qtdCaixa)
-    }
-
     onChangeQtdUnidade = (quantidadeUnidade) => {    
         const { form: { getFieldsValue, setFieldsValue }, produtoList = [], } = this.props    
-        const { osProduto } = getFieldsValue()     
-        const { produto: {id: idProduto}, percDesconto, quantidadeCaixa} = osProduto
+        const { osKitProduto } = getFieldsValue()     
+        const { produto: {id: idProduto}, percDesconto, } = osKitProduto
 
-        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa)     
+        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade )     
     } 
 
     limpar = () => {
         const { form: { getFieldsValue, setFieldsValue }, } = this.props
         const fields = getFieldsValue()
-        fields.osProduto = {
+        fields.osKitProduto = {
             id: null,
             produto: { id: null},
             bonificacao: false, 
             quantidadeUnidade: 1, 
-            quantidadeCaixa: 1, 
             valorUnidade: 0,
-            valorCaixa: 0,
             desconto: 0,
             percDesconto: 0,
-            qtdEstoqueCaixa: 0,
             qtdEstoqueUnidade: 0,
-            fracionado: false,
-            valorCaixaDesconto: 0,
+            valorUnidadeComDesconto: 0,
             total: 0,
         }
 
@@ -270,7 +201,6 @@ export default class TabProduto extends React.Component {
     getExtra() {
         const { viewStateTab } = this.state
         const { stateView, form: { getFieldValue }, ordemServico = {}, } = this.props
-        const { estoqueGerado } = ordemServico || {}        
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
         
         return (
@@ -278,7 +208,7 @@ export default class TabProduto extends React.Component {
                 <Button 
                     type={"primary"} 
                     onClick={() => this.adicionar()}
-                    disabled= {isEqual(stateView, VIEWING) || isNil(idTabelaPreco) || estoqueGerado == true }>
+                    disabled= {isEqual(stateView, VIEWING) || isNil(idTabelaPreco)}>
                     { isEqual(viewStateTab, INSERTING) ? 'Adicionar' : 'Atualizar' } Produto
                 </Button>
                 &nbsp;
@@ -298,47 +228,57 @@ export default class TabProduto extends React.Component {
             form,        
             produtoList = [],
             ordemServico = {},      
-            stateView,  
+            stateView,
+            drawerKitVisivel,
+            onCloseDrawerKit,
+            idKit,
+            codigoPai
         } = this.props
-        const { produtoItemsList = [] } = ordemServico || {}
+        const { kitProdutoList = [] } = ordemServico || {}
         const { getFieldDecorator, getFieldValue } = form
 
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };        
 
         let produtoListFilter = produtoList.filter(c=> c.tipo == 'P' || c.tipo == 'C')
-        const idForm = getFieldValue("osProduto.id") || null  
-        const idProdutoForm = getFieldValue("osProduto.produto.id") || null 
-        const valorCaixaForm = getFieldValue("osProduto.valorCaixa") || 0 
-        const valorUnidadeForm = getFieldValue("osProduto.valorUnidade") || 0 
-        let fracionado = false; 
+        const idForm = getFieldValue("osKitProduto.id") || null  
+        //const codigoPaiForm = getFieldValue("osKitProduto.codigoPai") || null  
+        const idProdutoForm = getFieldValue("osKitProduto.produto.id") || null 
+        const valorUnidadeForm = getFieldValue("osKitProduto.valorUnidade") || 0 
         let produto = null;  
         let percDescontoMaximo = 0;
         let descontoMaximo = 0;
+        let kitProdutoFilterList = kitProdutoList.filter(c=> c.codigoPai == codigoPai);
         
         if (idProdutoForm) {        
             produto = produtoList.find(c=> c.id == idProdutoForm);
-            fracionado = produto.fracionado;
             percDescontoMaximo = produto.percDescontoMaximo;
-
-            if (fracionado){
-                descontoMaximo = obterValorDesconto(percDescontoMaximo, valorUnidadeForm);
-            } else {
-                descontoMaximo = obterValorDesconto(percDescontoMaximo, valorCaixaForm);
-            }
+            descontoMaximo = obterValorDesconto(percDescontoMaximo, valorUnidadeForm);
         }
 
-        const produtoNome = getFieldValue("osProduto.produto.nome") || produtoDescricao
+        const produtoNome = getFieldValue("osKitProduto.produto.nome") || produtoDescricao
         
+        
+        // console.log("Kit: " + idKit)
+        // console.log("codigoPaiForm: " + codigoPai)
         return (<div>
-            <Card title={"Informe os dados referente aos produtos da Ordem de Serviço"} extra={this.getExtra()}>
-                { getFieldDecorator("osProduto.id", { initialValue: idForm })(<Input type="hidden" />) }
-                { getFieldDecorator("osProduto.produto.nome", { initialValue: produtoNome })(<Input type="hidden" />) }     
-                { getFieldDecorator("osProduto.fracionado", { initialValue: fracionado })(<Input type="hidden" />) } 
+        <Drawer
+            title="Kit Produtos"
+            //width={720}
+            width={"75%"}
+            onClose={onCloseDrawerKit}
+            visible={drawerKitVisivel}
+            bodyStyle={{ paddingBottom: 80 }}
+            >
+            <Card title={"Informe os produtos referente ao kit"} extra={this.getExtra()}>
+                {/* { getFieldDecorator("ordemServico.kitProdutoList", { initialValue: isNil(kitProdutoList) ? [] : kitProdutoList})(<Input type="hidden" />) }              */}
+                { getFieldDecorator("osKitProduto.id", { initialValue: idForm })(<Input type="hidden" />) }
+                { getFieldDecorator("osKitProduto.codigoPai", { initialValue: codigoPai })(<Input type="hidden" />) }
+                { getFieldDecorator("osKitProduto.produto.nome", { initialValue: produtoNome })(<Input type="hidden" />) }     
                 <Row gutter = { 12 }>
                     <Col span = { 6 }>
                         <Form.Item label={"Produto"}>
                             {
-                                getFieldDecorator('osProduto.produto.id', {})(
+                                getFieldDecorator('osKitProduto.produto.id', {})(
                                     <Select 
                                         showSearch
                                         optionFilterProp="children"
@@ -346,6 +286,7 @@ export default class TabProduto extends React.Component {
                                         onChange={(value) => this.handleChangeProduto(value)}
                                         filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                         disabled= {isEqual(stateView, VIEWING)}
+                                        style = {{ width: '98%' }}
                                         >
                                         {generateOptions(produtoListFilter.map(({id, nome}) => ({id, descricao: nome})))}
                                     </Select>
@@ -354,27 +295,27 @@ export default class TabProduto extends React.Component {
                         </Form.Item>               
                     </Col>
                     <Col span={2}>
-                        <Form.Item label={"Qtd. caixas"}>
+                        <Form.Item label={"Qtd. (unid.)"}>
                             {
-                                getFieldDecorator('osProduto.quantidadeCaixa', {
+                                getFieldDecorator('osKitProduto.quantidadeUnidade', {
                                     initialValue: 1
                                 })(
-                                    <InputNumber style={{ width: "150" }} 
+                                    <InputNumber 
+                                        style={{ width: "150" }} 
                                         min={0}
                                         precision={0}
-                                        step={1}  
-                                        onChange={(value) => this.onChangeQtdCaixa(value)} 
-                                        //disabled= {isEqual(stateView, VIEWING)}
-                                        disabled= {isEqual(stateView, VIEWING) || fracionado == true}
+                                        step={1} 
+                                        onChange={(value) => this.onChangeQtdUnidade(value)}
+                                        disabled= {isEqual(stateView, VIEWING)}
                                     />
                                 )
                             }
                         </Form.Item>            
                     </Col> 
                     <Col span={2}>
-                        <Form.Item label={"Valor(cx)"}>
+                        <Form.Item label={"Valor(unid.)"}>
                             {
-                                getFieldDecorator('osProduto.valorCaixa', {
+                                getFieldDecorator('osKitProduto.valorUnidade', {
                                     initialValue: 0
                                 })(
                                     <InputNumber 
@@ -387,11 +328,11 @@ export default class TabProduto extends React.Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>
+                    </Col>  
                     <Col span={2}>
-                        <Form.Item label={"Estoque(caixa)"}>
+                        <Form.Item label={"Estoque(unid.)"}>
                             {
-                                getFieldDecorator('osProduto.qtdEstoqueCaixa', {
+                                getFieldDecorator('osKitProduto.qtdEstoqueUnidade', {
                                     initialValue: 0
                                 })(
                                     <InputNumber 
@@ -404,11 +345,11 @@ export default class TabProduto extends React.Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>                     
+                    </Col>                                      
                     <Col span={3}>
                         <Form.Item label={"Perc. desc." + "(máx "+(percDescontoMaximo ? percDescontoMaximo : 0) +")"}>
                             {
-                                getFieldDecorator('osProduto.percDesconto', {
+                                getFieldDecorator('osKitProduto.percDesconto', {
                                     initialValue: 0
                                 })(                            
                                     <InputNumber style={{ width: "150" }}                                
@@ -426,7 +367,7 @@ export default class TabProduto extends React.Component {
                     <Col span={3}>
                         <Form.Item label={"Desc." + "(máx "+(descontoMaximo ? descontoMaximo : 0 )+")"}>
                             {
-                                getFieldDecorator('osProduto.desconto', {
+                                getFieldDecorator('osKitProduto.desconto', {
                                     initialValue: 0
                                 })(
                                     <InputNumber style={{ width: "150" }}
@@ -443,7 +384,7 @@ export default class TabProduto extends React.Component {
                     </Col>
                     <Col span={3}>
                         <Form.Item label={"Total(c/ Descont.)"}>
-                            {getFieldDecorator('osProduto.total', {
+                            {getFieldDecorator('osKitProduto.total', {
                                 initialValue: 0
                             })(                                      
                                 <InputNumber style={{ width: "150" }}
@@ -458,7 +399,7 @@ export default class TabProduto extends React.Component {
                     <Col span={ 2 }>            
                         <Form.Item label={"Bonificação"}>
                         {
-                            getFieldDecorator('osProduto.bonificacao', {
+                            getFieldDecorator('osKitProduto.bonificacao', {
                                 initialValue: false,
                                 valuePropName: 'checked'                                    
                             })(
@@ -472,83 +413,23 @@ export default class TabProduto extends React.Component {
                     </Col>                        
                 </Row>  
                 <Row gutter = { 12 }>
-                    <Col span = { 6 }>
-                    </Col>
-                    <Col span={2}>
-                        <Form.Item label={"Qtd. (unds.)"}>
-                            {
-                                getFieldDecorator('osProduto.quantidadeUnidade', {
-                                    initialValue: 1
-                                })(
-                                    <InputNumber 
-                                        style={{ width: "150" }} 
-                                        min={0}
-                                        precision={0}
-                                        step={1} 
-                                        onChange={(value) => this.onChangeQtdUnidade(value)}
-                                        disabled= {isEqual(stateView, VIEWING) || fracionado == false}
-                                    />
-                                )
-                            }
-                        </Form.Item>            
-                    </Col> 
-                    <Col span={2}>
-                        <Form.Item label={"Valor(unidade)"}>
-                            {
-                                getFieldDecorator('osProduto.valorUnidade', {
-                                    initialValue: 0
-                                })(
-                                    <InputNumber 
-                                        style={{ width: "150" }}
-                                        min={0}
-                                        precision={2}
-                                        step={1}
-                                        disabled
-                                    />
-                                )
-                            }
-                        </Form.Item>
-                    </Col>  
-                    <Col span={2}>
-                        <Form.Item label={"Estoque(unidade)"}>
-                            {
-                                getFieldDecorator('osProduto.qtdEstoqueUnidade', {
-                                    initialValue: 0
-                                })(
-                                    <InputNumber 
-                                        style={{ width: "150" }}
-                                        min={0}
-                                        precision={2}
-                                        step={1}
-                                        disabled
-                                    />
-                                )
-                            }
-                        </Form.Item>
-                    </Col>                    
-                </Row>       
-                <Row gutter = { 12 }>
                     <Form.Item label={"Produtos"}>
                         {
-                            getFieldDecorator('ordemServico.produtoItemsList', {
+                            getFieldDecorator('ordemServico.kitProdutoList', {
                                 rules: [{ required: false, type: 'array', message: 'Por favor, informe pelo menos um produto.'}],
-                                initialValue: [...produtoItemsList],
+                                initialValue: [...kitProdutoFilterList],
                                 valuePropName: 'dataSource'
                             })(
                                 <Table rowKey={(row) => row.id || row.produto && row.produto.id} size={"small"} 
+                                    dataSource = {kitProdutoFilterList}
                                     pagination={false} bordered>
                                     <Table.Column title={<center>Produto</center>} key={"nomeProduto"} dataIndex={"nomeProduto"} align={"center"} />  
-                                    <Table.Column title={<center>Qtd. cx's</center>} key={"quantidadeCaixa"} dataIndex={"quantidadeCaixa"} align={"center"} />    
                                     <Table.Column title={<center>Qtd. unids.</center>} key={"quantidadeUnidade"} dataIndex={"quantidadeUnidade"} align={"center"} />
                                     <Table.Column title={<center>Valor(unit)</center>} key={"valorUnidade"} dataIndex={"valorUnidade"} align={"center"} />
-                                    <Table.Column title={<center>Valor(cx)</center>} key={"valorCaixa"} dataIndex={"valorCaixa"} align={"center"} />
                                     <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
                                     <Table.Column title={<center>Valor c/ desc.</center>} key={"total2"} dataIndex={"total2"} align={"center"}
-                                        render={(text, record) => record.fracionado ?
-                                             (record.valorUnidade - record.desconto) : 
-                                             (record.valorCaixa - record.desconto)  } />
+                                        render={(text, record) => (record.valorUnidade - record.desconto) } />
                                     <Table.Column title={<center>NF unit.</center>} key={"valorNfUnidade"} dataIndex={"valorNfUnidade"} align={"center"} />
-                                    <Table.Column title={<center>NF cx</center>} key={"valorNfCaixa"} dataIndex={"valorNfCaixa"} align={"center"} />
                                     <Table.Column title={<center>Total(C/ Desc.)</center>} key={"total"} dataIndex={"total"} align={"center"} />
                                     <Table.Column title={<center>Bonif.</center>} key={"bonificacao"} dataIndex={"bonificacao"} align={"center"}
                                         render={(text, record) => record.bonificacao ? 'SIM' : 'NÃO'} />    
@@ -581,6 +462,7 @@ export default class TabProduto extends React.Component {
                     </Form.Item>
                 </Row>
             </Card>
+            </Drawer>  
         </div>)
     }
 }

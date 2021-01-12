@@ -14,7 +14,7 @@ class PlanoConta extends Component {
         const { fetching, stateView } = this.props
         return (
             <Spin spinning={ fetching }>
-                { getHeader('PlanoConta') }
+                { getHeader('Plano de Conta') }
                 {
                     isEqual(stateView, SEARCHING) &&
                     <div>

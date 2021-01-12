@@ -18,6 +18,8 @@ const { Types, Creators } = createActions({
    ordemServicoCleanTable: null,
    ordemServicoAlterarStatus: ['obj'],
    ordemServicoSetDrawerVisivel: ['drawerVisivel'],
+   ordemServicoSetDrawerKitVisivel: ['drawerKitVisivel'],
+   ordemServicoSetKitProdutoList: ['kitProdutoList'],
 });
 
 export const OrdemServicoTypes = Types;
@@ -31,6 +33,8 @@ export const INITIAL_STATE = Immutable({
     stateView: SEARCHING,
     ordemServico: null,
     drawerVisivel: false,
+    drawerKitVisivel: false,
+    kitProdutoList: []
 });
 
 /* ------------- Reducers ------------- */
@@ -81,6 +85,8 @@ export const setOrdemServicoItems = (state, { ordemServicoItems }) => state.merg
 export const finalizarOrdemServico = (state, { ordemServico }) => state.merge({fetching: true})
 
 export const setDrawerVisivel = (state, { drawerVisivel }) => state.merge( { drawerVisivel } )
+export const setDrawerKitVisivel = (state, { drawerKitVisivel }) => state.merge( { drawerKitVisivel } )
+export const setKitProdutoList = (state, { kitProdutoList }) => state.merge( { kitProdutoList } )
 
 /* ------------- Hookup Reducers To Types ------------- */
 
@@ -96,4 +102,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ORDEM_SERVICO_CLEAN_TABLE]       : cleanTable,
   [Types.ORDEM_SERVICO_ALTERAR_STATUS]    : request,
   [Types.ORDEM_SERVICO_SET_DRAWER_VISIVEL]: setDrawerVisivel,
+  [Types.ORDEM_SERVICO_SET_DRAWER_KIT_VISIVEL]: setDrawerKitVisivel,
+  [Types.ORDEM_SERVICO_SET_KIT_PRODUTO_LIST]: setKitProdutoList,
 })
