@@ -96,7 +96,8 @@ export default function * root () {
         takeLatest(DashboardTypes.DASHBOARD_GET_POPULACAO_TOTAL, Dashboard.getPopulacaoTotal, api),
         takeLatest(DashboardTypes.DASHBOARD_GET_TOTAL_COLABORADOR_POR_TIPO, Dashboard.getTotalColaboradorPorTipo, api),
         takeLatest(DashboardTypes.DASHBOARD_GET_POPULACAO_TOTAL_POR_UNIDADE, Dashboard.getPopulacaoTotalPorUnidade, api),
-        takeLatest(DashboardTypes.DASHBOARD_PESQUISAR_MENSAGEM_UNIDADE, Dashboard.pesquisarMensagemUnidade, api),        
+        takeLatest(DashboardTypes.DASHBOARD_PESQUISAR_MENSAGEM_UNIDADE, Dashboard.pesquisarMensagemUnidade, api),
+        takeLatest(DashboardTypes.DASHBOARD_PESQUISAR_VENDA, Dashboard.pesquisarVenda, api),    
 
         takeLatest(BuscaRapidaTypes.BUSCA_RAPIDA_SEARCH, BuscaRapida.search, api),
 
@@ -199,5 +200,7 @@ export default function * root () {
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_PESQUISAR_PAGAR, ContasReceber.pesquisarPagar, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_PAGAR, ContasReceber.pagar, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_PAGAR_PARTE, ContasReceber.pagarParte, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_EXCLUIR, ContasReceber.excluir, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_EXCLUIR_ITEM, ContasReceber.excluirItem, api),
     ])
 }

@@ -1,7 +1,31 @@
 import { call, put } from 'redux-saga/effects'
 import DashboardActions from './redux';
 import { get } from "lodash";
+import moment from 'moment'
 import { USER_KEY } from '../../services/authenticationService'
+
+export function * pesquisarVenda ( api, { obj })  {
+  try {    
+    // const { data } = obj
+    // console.log(obj)
+    // obj.periodo = null;
+    console.log(obj)
+    //const response = yield call(api.Dashboard.pesquisarVenda, { ...obj, periodo: new moment() })
+    const response = yield call(api.Dashboard.pesquisarVenda, { ...obj })
+
+    if (response.ok) {
+      const dados = get(response, ['data'], {})
+      yield put(DashboardActions.dashboardSuccess({vendaList: dados}))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(DashboardActions.dashboardFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(DashboardActions.dashboardSuccess())
+  }
+}
+
 
 export function * getPopulacaoTotal ( api )  {
   try {

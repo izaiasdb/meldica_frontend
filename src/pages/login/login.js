@@ -110,7 +110,7 @@ class Login extends Component {
                                 <Form.Item>
                                 {getFieldDecorator('username', {
                                     rules: [{ required: true, message: 'Por favor, informe o seu login.' }],
-                                    initialValue: 'izaias.barreto'
+                                    initialValue: null //'izaias.barreto'
                                 })(
                                     <Input
                                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -126,7 +126,7 @@ class Login extends Component {
                                 <Form.Item>
                                 {getFieldDecorator('password', {
                                     rules: [{ required: true, message: 'Por favor, informe a sua senha.' }],
-                                    initialValue: '123'
+                                    initialValue: null//'123'
                                 })(
                                     <Input
                                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}

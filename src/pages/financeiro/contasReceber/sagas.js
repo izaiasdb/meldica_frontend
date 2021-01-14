@@ -142,3 +142,60 @@ export function * pagarParte (api, { obj })  {
     yield put(Actions.contasReceberFailure())
   }
 }
+
+export function * excluir (api, { obj })  {
+  try {
+    const { id } = getUser();
+    // Erro imutavel
+    // console.log(obj)
+    // obj.idUsuarioAlteracao = id;
+
+    // if (!obj.id){
+    //   obj.idUsuarioInclusao = id;
+    // }
+
+    console.log(obj)
+    const response = yield call(api.ContasReceber.excluir, {...obj, idUsuarioAlteracao: id, idUsuarioInclusao: id })
+    
+    if (response.ok) {
+      yield put(Actions.contasReceberSuccess({
+        message: {
+          tipo: 'success', descricao: `Registro ${obj && obj.id ? 'alterado' : 'salvo'} com sucesso.`
+        }
+      }))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.contasReceberFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.contasReceberFailure())
+  }
+}
+
+export function * excluirItem (api, { obj })  {
+  try {
+    const { id } = getUser();
+    // obj.idUsuarioAlteracao = id;
+
+    // if (!obj.id){
+    //   obj.idUsuarioInclusao = id;
+    // }
+
+    const response = yield call(api.ContasReceber.excluirItem, {...obj, idUsuarioAlteracao: id, idUsuarioInclusao: id  })
+    
+    if (response.ok) {
+      yield put(Actions.contasReceberSuccess({
+        message: {
+          tipo: 'success', descricao: `Registro ${obj && obj.id ? 'alterado' : 'salvo'} com sucesso.`
+        }
+      }))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.contasReceberFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.contasReceberFailure())
+  }
+}

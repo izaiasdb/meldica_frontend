@@ -67,6 +67,22 @@ class Tabela extends Component {
         });
     }    
 
+    excluirEvent = (contasReceber) => {
+        const { confirm } = Modal;
+        const { excluir } = this.props;
+
+        confirm({
+            title: `Tem certeza que deseja Excluir registro?`,
+            content: 'Processo não pode ser DESFEITO!',
+            onOk() {
+                excluir(contasReceber)
+            },
+            onCancel() {
+              console.log('Cancelar');
+            },
+        });
+    } 
+
     getAcoes = (record) => {
         const { tipoTela } = this.props;
 
@@ -88,7 +104,7 @@ class Tabela extends Component {
                     {record.valor > record.valorPago  &&
                     <>
                     <Divider type="vertical"/>
-                    <Tooltip title={`${isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'} do documento`}>
+                    <Tooltip title={`${isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'} parte do documento`}>
                         {/* <FontAwesomeIcon 
                             icon={faDollarSign} 
                         }} /> */}
@@ -113,6 +129,18 @@ class Tabela extends Component {
                 </>
                 }
                 {
+                    hasAnyAuthority("CONTAS_PAGAR_EXCLUIR") &&
+                    <>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Excluir">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'close-circle' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.excluirEvent(record)}></Icon>
+                    </Tooltip>  
+                    </>
+                }
+                { 
                 <>
                 <Divider type="vertical"/>
                 <Tooltip title="Visualizar documento">
@@ -201,6 +229,7 @@ const mapDispatchToProps = (dispatch) => ({
     contasReceberPagar: (obj) => dispatch(Actions.contasReceberPagar(obj)),    
     cleanMessage: ()  => dispatch(Actions.contasReceberCleanMessage()),
     cleanTable: () => dispatch(Actions.contasReceberCleanTable()),    
+    excluir: (obj) => dispatch(Actions.contasReceberExcluir(obj)),
 })
 
 export default connect(

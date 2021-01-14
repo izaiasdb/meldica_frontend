@@ -212,6 +212,7 @@ const mapDispatchToProps = (dispatch) => ({
     setStateView: (stateView) => dispatch(Actions.contasReceberSetStateView(stateView)),
     setContasReceber: (contasReceber) => dispatch(Actions.contasReceberSetContasReceber(contasReceber)),
     salvar: (obj) => dispatch(Actions.contasReceberSalvar(obj)),
+    excluirItem: (obj) => dispatch(Actions.contasReceberExcluirItem(obj)),
 })
 
 const wrapedFormulario = Form.create()(Formulario)

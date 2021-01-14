@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Form, Select, Button, Table, Icon, Divider, Input, Tag, InputNumber, Card, DatePicker } from 'antd'
+import { Row, Col, Form, Select, Button, Table, Icon, Divider, Input, Tag, InputNumber, Card, DatePicker, Modal } from 'antd'
 import { Link } from 'react-router-dom'
 import { isEqual, isNil } from 'lodash'
 import { generateOptions } from '../../../util/helper'
@@ -104,6 +104,22 @@ export default class TabForma extends React.Component {
 
         setFieldsValue({contasReceber: { pagarReceberItemsList } })
     }
+
+    excluirEvent = (registro) => {
+        const { confirm } = Modal;
+        const { excluirItem } = this.props;
+
+        confirm({
+            title: `Tem certeza que deseja Excluir registro?`,
+            content: 'Processo não pode ser DESFEITO!',
+            onOk() {
+                excluirItem(registro)
+            },
+            onCancel() {
+              console.log('Cancelar');
+            },
+        });
+    } 
 
     limpar = () => {
         const { form: { getFieldsValue, setFieldsValue }, } = this.props
@@ -321,7 +337,8 @@ export default class TabForma extends React.Component {
                                                             {
                                                                 !isEqual(stateView, VIEWING) &&
                                                                 <> 
-                                                                <Icon style={{cursor: 'pointer'}} type={"delete"} onClick={ () => this.remover(record, form) }/>
+                                                                <Icon style={{cursor: 'pointer'}} type={"delete"} onClick={ () => this.excluirEvent(record) }/>
+                                                                {/* <Icon style={{cursor: 'pointer'}} type={"delete"} onClick={ () => this.remover(record, form) }/> */}
                                                                 <Divider type="vertical"/>
                                                                 </>
                                                             }

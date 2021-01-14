@@ -13,6 +13,7 @@ const { Types, Creators } = createActions({
    dashboardGetPopulacaoTotalPorUnidade: null,
    dashboardSetUnidadeAtual: ['unidadeAtual'],
    dashboardPesquisarMensagemUnidade: ['obj'],
+   dashboardPesquisarVenda: ['obj'],
 });
 
 export const DashboardTypes = Types;
@@ -32,6 +33,7 @@ export const success = (state, { dados }) =>  {
      populacaoTotalPorUnidade:  get(dados, ['populacaoTotalPorUnidade'], get(state.data, ['populacaoTotalPorUnidade'], [])),
      unidadeAtual:              get(dados, ['unidadeAtual'], get(state.data, ['unidadeAtual'], {})),
      mensagemUnidade:           get(dados, ['mensagemUnidade'], get(state.data, ['mensagemUnidade'], {})),
+     vendaList:                 get(dados, ['vendaList'], get(state.data, ['vendaList'], {})),
   }
 
    state = state.merge({fetching: false, data})
@@ -58,4 +60,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DASHBOARD_GET_POPULACAO_TOTAL_POR_UNIDADE] : request,
   [Types.DASHBOARD_SET_UNIDADE_ATUAL]               : setUnidadeAtual,
   [Types.DASHBOARD_PESQUISAR_MENSAGEM_UNIDADE]      : request,
+  [Types.DASHBOARD_PESQUISAR_VENDA]                 : request,
 })

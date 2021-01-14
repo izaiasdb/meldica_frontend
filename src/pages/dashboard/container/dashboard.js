@@ -1,77 +1,212 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Card, Spin, Row, Col, Avatar, Select, Carousel , Form, Input } from 'antd'
+import { Card, Spin, Row, Col, Avatar, Select, Carousel , Form, Input, DatePicker } from 'antd'
 import { Bar } from 'react-chartjs-2'
+import moment from 'moment'
+
 import DashboardActions from '../redux'
 import { cloneDeep, isEmpty, isNil } from 'lodash'
 import { generateOptions } from '../../util/helper'
 
 const { Meta } = Card
+const { Option, OptGroup } = Select;
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 class Dashboard extends Component {
 
     constructor(props){
         super(props)
-        this.state = { unidade: {}}
+
+        this.state = { 
+            unidade: {},
+            idTipoDashboard: '1',
+            periodo: "01/" + moment().format('MM/YYYY') //moment().format('DD/MM/YYYY')
+        }
     }   
 
     componentDidMount() {
         //this.props.getTotalColaboradorPorTipo();
         //this.props.getPopulacaoTotalPorUnidade();
+
+        const { idTipoDashboard, periodo } = this.state
+
+        this.pesquisarVenda(idTipoDashboard, periodo)
     }
 
-    getDatasetForColaboradorTotal = (colaboradorTotal) => {
-        let data = {
-            labels: colaboradorTotal.map(ct => ct.tipo),
-            datasets: [{
-                label: 'Quantidade de Colaboradores',
-                data: colaboradorTotal.map(ct => ct.qtd),
-                backgroundColor: [ '#149647', '#F36A21', '#149647', '#F36A21']
-            }]
-        }
+    // getDatasetForColaboradorTotal = (colaboradorTotal) => {
+    //     let data = {
+    //         labels: colaboradorTotal.map(ct => ct.tipo),
+    //         datasets: [{
+    //             label: 'Quantidade de Colaboradores',
+    //             data: colaboradorTotal.map(ct => ct.qtd),
+    //             backgroundColor: [ '#149647', '#F36A21', '#149647', '#F36A21']
+    //         }]
+    //     }
+    //
+    //     return data;
+    // }
 
-        return data;
-    }
+    // getDatasetForPopulacaoTotalPorUnidade = (populacaoTotalPorUnidade) => {
+    //     let data = {
+    //         labels: populacaoTotalPorUnidade.map(ct => ct.unidade),
+    //         datasets: [{
+    //             label: 'População Total da Unidade',
+    //             data: populacaoTotalPorUnidade.map(ct => ct.total),
+    //             backgroundColor: '#149647'
+    //         }]
+    //     }
+    //
+    //     return data;
+    // }
 
-    getDatasetForPopulacaoTotalPorUnidade = (populacaoTotalPorUnidade) => {
-        let data = {
-            labels: populacaoTotalPorUnidade.map(ct => ct.unidade),
-            datasets: [{
-                label: 'População Total da Unidade',
-                data: populacaoTotalPorUnidade.map(ct => ct.total),
-                backgroundColor: '#149647'
-            }]
-        }
-
-        return data;
-    }
-
-    listarMensagenUnidades = () => {                
-        const { mensagemUnidade = [] } = this.props
-        const divs = []
-
-        if (mensagemUnidade && mensagemUnidade.length > 0) {
-            mensagemUnidade.map((mensagem, index) => {
-                divs.push(<div key={index}><h2>{mensagem.descricao}</h2></div>)
-            })
-        }
+    // listarMensagenUnidades = () => {                
+    //     const { mensagemUnidade = [] } = this.props
+    //     const divs = []
+    //
+    //     if (mensagemUnidade && mensagemUnidade.length > 0) {
+    //         mensagemUnidade.map((mensagem, index) => {
+    //             divs.push(<div key={index}><h2>{mensagem.descricao}</h2></div>)
+    //         })
+    //     }
         
-        return divs;
-    }    
+    //     return divs;
+    // }   
+    
+    tipoDashboardHandleChange = (idTipoDashboard) => {
+        const { periodo } = this.state
+        console.log(`selected ${idTipoDashboard}`);
+        this.setState({ idTipoDashboard })
+
+        this.pesquisarVenda(idTipoDashboard, periodo)
+    }
+
+    dataHandleChange = (date, dateString) => {
+        const { idTipoDashboard } = this.state
+        console.log(date, dateString);
+        this.setState({ periodo: "01/" + dateString })
+
+        this.pesquisarVenda(idTipoDashboard, "01/" + dateString)
+    }
+
+    pesquisarVenda(idTipoDashboard, periodo) {
+        if (!isNil(idTipoDashboard) && !isNil(periodo)){
+            // const data = moment(periodo, 'DD/MM/YYYY')
+            // let dataStr = moment(periodo).format('DD/MM/YYYY');
+
+            this.props.pesquisarVenda({ idTipoDashboard, data: periodo })
+        }
+    }
+
+    getCard = (nome, color, icon, value) => {
+        return (<Col span={6}>
+            <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} >
+                <Meta avatar = { <Avatar size={72} icon={icon} style = {{ color, backgroundColor: '#fff' }}/> }
+                      title={<span style={{ 'fontSize': '16px', 'fontWeight' : 'bold'}}>{nome}</span>}
+                      description = {
+                            <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '2em', 'color' : '#000'}}>
+                                { value }
+                            </div>
+                      }
+                />
+            </Card>
+        </Col>)
+    }
 
     render(){
         let { 
             fetching, 
-            totalColaboradorPorTipo = [], 
-            populacaoTotalPorUnidade = []  
+            //totalColaboradorPorTipo = [], 
+            vendaList = []  
         } = this.props
         
-        const { unidade = {} } = this.state
-        populacaoTotalPorUnidade = unidade.id ? populacaoTotalPorUnidade.filter(i => i.unidade == unidade.abreviacao) : populacaoTotalPorUnidade
-        populacaoTotalPorUnidade = cloneDeep(populacaoTotalPorUnidade).sort((a, b) => b.total - a.total)
+        const { 
+            //unidade = {}, 
+            idTipoDashboard 
+        } = this.state
+        //populacaoTotalPorUnidade = unidade.id ? populacaoTotalPorUnidade.filter(i => i.unidade == unidade.abreviacao) : populacaoTotalPorUnidade
+        //populacaoTotalPorUnidade = cloneDeep(populacaoTotalPorUnidade).sort((a, b) => b.total - a.total)
 
         return (
             <Spin spinning={ fetching }>
+                <Row gutter={24}>
+                    <Col span={24}>
+                    {/* 'height': '150px'  */}
+                        <Card style={{ 'borderRadius' : '1em' , 'height': '100%' }} >
+                            <Row gutter={24}>
+                                <Col span={4}>
+                                    <Form.Item label={"Tipo Dashboard"}>
+                                        {
+                                             <Select 
+                                                defaultValue="GERAL" 
+                                                onChange={this.tipoDashboardHandleChange}
+                                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                                style = {{ width: '98%' }}
+                                                //style={{ width: 200 }}
+                                                >
+                                             <OptGroup label="VENDAS">
+                                               <Option value="1">GERAL</Option>
+                                               <Option value="2">POR VENDEDOR</Option>
+                                             </OptGroup>
+                                             <OptGroup label="FINANCEIRO">
+                                               <Option value=""></Option>
+                                             </OptGroup>
+                                           </Select>
+                                        }
+                                    </Form.Item>
+                                </Col>
+                                <Col span={4}>
+                                    <Form.Item label={"Período"}>
+                                        {                                    
+                                        <MonthPicker 
+                                            onChange={this.dataHandleChange} 
+                                            placeholder="Selecione o mês"
+                                            format={'MM/YYYY'}
+                                            value={new moment()} />
+                                        }
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            { idTipoDashboard == '1' && vendaList.length > 0 &&
+                            <Row gutter={24}>
+                                <Card 
+                                    title={"VENDAS GERAL"} 
+                                    style={{ 'borderRadius' : '1em', margin: '20px',// 'height': '400px' 
+                                    }}
+                                    >
+                                    <Row gutter={24}>
+                                        {
+                                            vendaList.map((venda, index) => {
+                                                return (
+                                                    this.getCard(venda.descricao, '#51BCDA', 'global', venda.valor + " cx")
+                                                )
+                                            })
+                                        }
+                                    </Row>
+                                </Card>                                                              
+                            </Row>
+                            }
+                            { idTipoDashboard == '2' && vendaList.length > 0 &&
+                            <Row gutter={24}>
+                                <Card 
+                                    title={"VENDAS POR FUNCIONÁRIO"} 
+                                    style={{ 'borderRadius' : '1em', margin: '20px' }}
+                                    >
+                                    <Row gutter={24}>
+                                        {
+                                        vendaList.map((venda, index) => {
+                                            return (
+                                                this.getCard(venda.descricao, '#6BD098', 'global', venda.valor + " cx")
+                                            )
+                                        })
+                                        }
+                                    </Row>
+                                </Card>                                                              
+                            </Row>
+                            }      
+                        </Card>
+                    </Col>
+                </Row>
+                
                 <Row gutter={24}>
                     {/* <Col span={6}>
                         <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} >
@@ -205,7 +340,8 @@ const mapDispatchToProps = (dispatch) => ({
     getPopulacaoTotal: () => dispatch(DashboardActions.dashboardGetPopulacaoTotal()),
     getTotalColaboradorPorTipo: () => dispatch(DashboardActions.dashboardGetTotalColaboradorPorTipo()),
     getPopulacaoTotalPorUnidade: () => dispatch(DashboardActions.dashboardGetPopulacaoTotalPorUnidade()),  
-    pesquisarMensagemUnidade: (obj) => dispatch(DashboardActions.dashboardPesquisarMensagemUnidade(obj)),  
+    pesquisarMensagemUnidade: (obj) => dispatch(DashboardActions.dashboardPesquisarMensagemUnidade(obj)),
+    pesquisarVenda: (obj) => dispatch(DashboardActions.dashboardPesquisarVenda(obj)),
 })
 
 const wrapedPesquisa = Form.create()(Dashboard)

@@ -22,6 +22,8 @@ const { Types, Creators } = createActions({
    contasReceberCleanTable: null,
    contasReceberPagar: ['obj'],
    contasReceberPagarParte: ['obj'],
+   contasReceberExcluir: ['obj'],
+   contasReceberExcluirItem: ['obj'],
 });
 
 export const ContasReceberTypes = Types;
@@ -95,4 +97,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CONTAS_RECEBER_CLEAN_TABLE]             : cleanTable,
   [Types.CONTAS_RECEBER_PAGAR]                   : request,
   [Types.CONTAS_RECEBER_PAGAR_PARTE]             : request,
+  [Types.CONTAS_RECEBER_EXCLUIR]                 : request,
+  [Types.CONTAS_RECEBER_EXCLUIR_ITEM]            : request,
 })

@@ -66,6 +66,7 @@ const create = () => {
     getTotalColaboradorPorTipo: () => api.get('/dashboard/totalcolaboradores'),
     getPopulacaoTotalPorUnidade: (unidades) => api.get(`/dashboard/populacaototalporunidade/${unidades}`),
     pesquisarMensagemUnidade: (obj) => api.post('/dashboard/listarmensagensunidade', {...obj}),
+    pesquisarVenda: (obj) => api.post('/dashboard/pesquisarVenda', {...obj}),
   }
 
   //************************************ Configuração ************************************/
@@ -212,6 +213,8 @@ const create = () => {
     salvar: (obj) => api.post('/pagarReceber/salvar', obj),
     pagar: (obj) => api.post('/pagarReceber/pagar', obj),   
     pagarParte: (obj) => api.post('/pagarReceber/salvarPagarReceberItem', obj),    
+    excluir: (obj) => api.post('/pagarReceber/excluir', obj),
+    excluirItem: (obj) => api.post('/pagarReceber/excluirItem', obj),
   }
 
   return {
