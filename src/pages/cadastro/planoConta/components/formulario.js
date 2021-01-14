@@ -111,7 +111,7 @@ class Formulario extends Component {
                                     initialValue: nivel || null,
                                 })(
                                     <InputNumber style={{ width: '100%'}} 
-                                                max={300} 
+                                                max={10} 
                                                 min={0} 
                                                 maxLength={3}
                                                 formatter={value => new String(value).replace(/([a-zA-Z]*)/g,'') } />

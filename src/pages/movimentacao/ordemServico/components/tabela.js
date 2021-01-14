@@ -71,7 +71,13 @@ class Tabela extends Component {
               console.log('Cancelar');
             },
         });
-    }    
+    }  
+    
+    imprimirEvent = (ordemServico) => {
+        // this.props.setStateView(stateView)
+        // this.props.setOrdemServico(ordemServico)
+        // this.props.setKitProdutoList(ordemServico.kitProdutoList)
+    }
 
     getAcoes = (record) => {
         //console.log(getUser())
@@ -186,7 +192,15 @@ class Tabela extends Component {
                             className={'tabela-icone'}
                             type={ 'zoom-in' } 
                             onClick={(e) => this.setModo(record, VIEWING)} />
-                    </Tooltip>               
+                    </Tooltip>  
+                    <Divider type="vertical"/>
+                    <Tooltip title="Imprimir">
+                        <Icon 
+                            className={'tabela-icone'}
+                            type={ 'printer' } 
+                            onClick={(e) => this.props.imprimir(record.id)}
+                            />
+                    </Tooltip>                                   
                 </>
                 }
             </div> 
@@ -255,6 +269,8 @@ const mapDispatchToProps = (dispatch) => ({
     cleanMessage: ()  => dispatch(Actions.ordemServicoCleanMessage()),
     cleanTable: () => dispatch(Actions.ordemServicoCleanTable()),
     setKitProdutoList: (kitProdutoList) => dispatch(Actions.ordemServicoSetKitProdutoList(kitProdutoList)),
+    imprimir: (id) => dispatch(Actions.ordemServicoImprimir(id)),
+    
 })
 
 export default connect(

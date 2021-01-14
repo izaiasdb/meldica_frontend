@@ -26,13 +26,15 @@ class Formulario extends Component {
             if (isEqual(message.tipo, 'success')) {
                 const { usuario } = this.props
                 
-                if (usuario.id){
-                    this.props.cleanTable()
-                    this.props.setState(SEARCHING)
-                } else {
-                    this.handleReset()
-                    this.props.setUsuario(null)
-                }
+                // if (usuario.id){
+                //     this.props.cleanTable()
+                //     this.props.setState(SEARCHING)
+                // } else {
+                //     this.handleReset()
+                //     this.props.setUsuario(null)
+                // }
+                this.props.cleanTable()
+                this.props.setState(SEARCHING)
             }
 
             this.props.cleanMessage()

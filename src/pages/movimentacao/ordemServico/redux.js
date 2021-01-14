@@ -20,6 +20,7 @@ const { Types, Creators } = createActions({
    ordemServicoSetDrawerVisivel: ['drawerVisivel'],
    ordemServicoSetDrawerKitVisivel: ['drawerKitVisivel'],
    ordemServicoSetKitProdutoList: ['kitProdutoList'],
+   ordemServicoImprimir : ['id'],
 });
 
 export const OrdemServicoTypes = Types;
@@ -94,6 +95,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ORDEM_SERVICO_INIT]              : request,
   [Types.ORDEM_SERVICO_SUCCESS]           : success,
   [Types.ORDEM_SERVICO_PESQUISAR]         : request,
+  [Types.ORDEM_SERVICO_IMPRIMIR]          : request,
   [Types.ORDEM_SERVICO_FAILURE]           : failure,
   [Types.ORDEM_SERVICO_CLEAN_MESSAGE]     : cleanMessage,
   [Types.ORDEM_SERVICO_SALVAR]            : request,

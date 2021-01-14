@@ -21,7 +21,7 @@ export default class DrawerKitProduto extends React.Component {
     }
 
     UNSAFE_componentWillMount() {
-        const { kitProdutoList } = this.props
+        const { kitProdutoList = []} = this.props
         let dados = []
 
         kitProdutoList.map((item, i) => {
