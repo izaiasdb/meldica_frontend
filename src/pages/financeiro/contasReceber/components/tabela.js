@@ -93,7 +93,7 @@ class Tabela extends Component {
                 {/* { (isEqual(tipoTela, "PAGAR") ? hasAnyAuthority("CONTAS_PAGAR_ALTERAR") : hasAnyAuthority("CONTAS_RECEBER_ALTERAR"))  &&  */}
                 { permissao && 
                 <>
-                    {record.valorPago == 0 &&
+                    {//record.valorPago == 0 &&
                     <Tooltip title={`Editar Contas a ${isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'}`}>
                         <Icon 
                             className={'tabela-icone'}

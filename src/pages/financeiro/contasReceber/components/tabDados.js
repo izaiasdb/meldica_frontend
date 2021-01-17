@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, DatePicker, InputNumber, Switch, Card, Radio } from 'antd'
+import { Row, Col, Form, Select, Input, DatePicker, InputNumber, Switch, Card, Radio, Tag } from 'antd'
 import { generateOptions } from '../../../util/helper'
 import { isNil, isEqual } from 'lodash'
 import moment from 'moment'
@@ -53,9 +53,9 @@ const TabDados = (props) => {
     return (<div>
         <Card title={`Informe os dados referente a Contas a ${isEqual(tipoTela, 'PAGAR') ? 'pagar': 'receber'}`}>
             <Row gutter={ 12 }>
-                { (isEqual(stateView, EDITING) || isEqual(stateView, VIEWING)) && !isNil(cliente) &&
+                {// (isEqual(stateView, EDITING) || isEqual(stateView, VIEWING)) && !isNil(cliente) &&
                 <Col span={ 12 }>
-                    { isEqual(tipoTela, 'PAGAR') &&
+                    { isEqual(tipoTela, 'RECEBER') &&
                     <Form.Item label={"Cliente"}>
                         {
                             getFieldDecorator('contasReceber.cliente.id', {
@@ -63,7 +63,7 @@ const TabDados = (props) => {
                                 initialValue: isNil(cliente) ? null : cliente.id
                             })(
                             <Select showSearch
-                                    disabled = {true}
+                                    //disabled = {true}
                                     optionFilterProp="children"
                                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
@@ -73,7 +73,7 @@ const TabDados = (props) => {
                             )
                         }
                     </Form.Item> }
-                    { isEqual(tipoTela, 'RECEBER') &&
+                    { isEqual(tipoTela, 'PAGAR') &&
                     <Form.Item label={"Fornecedor"}>
                         {
                             getFieldDecorator('contasReceber.fornecedor.id', {
@@ -81,7 +81,7 @@ const TabDados = (props) => {
                                 initialValue: isNil(fornecedor) ? null : fornecedor.id
                             })(
                             <Select showSearch
-                                    disabled = {true}
+                                    //disabled = {true}
                                     optionFilterProp="children"
                                     filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
@@ -233,6 +233,7 @@ const TabDados = (props) => {
                 </Col>
             </Row>   
             { isEqual(stateView, INSERTING) &&
+            <>
             <Row gutter={ 22 }>
                 <Col span={ 12 }>
                     <Form.Item label={"Escolha o tipo de lançamento"}>
@@ -243,7 +244,7 @@ const TabDados = (props) => {
                                 <Radio.Group>
                                     <Radio key={1} value={0}>Lançamento Normal</Radio>
                                     <Radio key={2} value={1}>Lançamento à vista</Radio>
-                                    {/* <Radio key={3} value={2}>Lançamento várias parcelas</Radio> */}
+                                    <Radio key={3} value={2}>Lançamento várias parcelas</Radio>
                                 </Radio.Group>
                             )
                         }
@@ -252,12 +253,12 @@ const TabDados = (props) => {
                 { 
                 idTipoLancamento == 2 &&
                 <>
-                {/* <Col span={ 2 }>
+                <Col span={ 2 }>
                     <Form.Item label={"Parcelas"}>
                         {
                             getFieldDecorator('contasReceber.parcelas', {
                                 rules: [{required: false, message: 'Por favor, informe as parcelas.'}],
-                                initialValue: 1
+                                initialValue: 2
                             })(
                                 <InputNumber style={{ width: "150" }}                                                         
                                     min={2}
@@ -268,25 +269,23 @@ const TabDados = (props) => {
                             )
                         }
                     </Form.Item>
-                </Col>  */}
-                <Col span = { 10 }>
-                    <Form.Item label={`Forma condição de ${isEqual(tipoTela, 'PAGAR') ? 'pagamento' : 'recebimento'} `}>
-                        {
-                            getFieldDecorator('contasReceber.formaCondicaoPagamento.id', {})(
-                                <Select showSearch
-                                        optionFilterProp="children"
-                                        placeholder={"Digite para buscar"}
-                                        //onChange={(value) => this.handleChangeForma(value)}
-                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                        >
-                                    {generateOptions(formaCondicaoList.map(({id, formaPagamento, condicaoPagamento }) => ({id, descricao: formaPagamento.nome + ' - ' + condicaoPagamento.nome})))}
-                                </Select>
-                            )
-                        }
-                    </Form.Item>               
-                </Col>    
-                </> }              
-            </Row> }
+                </Col> 
+
+                </> 
+                }              
+            </Row> 
+            { idTipoLancamento == 2 &&
+            <Row gutter = { 12 }>
+                    <Col span = { 24 }>
+                        <Tag style={{ marginBottom: '10px' }} color="volcano" >
+                            <span style={{fontWeight: 'bold', fontSize: '14px'}}>
+                                Obs: O documento será gerado em várias parcelas. Ex: Doc 1/5, Doc 2/5 e etc.
+                            </span>
+                        </Tag> 
+                    </Col>
+                </Row>            
+            }
+            </>}
         </Card>      
     </div>)
 }

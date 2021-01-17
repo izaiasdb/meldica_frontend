@@ -178,10 +178,10 @@ class Formulario extends Component {
                     return
                 }
 
-                if (!isNil(contasReceber.tipoLancamento) && contasReceber.tipoLancamento == 2 && isNil(contasReceber.formaCondicaoPagamento)){
-                    openNotification({tipo: 'warning', descricao: 'Forma condição precisa ser informada para lançamento do tipo PARCELADO!'})
-                    return
-                }
+                // if (!isNil(contasReceber.tipoLancamento) && contasReceber.tipoLancamento == 2 && isNil(contasReceber.formaCondicaoPagamento)){
+                //     openNotification({tipo: 'warning', descricao: 'Forma condição precisa ser informada para lançamento do tipo PARCELADO!'})
+                //     return
+                // }
 
                 this.props.setContasReceber(contasReceber)
                 this.props.salvar(contasReceber)
