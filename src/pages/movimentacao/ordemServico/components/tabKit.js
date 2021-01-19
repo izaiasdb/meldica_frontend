@@ -23,9 +23,9 @@ export default class TabKit extends React.Component {
 
         let { osKit } = getFieldsValue(['osKit'])
         let kitList = getFieldValue("ordemServico.kitList")
-        let { id, nome, valorNf, codigo } = osKit      
+        let { id, nome, valorNf, codigo, peso } = osKit      
         
-        if(!(nome && valorNf)){
+        if(!(nome && valorNf, peso)){
             openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes ao kit.'})
             return null
         }     
@@ -62,7 +62,8 @@ export default class TabKit extends React.Component {
                 osKit: { 
                     //id: null,
                     nome: '', //'KIT DE AMOSTRA GRÁTIS', 
-                    valorNf: 0,
+                    valorNf: 15,
+                    peso: 1,
                     codigo: null
                 }
             })
@@ -94,7 +95,8 @@ export default class TabKit extends React.Component {
         fields.osKit = {
             //id: null,
             nome: '', //'KIT DE AMOSTRA GRÁTIS', 
-            valorNf: 0,
+            valorNf: 15,
+            peso: 1,
             codigo: null
         }
 
@@ -168,6 +170,22 @@ export default class TabKit extends React.Component {
                         <Form.Item label={"Valor NF"}>
                             {
                                 getFieldDecorator('osKit.valorNf', {
+                                    initialValue: 15
+                                })(
+                                    <InputNumber style={{ width: "150" }} 
+                                        min={0}
+                                        precision={3}
+                                        step={1}  
+                                        disabled= {isEqual(stateView, VIEWING)}
+                                    />
+                                )
+                            }
+                        </Form.Item>            
+                    </Col>
+                    <Col span={2}>
+                        <Form.Item label={"Peso"}>
+                            {
+                                getFieldDecorator('osKit.peso', {
                                     initialValue: 1
                                 })(
                                     <InputNumber style={{ width: "150" }} 
@@ -179,7 +197,7 @@ export default class TabKit extends React.Component {
                                 )
                             }
                         </Form.Item>            
-                    </Col> 
+                    </Col>                    
                     <Col span={ 4 }>
                         <Button type="primary" 
                             onClick={showDrawerKit} style={{ marginTop: "40px" }}
@@ -200,6 +218,7 @@ export default class TabKit extends React.Component {
                                     pagination={false} bordered>
                                     <Table.Column title={<center>Nome Kit</center>} key={"nome"} dataIndex={"nome"} align={"center"} />  
                                     <Table.Column title={<center>Valor NF</center>} key={"valorNf"} dataIndex={"valorNf"} align={"center"} />
+                                    <Table.Column title={<center>Peso</center>} key={"peso"} dataIndex={"peso"} align={"center"} />
                                     <Table.Column title={<center>Ações</center>} key={"actions"} 
                                                 dataIndex={"actions"} 
                                                 align={"center"} 

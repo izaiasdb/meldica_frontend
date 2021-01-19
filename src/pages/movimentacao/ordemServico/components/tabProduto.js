@@ -150,8 +150,13 @@ export default class TabProduto extends React.Component {
             let tabelaPrecoProduto = tabelaPrecoProdutoList.find(c=> c.idTabelaPreco == idTabelaPreco && c.produto.id == idProduto);
 
             if (!isNil(tabelaPrecoProduto)){
-                valorVendaUnidade = tabelaPrecoProduto.valorUnidade
-                valorVendaCaixa = tabelaPrecoProduto.valorCaixa
+                if (tabelaPrecoProduto.valorUnidade) {
+                    valorVendaUnidade = tabelaPrecoProduto.valorUnidade
+                }
+
+                if (tabelaPrecoProduto.valorCaixa) {
+                    valorVendaCaixa = tabelaPrecoProduto.valorCaixa
+                }
             }
         }
 
@@ -160,15 +165,15 @@ export default class TabProduto extends React.Component {
 
         if (fracionado) {
             vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade);
-            totalProduto = (valorVendaUnidade - vValorDesconto) * quantidadeUnidade;
+            totalProduto = (valorVendaUnidade - vValorDesconto) * (isNil(quantidadeUnidade) ? produto.quantidadeCaixa : quantidadeUnidade);
         } else {
             vValorDesconto = obterValorDesconto(percDesconto, valorVendaCaixa);
-            totalProduto = (valorVendaCaixa - vValorDesconto) * quantidadeCaixa; 
+            totalProduto = (valorVendaCaixa - vValorDesconto) * (isNil(quantidadeCaixa) ? 1: quantidadeCaixa); 
         }
 
         setFieldsValue({osProduto: {
                 ...osProduto, 
-                quantidadeUnidade: produto.quantidadeCaixa,
+                quantidadeUnidade: isNil(quantidadeUnidade) ? produto.quantidadeCaixa : quantidadeUnidade,
                 quantidadeCaixa: quantidadeCaixa,
                 valorUnidade: valorVendaUnidade,
                 valorCaixa: valorVendaCaixa,

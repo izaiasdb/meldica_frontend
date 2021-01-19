@@ -70,7 +70,8 @@ class Formulario extends Component {
         //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
         let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
         let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
-        let totalPesoKit = kitProdutoList.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
+        //let totalPesoKit = kitProdutoList.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
+        let totalPesoKit = kitList.reduce((acum,{peso}) => acum + peso, 0);
         let totalVolumeProd = produtoItemsListForm.reduce((acum,{quantidadeUnidade, quantidadeNaCaixa}) => acum + (Number(quantidadeUnidade) / Number(quantidadeNaCaixa)), 0);
         let totalVolumeKit = kitProdutoList.reduce((acum,) => acum + 1, 0);
         let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);
