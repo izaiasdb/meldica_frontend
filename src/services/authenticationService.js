@@ -1,8 +1,8 @@
 import { get } from "lodash";
 import { select } from 'redux-saga/effects'
 
-export const TOKEN_KEY = "@sap-token";
-export const USER_KEY = "@sap-user";
+export const TOKEN_KEY = "@meldica-token";
+export const USER_KEY = "@meldica-user";
 
 export const isAuthenticated = () => localStorage.getItem(TOKEN_KEY) !== null;
 
