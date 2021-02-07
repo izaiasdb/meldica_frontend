@@ -75,6 +75,17 @@ import { ContasReceberTypes } from '../pages/financeiro/contasReceber/redux';
 
 import * as ContasReceber from '../pages/financeiro/contasReceber/sagas';
 
+//************************************ Relatórios ************************************/
+import { RelatorioGeralTypes } from '../pages/relatorios/geralEstatistica/redux';
+import { RelatorioPagarReceberTypes } from '../pages/relatorios/relatorioPagarReceber/redux';
+import { RelatorioPagasRecebidasTypes } from '../pages/relatorios/relatorioPagasRecebidas/redux';
+
+import * as RelatorioGeral from '../pages/relatorios/geralEstatistica/sagas';
+import * as RelatorioPagarReceber from '../pages/relatorios/relatorioPagarReceber/sagas';
+import * as RelatorioPagasRecebidas from '../pages/relatorios/relatorioPagasRecebidas/sagas';
+
+
+
 const api = API.create();
 
 export default function * root () {
@@ -202,5 +213,14 @@ export default function * root () {
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_PAGAR_PARTE, ContasReceber.pagarParte, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_EXCLUIR, ContasReceber.excluir, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_EXCLUIR_ITEM, ContasReceber.excluirItem, api),
+
+        //************************************ Relatórios ************************************/
+        takeLatest(RelatorioGeralTypes.RELATORIO_GERAL_INIT, RelatorioGeral.fetch, api),
+
+        takeLatest(RelatorioPagarReceberTypes.RELATORIO_PAGAR_RECEBER_INIT, RelatorioPagarReceber.fetch, api),
+        takeLatest(RelatorioPagarReceberTypes.RELATORIO_PAGAR_RECEBER_PESQUISAR, RelatorioPagarReceber.pesquisar, api),
+
+        takeLatest(RelatorioPagasRecebidasTypes.RELATORIO_PAGAS_RECEBIDAS_INIT, RelatorioPagasRecebidas.fetch, api),
+        takeLatest(RelatorioPagasRecebidasTypes.RELATORIO_PAGAS_RECEBIDAS_PESQUISAR, RelatorioPagasRecebidas.pesquisar, api),
     ])
 }

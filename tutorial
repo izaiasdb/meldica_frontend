@@ -1,1 +1,5 @@
+desenvolvimento
 npm run dev
+
+produção
+npm start

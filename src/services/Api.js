@@ -217,6 +217,16 @@ const create = () => {
     excluirItem: (obj) => api.post('/pagarReceber/excluirItem', obj),
   }
 
+  //************************************ Relatórios ************************************/
+  const RelatorioGeral = {
+    init: () => api.get('/relatorios/geral/init'),
+  }  
+
+  const RelatorioPagarReceber = {
+    init: () => api.post('/relatorio/pagarReceber/init'),
+    pesquisar: (obj) => api.post('/relatorio/pagarReceber/pesquisar', obj),
+  }
+
   return {
     Login,
     AlterarSenha,
@@ -245,6 +255,8 @@ const create = () => {
     Empresa,
     GrupoProduto,
     ContasReceber,
+    RelatorioGeral,
+    RelatorioPagarReceber
   }
 }
 

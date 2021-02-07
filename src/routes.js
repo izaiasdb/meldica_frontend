@@ -43,6 +43,10 @@ import OrdemServico from './pages/movimentacao/ordemServico/container/ordemServi
 import ContasReceber from './pages/financeiro/contasReceber/container/contasReceber'
 import ContasPagar from './pages/financeiro/contasReceber/container/contasPagar'
 
+//************************************ Relatórios ************************************/
+import RelatorioGeral from './pages/relatorios/geralEstatistica/container/relatorio'
+import RelatorioPagarReceber from './pages/relatorios/relatorioPagarReceber/container/relatorioPagarReceber'
+
 const PrivateRoute = ({ component: Component, ...rest }) => (
         <Route  {...rest} 
                 render={props => isAuthenticated() ? (<Component {...props} />) : (
@@ -89,7 +93,11 @@ const Routes = () => (
 
             {/************************************* Financeiro *************************************/}
             <PrivateRoute path='/financeiro/contasReceber' component={ContasReceber} />            
-            <PrivateRoute path='/financeiro/contasPagar' component={ContasPagar} />            
+            <PrivateRoute path='/financeiro/contasPagar' component={ContasPagar} />  
+
+            {/************************************* Relatórios *************************************/}
+            <PrivateRoute path='/relatorios' component={RelatorioGeral} />          
+            {/* <PrivateRoute path='/relatorios/relatorioPagarReceber' component={RelatorioPagarReceber} />           */}
 
         </React.Fragment>
 );

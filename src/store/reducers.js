@@ -33,13 +33,18 @@ const rootReducer = combineReducers({
     tabelaPreco: require('../pages/cadastro/tabelaPreco/redux').reducer,
     empresa: require('../pages/cadastro/empresa/redux').reducer,
     grupoProduto: require('../pages/cadastro/grupoProduto/redux').reducer,
-    
 
     //************************************ Movimentação ************************************/      
     ordemServico: require('../pages/movimentacao/ordemServico/redux').reducer,    
   
     //************************************ Financeiro ************************************/      
     contasReceber: require('../pages/financeiro/contasReceber/redux').reducer,    
+
+    //************************************ Relatórios ************************************/
+    relatorioGeral: require('../pages/relatorios/geralEstatistica/redux').reducer,
+    relatorioPagarReceber: require('../pages/relatorios/relatorioPagarReceber/redux').reducer,
+    relatorioPagasRecebidas: require('../pages/relatorios/relatorioPagasRecebidas/redux').reducer,
+    
 
 });
 

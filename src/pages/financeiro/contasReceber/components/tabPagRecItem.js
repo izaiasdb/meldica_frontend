@@ -45,6 +45,11 @@ export default class TabForma extends React.Component {
         //     return null
         // }
 
+        if (isEqual(viewStateTab, EDITING)) {
+            let oldRegistro = pagarReceberItemsList.find(c=> c.id == id)
+            totalPago = totalPago - oldRegistro.valor
+        }
+
         if (valor + totalPago > (pagarReceber.valor)) {
             openNotification({tipo: 'warning', descricao: `Valor do ${isEqual(tipoTela, 'PAGAR') ? 'pagamento': 'recebimento'} excede o total do documento.`})
             return null
@@ -88,7 +93,11 @@ export default class TabForma extends React.Component {
 
     prepareUpdate = (record) => {
         const { form: { setFieldsValue } } = this.props
-        setFieldsValue({ pagarReceberItem: {...record } } )
+        setFieldsValue({ pagarReceberItem: {
+            ...record,
+            dataPagamento: record.dataPagamento ? new moment(record.dataPagamento, 'YYYY-MM-DD') : null,
+            //dataInclusao: menu.dataInclusao ? new moment(menu.dataInclusao, 'YYYY-MM-DD') : null,
+        }})
         this.setState({
             viewStateTab: EDITING,
             formaCondicaoDescricao: record.formaCondicaoPagamento.nome
@@ -197,7 +206,7 @@ export default class TabForma extends React.Component {
                             {
                                 getFieldDecorator('pagarReceberItem.formaCondicaoPagamento.id', {
                                     rules: [{required: false, message: 'Por favor, informe o cliente.'}],
-                                    initialValue: null//isNil(cliente) ? null : cliente.id
+                                    initialValue: 1//isNil(cliente) ? null : cliente.id
                                 })(
                                 <Select showSearch
                                         optionFilterProp="children"
@@ -217,7 +226,7 @@ export default class TabForma extends React.Component {
                 </Row>
                 <Row gutter = { 12 }>
                     <Col span={ 8 }>
-                        <Form.Item label={"Data do Vencimento"}>
+                        <Form.Item label={"Data do Recebimento"}>
                             {
                                 getFieldDecorator('pagarReceberItem.dataPagamento', {
                                     rules: [{required: true, message: "Por favor, informe a data do vencimento."}
