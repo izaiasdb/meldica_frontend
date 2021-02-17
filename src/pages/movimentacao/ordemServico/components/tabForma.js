@@ -224,6 +224,30 @@ export default class TabForma extends React.Component {
         } })        
     }
 
+    obterTotalFormaInicial = () => {
+        const { 
+            form,
+            ordemServico = {},
+        } = this.props
+        const { 
+            produtoItemsList = [], 
+            formaItemsList = [], 
+            transportadoraItemsList = [], 
+        } = isNil(ordemServico) ? {} : ordemServico        
+        const { getFieldDecorator, getFieldValue } = form
+
+        let produtoItemsListForm = getFieldValue("ordemServico.produtoItemsList") || produtoItemsList
+        let formaItemsListForm = getFieldValue("ordemServico.formaItemsList") || formaItemsList
+        let transportadoraItemsListForm = getFieldValue("ordemServico.transportadoraItemsList") || transportadoraItemsList
+        let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
+        let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);        
+        let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
+        let totalPedido = (totalProduto ? totalProduto : 0) +  (totalFrete ? totalFrete : 0);
+        let faltaFormaPgto = totalPedido - totalForma;
+
+        return faltaFormaPgto
+    }
+
     render() {
         const { viewStateTab, formaCondicaoDescricao } = this.state
         const { 
@@ -234,7 +258,6 @@ export default class TabForma extends React.Component {
         } = this.props
         const { formaItemsList = [] } = ordemServico || {}
         const { getFieldDecorator, getFieldValue } = form
-
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };        
 
         let id = getFieldValue("osForma.id") || null    
@@ -281,7 +304,7 @@ export default class TabForma extends React.Component {
                         <Form.Item label={"Valor"}>
                             {
                                 getFieldDecorator('osForma.valor', {
-                                    initialValue: 0
+                                    initialValue: this.obterTotalFormaInicial() || 0
                                 })(
                                     <InputNumber 
                                         style={{ width: "150" }}

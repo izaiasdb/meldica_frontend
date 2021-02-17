@@ -174,7 +174,7 @@ export default class TabProduto extends React.Component {
         setFieldsValue({osProduto: {
                 ...osProduto, 
                 quantidadeUnidade: isNil(quantidadeUnidade) ? produto.quantidadeCaixa : quantidadeUnidade,
-                quantidadeCaixa: quantidadeCaixa,
+                quantidadeCaixa: isNil(quantidadeCaixa) ? 1 : quantidadeCaixa,
                 valorUnidade: valorVendaUnidade,
                 valorCaixa: valorVendaCaixa,
                 desconto: vValorDesconto,

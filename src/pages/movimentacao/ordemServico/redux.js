@@ -55,6 +55,7 @@ export const success = (state, { dados }) =>  {
     transportadoraList:         get(dados, ['transportadoraList'], get(state.data, ['transportadoraList'], [])),
     tabelaPrecoList:            get(dados, ['tabelaPrecoList'], get(state.data, ['tabelaPrecoList'], [])),
     tabelaPrecoProdutoList:     get(dados, ['tabelaPrecoProdutoList'], get(state.data, ['tabelaPrecoProdutoList'], [])),
+    clienteTabelaPrecoList:     get(dados, ['clienteTabelaPrecoList'], get(state.data, ['clienteTabelaPrecoList'], [])),
     clienteRazaoList:           get(dados, ['clienteRazaoList'], get(state.data, ['clienteRazaoList'], [])),
     planoContaList:             get(dados, ['planoContaList'], get(state.data, ['planoContaList'], [])),
     clienteEnderecoList:        get(dados, ['clienteEnderecoList'], get(state.data, ['clienteEnderecoList'], [])),

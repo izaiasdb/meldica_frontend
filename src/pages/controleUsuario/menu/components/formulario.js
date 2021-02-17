@@ -277,7 +277,7 @@ class Formulario extends Component {
                                 Voltar
                         </Button>
                         <Button type={"primary"} 
-                                htmlType={"submit"} 
+                                //htmlType={"submit"} 
                                 onClick={this.handleSubmit}>
                             { this.isSaving() ? 'Salvar' : 'Atualizar' }
                         </Button>

@@ -161,9 +161,10 @@ class Formulario extends Component {
                                 style={{marginRight: '10px'}}>
                                 Voltar
                         </Button>
-                        <Button type={"primary"} 
-                                htmlType={"submit"} 
-                                onClick={this.handleSubmit}>
+                        <Button 
+                            type={"primary"} 
+                            //htmlType={"submit"} 
+                            onClick={this.handleSubmit}>
                             { this.isSaving() ? 'Salvar' : 'Atualizar' }
                         </Button>
                     </Row>

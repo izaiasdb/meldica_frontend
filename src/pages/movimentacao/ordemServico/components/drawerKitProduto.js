@@ -102,13 +102,17 @@ export default class DrawerKitProduto extends React.Component {
 
     prepareUpdate = (record) => {
         const { form: { setFieldsValue } } = this.props
-        setFieldsValue({ osKitProduto: {...record, 
-        } } )
+        setFieldsValue({ osKitProduto: {...record, } } )
         this.setState({ viewStateTab: EDITING, produtoDescricao: record.produto.nome })
     }    
     
     remover = (record, { getFieldValue, setFieldsValue }) => {
-        let kitProdutoList = getFieldValue("ordemServico.kitProdutoList")
+        // const { 
+        //     form: { getFieldValue, getFieldsValue, setFieldsValue },
+        //     produtoList = [], codigoPai, ordemServico = {}, setKitProdutoListEvent, 
+        // } = this.props
+        const { kitProdutoList = [] } = this.state
+        //let kitProdutoList = getFieldValue("ordemServico.kitProdutoList")
 
         kitProdutoList.splice(kitProdutoList.findIndex((item) => {            
             return (item.produto && item.produto.id === record.produto.id)

@@ -11,6 +11,7 @@ import TabRazao from './tabRazao'
 import TabTabelaPreco from './tabTabelaPreco'
 import { getTitle } from '../../../util/helper'
 import { openNotification } from '../../../util/notification'
+import DrawerTabelaPreco from '../../../movimentacao/ordemServico/components/drawerTabelaPreco'
 
 class Formulario extends Component {
     
@@ -43,11 +44,21 @@ class Formulario extends Component {
 
     setActiveKey = (activeKey) => this.setState({activeKey})
 
+    showDrawer = () => {
+        this.props.setDrawerVisivel(true);
+    };
+
+    onCloseDrawer = () => {
+        this.props.setDrawerVisivel(false);
+    };    
+
     render() {
         const { activeKey } = this.state
-        const { fetching, cliente, form } = this.props
-        const { getFieldDecorator } = form
+        const { fetching, cliente, form, drawerVisivel, } = this.props
+        const { getFieldDecorator, getFieldValue } = form
         const { id, ativo, idUsuarioInclusao} = isNil(cliente) ? {} : cliente
+        
+        let idTabelaPreco = getFieldValue("clienteTabelaPreco.tabelaPreco.id")
 
         return (
             <Spin spinning={fetching}>
@@ -70,7 +81,7 @@ class Formulario extends Component {
                                 <TabRazao {...this.props} />
                             </Tabs.TabPane> 
                             <Tabs.TabPane key={5} tab={<span><Icon type="dollar" />Tabela Preço</span>}>
-                                <TabTabelaPreco {...this.props} />
+                                <TabTabelaPreco {...this.props } showDrawer={this.showDrawer} onCloseDrawer={this.onCloseDrawer} />
                             </Tabs.TabPane>                                                           
                         </Tabs>
                     </Row>                    
@@ -80,13 +91,16 @@ class Formulario extends Component {
                                 style={{marginRight: '10px'}}>
                                 Voltar
                         </Button>
-                        <Button type={"primary"}                             
-                            htmlType={"submit"}>
+                        <Button 
+                            type={"primary"}                             
+                            //htmlType={"submit"}
+                            onClick={this.handleSubmit}>
                             { this.isSaving() ? 'Salvar' : 'Atualizar' }
                         </Button>
                     </Row>
                 </Card>
             </Form>
+            <DrawerTabelaPreco {...this.props} onCloseDrawer={this.onCloseDrawer} drawerVisivel={drawerVisivel} idTabelaPreco={idTabelaPreco} />
         </Spin>
         )
     }
@@ -134,7 +148,8 @@ const mapStateToProps = (state) => {
         ...state.cliente.data,
         cliente: state.cliente.cliente,
         stateView: state.cliente.stateView,
-        fetching: state.cliente.fetching,   
+        fetching: state.cliente.fetching,
+        drawerVisivel: state.cliente.drawerVisivel,     
         profile: state.login.data.profile,      
     }
 }
@@ -145,6 +160,7 @@ const mapDispatchToProps = (dispatch) => ({
     setStateView: (stateView) => dispatch(Actions.clienteSetStateView(stateView)),
     setCliente: (cliente) => dispatch(Actions.clienteSetCliente(cliente)),    
     salvar: (obj) => dispatch(Actions.clienteSalvar(obj)),
+    setDrawerVisivel: (drawerVisivel) => dispatch(Actions.clienteSetDrawerVisivel(drawerVisivel)),
 })
 
 const wrapedFormulario = Form.create()(Formulario)

@@ -120,12 +120,14 @@ export default class TabTelefone extends Component {
         const { 
             form: { getFieldDecorator, getFieldValue },
             cliente = {},
-            tabelaPrecoList = []
+            tabelaPrecoList = [],
+            showDrawer,
         } = this.props
         const { clienteTabelaPrecoList = [] } = cliente || {}    
 
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
         const id = getFieldValue("clienteTabelaPreco.id") || null
+        let idTabelaPreco = getFieldValue("clienteTabelaPreco.tabelaPreco.id")
         
         return (<div>
             <Card title={"Informe os dados referente a Razão e clique no botão 'Adicionar'."} extra={this.getExtra()}>
@@ -148,6 +150,15 @@ export default class TabTelefone extends Component {
                             }
                         </Form.Item>
                     </Col>
+                    <Col span={ 4 }>
+                        <Button 
+                            type="primary" 
+                            onClick={showDrawer} 
+                            style={{ marginTop: "40px" }}
+                            disabled={isNil(idTabelaPreco)}>
+                            <Icon type="plus" /> Ver tabela Preço
+                        </Button>
+                    </Col>                    
                 </Row>                            
             </Card>
             <Card title={getTitle("Tabela de Preços do CLiente")} style={{marginTop: '10px'}}>

@@ -28,11 +28,12 @@ class Pesquisa extends Component {
     getExtra = () => {
         return (
             <div>
-                <Button type={"primary"}
-                        htmlType={"submit"}
-                        onClick={this.handleSubmit}
-                        disabled = {!hasAnyAuthority("CLIENTES_CONSULTAR")}>
-                        Pesquisar
+                <Button 
+                    type={"primary"}
+                    htmlType={"submit"}
+                    onClick={this.handleSubmit}
+                    disabled = {!hasAnyAuthority("CLIENTES_CONSULTAR")}>
+                    Pesquisar
                 </Button>
                 <Divider type="vertical" />
                 <Button type={"primary"}

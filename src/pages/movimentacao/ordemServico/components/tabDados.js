@@ -30,6 +30,7 @@ const TabDados = (props) => {
         const fields = getFieldsValue()
         fields.ordemServico.idClienteRazao = null
         fields.ordemServico.idClienteEndereco = null
+        fields.ordemServico.tabelaPreco.id = null
         setFieldsValue({...fields})
     }
 
@@ -42,6 +43,7 @@ const TabDados = (props) => {
         clienteRazaoList = [],
         planoContaList = [],
         configuracaoList = [],
+        clienteTabelaPrecoList = [],
         stateView,
         showDrawer,
     } = props
@@ -64,8 +66,22 @@ const TabDados = (props) => {
 
     const idCliente = getFieldValue("ordemServico.cliente.id") || (isNil(cliente) ? null : cliente.id)
     const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
-    const idPlanoContaOrdemServico = configuracaoList[0].planoContaOrdemServico.id;
-    //console.log(idPlanoContaOrdemServico)
+    let idPlanoContaOrdemServico = null
+    
+    if (configuracaoList.length > 0) {
+        idPlanoContaOrdemServico = configuracaoList[0].planoContaOrdemServico.id;
+    }
+    
+    let clienteTabelaPrecoFilteredList = clienteTabelaPrecoList.filter(c=> c.idCliente == idCliente)
+    let tabelaPrecoFilteredList = []
+
+    if (clienteTabelaPrecoFilteredList.length > 0) {
+        tabelaPrecoFilteredList = tabelaPrecoList.filter((a) => {
+            return clienteTabelaPrecoFilteredList.some((f) => {
+                return f.tabelaPreco.id === a.id;
+            });
+        });        
+    }
 
     return (<div>
         <Card title={"Informe os dados referente ao Pedido"}>
@@ -254,7 +270,7 @@ const TabDados = (props) => {
                                 disabled= {isEqual(stateView, VIEWING)}
                                 >
                                 <Option key={1} value={null}>{"Selecione"}</Option>
-                                {generateOptions(tabelaPrecoList)}
+                                {generateOptions(tabelaPrecoFilteredList)}
                             </Select>
                             )
                         }

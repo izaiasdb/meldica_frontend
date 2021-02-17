@@ -31,8 +31,6 @@ class Formulario extends Component {
             openNotification(message)
         
             if (isEqual(message.tipo, 'success')) {
-                const { ordemServico } = this.props
-
                 this.props.cleanTable()
                 this.props.setStateView(SEARCHING)                
                 this.handleReset()
@@ -195,15 +193,17 @@ class Formulario extends Component {
 
                     <Divider />                  
                     <Row style={{textAlign: "right"}}>
-                        <Button type={ "primary"} 
-                                onClick={this.voltar}
-                                style={{marginRight: '10px'}}>
+                        <Button 
+                            type={ "primary"} 
+                            onClick={this.voltar}
+                            style={{marginRight: '10px'}}>
                                 Voltar
                         </Button>
                         <Button 
                             type={"primary"}
                             disabled= {isEqual(stateView, VIEWING)}                             
-                            htmlType={"submit"}>
+                            //htmlType={"submit"}
+                            onClick={this.handleSubmit}>                            
                             { this.isSaving() ? 'Salvar' : 'Atualizar' } Pedido
                         </Button>
                     </Row>

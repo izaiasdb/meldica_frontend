@@ -115,7 +115,8 @@ class Formulario extends Component {
                                 { isEqual(stateView, VIEWING) ? 'Visualizar Documentos' : `Adicionar ${isEqual(tipoTela, 'PAGAR') ? 'Pagamentos': 'Recebimentos'} `}
                         </Button> }                     
                         <Button type={"primary"}
-                            htmlType={"submit"}
+                            //htmlType={"submit"}
+                            onClick={this.handleSubmit}
                             disabled= {isEqual(stateView, VIEWING)}
                             >
                             { this.isSaving() ? 'Salvar' : 'Atualizar' } Contas a {isEqual(tipoTela, 'PAGAR') ? 'Pagar': 'Receber'}

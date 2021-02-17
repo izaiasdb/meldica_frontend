@@ -16,6 +16,7 @@ const { Types, Creators } = createActions({
    clienteSetStateView: ['stateView'],
    clienteSetCliente: ['cliente'],
    clienteCleanTable: null,
+   clienteSetDrawerVisivel: ['drawerVisivel'],
 });
 
 export const ClienteTypes = Types;
@@ -28,6 +29,7 @@ export const INITIAL_STATE = Immutable({
     fetching: false,
     stateView: SEARCHING,
     cliente: null,
+    drawerVisivel: false,
 });
 
 /* ------------- Reducers ------------- */
@@ -36,12 +38,13 @@ export const request = (state) => state.merge({ fetching: true })
 export const success = (state, { dados }) =>  {
 
   let data = {
-    message:               get(dados, ['message'], get(state.data, ['message'], [])),    
-    list:                  get(dados, ['list'], get(state.data, ['list'], [])),
-    clienteList:           get(dados, ['clienteList'], get(state.data, ['clienteList'], [])),
-    ufList:                get(dados, ['ufList'], get(state.data, ['ufList'], [])),
-    municipioList:         get(dados, ['municipioList'], get(state.data, ['municipioList'], [])),
-    tabelaPrecoList:       get(dados, ['tabelaPrecoList'], get(state.data, ['tabelaPrecoList'], [])),
+    message:                get(dados, ['message'], get(state.data, ['message'], [])),    
+    list:                   get(dados, ['list'], get(state.data, ['list'], [])),
+    clienteList:            get(dados, ['clienteList'], get(state.data, ['clienteList'], [])),
+    ufList:                 get(dados, ['ufList'], get(state.data, ['ufList'], [])),
+    municipioList:          get(dados, ['municipioList'], get(state.data, ['municipioList'], [])),
+    tabelaPrecoList:        get(dados, ['tabelaPrecoList'], get(state.data, ['tabelaPrecoList'], [])),
+    tabelaPrecoProdutoList: get(dados, ['tabelaPrecoProdutoList'], get(state.data, ['tabelaPrecoProdutoList'], [])),
   }
 
    state = state.merge({fetching: false, data})
@@ -65,6 +68,8 @@ export const setClienteItems = (state, { clienteItems }) => state.merge({
   }  
 })
 
+export const setDrawerVisivel = (state, { drawerVisivel }) => state.merge( { drawerVisivel } )
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -77,4 +82,5 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.CLIENTE_SET_STATE_VIEW]    : setStateView,
   [Types.CLIENTE_SET_CLIENTE]       : setCliente,
   [Types.CLIENTE_CLEAN_TABLE]       : cleanTable,
+  [Types.CLIENTE_SET_DRAWER_VISIVEL]: setDrawerVisivel,
 })
