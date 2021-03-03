@@ -8,6 +8,7 @@ import TabDados from './tabDados'
 import TabProduto from './tabProduto'
 import TabKit from './tabKit'
 import TabForma from './tabForma'
+import TabPagarReceber from './tabPagarReceber'
 import TabEndereco from './tabEndereco'
 import TabTransportadora from './tabTransportadora'
 import { getTitle } from '../../../util/helper'
@@ -190,7 +191,10 @@ class Formulario extends Component {
                     <Row>
                         <TabTransportadora {...this.props} />
                     </Row>  
-
+                    <Row>
+                        <TabPagarReceber {...this.props} />
+                    </Row>                      
+ 
                     <Divider />                  
                     <Row style={{textAlign: "right"}}>
                         <Button 
