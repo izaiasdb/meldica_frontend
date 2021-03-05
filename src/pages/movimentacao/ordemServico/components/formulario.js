@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Row, Button, Form, Spin, Tabs, Icon, Input, Modal, Col, Avatar, Divider } from 'antd'
+import { Card, Row, Button, Form, Spin, Tabs, Icon, Input, Modal, Col, Avatar, Divider,  } from 'antd'
 import { isEqual, isNil, isEmpty, get } from 'lodash'
 import { SEARCHING, INSERTING, VIEWING } from '../../../util/state'
 import { connect } from 'react-redux'
@@ -206,8 +206,10 @@ class Formulario extends Component {
                         <Button 
                             type={"primary"}
                             disabled= {isEqual(stateView, VIEWING)}                             
-                            //htmlType={"submit"}
-                            onClick={this.handleSubmit}>                            
+                            //htmlType={"submit"} // Tava comentado
+                            onClick={this.handleSubmit}
+                            //onClick={this.salvar}
+                            >                            
                             { this.isSaving() ? 'Salvar' : 'Atualizar' } Pedido
                         </Button>
                     </Row>
@@ -217,6 +219,23 @@ class Formulario extends Component {
         </Spin>
         )
     }
+
+    /*
+    salvar = () => {
+        const { confirm } = Modal;
+        const { alterarStatus } = this.props;
+
+        confirm({
+            title: `Tem certeza que deseja ${titulo}?`,
+            content: 'Processo não pode ser DESFEITO!',
+            onOk() {
+                handleSubmit
+            },
+            onCancel() {
+              console.log('Cancelar');
+            },
+        });
+    } */
 
     isSaving = () => isEqual(this.props.stateView, INSERTING)
 

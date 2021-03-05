@@ -23,9 +23,13 @@ const TabDados = (props) => {
     } = props
     const {
         nome,    
+        dataNascimento,
+        dataInicio,
+        limiteCredito,
         nomeFantasia,    
         fisicaJuridica,
         cpfCnpj,
+        inscricaoEstadual,
         ativo,  
         email,
         site,
@@ -48,6 +52,30 @@ const TabDados = (props) => {
                     }
                 </Form.Item>
             </Col>
+            <Col span={ 4 }>
+                <Form.Item label={"Data de Nascimento"}>
+                    {
+                        getFieldDecorator('cliente.dataNascimento', {
+                            rules: [{ required: false, message: "Por favor, informe a data de nascimento."}],
+                            initialValue: isNil(dataNascimento) ? null : new moment(dataNascimento)
+                        })(
+                            <DatePicker format={'DD/MM/YYYY'}/>
+                        )
+                    }
+                </Form.Item>
+            </Col> 
+            <Col span={ 4 }>
+                <Form.Item label={"Cliente desde"}>
+                    {
+                        getFieldDecorator('cliente.dataInicio', {
+                            rules: [{ required: false, message: "Por favor, informe a data de nascimento."}],
+                            initialValue: isNil(dataInicio) ? null : new moment(dataInicio)
+                        })(
+                            <DatePicker format={'DD/MM/YYYY'}/>
+                        )
+                    }
+                </Form.Item>
+            </Col>                        
             {/* <Col span={ 12 }>
                 <Form.Item label={"Nome Fantasia"}>
                     {
@@ -81,7 +109,7 @@ const TabDados = (props) => {
                     }
                 </Form.Item>
             </Col> 
-            <Col span={ 6 }>
+            <Col span={ 4 }>
                 <Form.Item label={"CNPJ / CPF"}>
                     {
                         getFieldDecorator('cliente.cpfCnpj', {
@@ -95,7 +123,38 @@ const TabDados = (props) => {
                         )
                     }
                 </Form.Item>
-            </Col>             
+            </Col>
+            <Col span={ 4 }>
+                <Form.Item label={"Inscrição Estadual"}>
+                    {
+                        getFieldDecorator('cliente.inscricaoEstadual', {
+                            rules: [
+                                { required: false, message: "Por favor, informe um CPF ou CNPJ." },
+                                //{ validator: validarCampoCPF },
+                            ],
+                            initialValue: inscricaoEstadual
+                        })(
+                            <Input maxLength={ 20 } onInput={toInputUppercase} />
+                        )
+                    }
+                </Form.Item>
+            </Col>     
+            <Col span={ 4 }>
+                <Form.Item label={"Limite de crédito"}>
+                    {
+                        getFieldDecorator('cliente.limiteCredito', {
+                            rules: [{required: false, message: 'Por favor, informe o valor de compra.'}],
+                            initialValue: limiteCredito || 0
+                        })(
+                            <InputNumber style={{ width: "150" }}
+                                min={0}
+                                precision={2}
+                                step={1}
+                                />
+                        )
+                    }
+                </Form.Item>
+            </Col>                    
             <Col span={ 4 }>            
                 <Form.Item label={"Ativo"}>
                 {

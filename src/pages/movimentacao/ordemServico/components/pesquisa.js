@@ -129,18 +129,49 @@ class Pesquisa extends Component {
                                     >
                                         <Option key={1} value={null}>{"Selecione"}</Option>
                                         <Option key={2} value={'A'}>{"ABERTA"}</Option>
-                                        <Option key={2} value={'N'}>{"CONCLUÍDA"}</Option>
-                                        <Option key={2} value={'O'}>{"APROVADA"}</Option>
-                                        <Option key={3} value={'P'}>{"PAGA"}</Option>
-                                        <Option key={3} value={'C'}>{"CANCELADA"}</Option>
-                                        <Option key={3} value={'G'}>{"GRÁTIS"}</Option>
+                                        <Option key={3} value={'L'}>{"LOGÍSTICA"}</Option>
+                                        <Option key={4} value={'F'}>{"FECHADO"}</Option>
+                                        <Option key={5} value={'R'}>{"REABERTO"}</Option>
+                                        <Option key={6} value={'L'}>{"LIBERADO"}</Option>
+                                        <Option key={7} value={'E'}>{"ENTREGUE"}</Option>
+                                        <Option key={8} value={'C'}>{"CANCELADA"}</Option>
                                     </Select>
                                 )
                             }
                         </Form.Item>
                     </Col> 
+                    <Col span={ 3 }>
+                        <Form.Item label={"NF Méldica"}>
+                            {
+                                getFieldDecorator('ordemServico.nfMeldica', {
+                                    rules: [{required: false, message: 'Por favor, informe o cliente.'}],
+                                })(
+                                    <Input 
+                                        placeholder={"Digite a nf Méldica"} 
+                                        maxLength={20} 
+                                        onInput={toInputUppercase} />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 3 }>
+                        <Form.Item label={"NF Cosmético"}>
+                            {
+                                getFieldDecorator('ordemServico.nfCosmetico', {
+                                    rules: [{required: false, message: 'Por favor, informe o cliente.'}],
+                                })(
+                                    <Input 
+                                        placeholder={"Digite a nf Cosmético"} 
+                                        maxLength={20} 
+                                        onInput={toInputUppercase} />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                     
+                </Row>
+                <Row gutter={12}>                      
                     <Col span={6}>
-                        <Form.Item label={"Período"} >
+                        <Form.Item label={"Período data venda"} >
                             {
                                 getFieldDecorator('ordemServico.periodoVenda', {
                                     initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
@@ -156,6 +187,54 @@ class Pesquisa extends Component {
                             }
                         </Form.Item>
                     </Col>
+                    {/* <Col span={6}>
+                        <Form.Item label={"Período data entrega"} >
+                            {
+                                getFieldDecorator('ordemServico.periodoEntrega', {
+                                    //initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
+                                    initialValue: [null, null],
+                                    rules: [{required: false, message: 'Por favor, informe um período.'}],
+                                })(
+                                    <DatePicker.RangePicker 
+                                        format={'DD/MM/YYYY'} 
+                                        moment='YYYY-MM-DD'
+                                        />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item label={"Período data prev. entrega"} >
+                            {
+                                getFieldDecorator('ordemServico.periodoPrevisaoEntrega', {
+                                    //initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
+                                    initialValue: [null, null],
+                                    rules: [{required: false, message: 'Por favor, informe um período.'}],
+                                })(
+                                    <DatePicker.RangePicker 
+                                        format={'DD/MM/YYYY'} 
+                                        moment='YYYY-MM-DD'
+                                        />
+                                )
+                            }
+                        </Form.Item>
+                    </Col> 
+                    <Col span={6}>
+                        <Form.Item label={"Período data liberação"} >
+                            {
+                                getFieldDecorator('ordemServico.periodoLiberacao', {
+                                    //initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
+                                    initialValue: [null, null],
+                                    rules: [{required: false, message: 'Por favor, informe um período.'}],
+                                })(
+                                    <DatePicker.RangePicker 
+                                        format={'DD/MM/YYYY'} 
+                                        moment='YYYY-MM-DD'
+                                        />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                                          */}
                 </Row>
                 <Row gutter={12}>                    
                     <Col span={ 12 }>
