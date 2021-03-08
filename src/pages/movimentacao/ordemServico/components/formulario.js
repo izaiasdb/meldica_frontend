@@ -42,6 +42,15 @@ class Formulario extends Component {
         }
     }
 
+    componentDidMount() {
+        const { ordemServico, obter } = this.props
+        const { id } = isNil(ordemServico) ? {} : ordemServico        
+
+        if(!isNil(id)){
+            obter(id)
+        }
+    }
+
     setActiveKey = (activeKey) => this.setState({activeKey})
 
     render() {
@@ -62,13 +71,22 @@ class Formulario extends Component {
         } = isNil(ordemServico) ? {} : ordemServico
 
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
-        let produtoItemsListForm = getFieldValue("ordemServico.produtoItemsList") || produtoItemsList
-        let formaItemsListForm = getFieldValue("ordemServico.formaItemsList") || formaItemsList
-        let transportadoraItemsListForm = getFieldValue("ordemServico.transportadoraItemsList") || transportadoraItemsList
+        //console.log(getFieldValue("ordemServico.produtoItemsList"))
+        //console.log(produtoItemsList)
+        //let produtoItemsListForm = getFieldValue("ordemServico.produtoItemsList") || produtoItemsList
+        //let transportadoraItemsListForm = getFieldValue("ordemServico.transportadoraItemsList") || transportadoraItemsList
+        let produtoItemsListForm = isNil(getFieldValue("ordemServico.produtoItemsList")) ? produtoItemsList : getFieldValue("ordemServico.produtoItemsList");
+        let kitProdutoListForm = isNil(getFieldValue("ordemServico.kitProdutoList")) ? kitProdutoList : getFieldValue("ordemServico.kitProdutoList");
+        let formaItemsListForm = isNil(getFieldValue("ordemServico.formaItemsList"))  ? formaItemsList : getFieldValue("ordemServico.formaItemsList"); 
+        let transportadoraItemsListForm = isNil(getFieldValue("ordemServico.transportadoraItemsList"))  ? transportadoraItemsList : getFieldValue("ordemServico.transportadoraItemsList"); 
 
         //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
-        let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
+        let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);        
+        let totalProdutoKit = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
         let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
+        let totalProdutoCxDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado == false).reduce((acum, {desconto, quantidadeCaixa}) => acum + desconto * quantidadeCaixa, 0);
+        let totalProdutoUnidadeDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0);
+        let totalProdutoKitDesconto = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0);
         //let totalPesoKit = kitProdutoList.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
         let totalPesoKit = kitList.reduce((acum,{peso}) => acum + peso, 0);
         let totalVolumeProd = produtoItemsListForm.reduce((acum,{quantidadeUnidade, quantidadeNaCaixa}) => acum + (Number(quantidadeUnidade) / Number(quantidadeNaCaixa)), 0);
@@ -76,11 +94,13 @@ class Formulario extends Component {
         let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);
         let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
         let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
-        let totalPedido = (totalProduto ? totalProduto : 0) +  (totalFrete ? totalFrete : 0);
-        let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalFormaDescontos ? totalFormaDescontos : 0);
+        let totalPedido = (totalProduto ? totalProduto : 0) +  (totalProdutoKit ? totalProdutoKit : 0) + (totalFrete ? totalFrete : 0);
+        //let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalFormaDescontos ? totalFormaDescontos : 0);
+        let faltaReceber = totalPedido - (valorPago ? valorPago : 0);// - (totalFormaDescontos ? totalFormaDescontos : 0);
         let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeCaixa}) => acum + (Number(quantidadeCaixa) * Number(valorNfCaixa)), 0);
         let totalNFUnidade = produtoItemsListForm.filter(c=> c.fracionado == true).reduce((acum,{ valorNfUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfUnidade)), 0);
         let totalNFKit = kitList.reduce((acum,{ valorNf}) => acum + valorNf, 0);
+        let totalProdutoDesconto = totalProdutoCxDesconto + totalProdutoUnidadeDesconto + totalProdutoKitDesconto;
         
         let totalNF = totalNFUnidade + totalNFCaixa + totalNFKit;
         let faltaFormaPgto = totalPedido - totalForma;
@@ -111,12 +131,17 @@ class Formulario extends Component {
                         {
                             getCard(`${id ? 'Nota: ' + id : 'Status Nota'}`, '#6BD098', 'file-protect', statusNovaDescricao ? statusNovaDescricao : 'ABERTA', false)
                         }   
-                        </Col>          
+                        </Col>                                  
                         <Col span={ 4 }>
                         {
-                            getCard('Total produtos', '#FBC658', 'code-sandbox', totalProduto)
+                            getCard('Total produtos(Méldica)', '#FBC658', 'code-sandbox', totalProduto)
                         }
                         </Col>
+                        <Col span={ 4 }>
+                        {
+                            getCard('Total kit produtos', '#FBC658', 'code-sandbox', totalProdutoKit)
+                        }
+                        </Col>                                                
                         <Col span={ 4 }>
                         {
                             getCard('Total frete', '#6BD098', 'car', totalFrete ? totalFrete : 0)
@@ -124,14 +149,14 @@ class Formulario extends Component {
                         </Col>
                         <Col span={ 4 }>
                         {
-                            getCard('Total pedido', '#6BD098', 'dollar', totalPedido ? totalPedido : 0)
+                            getCard('Total a pagar', '#6BD098', 'dollar', totalPedido ? totalPedido : 0)
                         }
                         </Col>                            
-                        <Col span={ 4 }>
+                        {/* <Col span={ 4 }>
                         {
                             getCard('Forma pgto.', '#6BD098', 'sketch', totalForma)
                         }
-                        </Col>
+                        </Col> */}
                         <Col span={ 4 }>
                         {
                             getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago : 0)
@@ -150,18 +175,26 @@ class Formulario extends Component {
                             getCard('Total volume', '#FBC658', 'appstore', totalVolume, true, false)
                         }  
                         </Col>
+                        {/* <Col span={ 4 }>
+                        {
+                            getCard('Tot. produtos(Cosméticos)', '#FBC658', 'code-sandbox', totalProduto)
+                        }
+                        </Col>                           */}
                         <Col span={ 4 }>
-                        </Col>                           
+                        {
+                            getCard('Tot. desc. produto', '#FBC658', 'code-sandbox', totalProdutoDesconto, true, false)
+                        }  
+                        </Col>           
                         <Col span={ 4 }>                            
                         {
                             getCard('Total Nota Fiscal', '#6BD098', 'dollar', totalNF ? totalNF : 0)
                         }
                         </Col>                            
-                        <Col span={ 4 }>
+                        {/* <Col span={ 4 }>
                         {
                             getCard('Falta forma.', '#DA120B', 'sketch', faltaFormaPgto)
                         }
-                        </Col>
+                        </Col> */}
                         <Col span={ 4 }>
                         {
                             getCard('Falta receber', '#DA120B', 'dollar', faltaReceber)
@@ -325,6 +358,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+    obter: (id) => dispatch(Actions.ordemServicoObter(id)),    
     cleanMessage: ()  => dispatch(Actions.ordemServicoCleanMessage()),
     cleanTable: () => dispatch(Actions.ordemServicoCleanTable()),
     setStateView: (stateView) => dispatch(Actions.ordemServicoSetStateView(stateView)),

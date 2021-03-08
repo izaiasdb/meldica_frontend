@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Table , Icon, Divider, Tooltip, Button, Modal } from 'antd'
+import { Card, Table , Icon, Divider, Tooltip, Button, Modal, Popover, Badge  } from 'antd'
 import { EDITING, VIEWING } from '../../../util/state'
 import { connect } from 'react-redux'
 import Actions from '../redux'
@@ -54,7 +54,7 @@ class Tabela extends Component {
     setModo = (ordemServico, stateView) => {
         this.props.setStateView(stateView)
         this.props.setOrdemServico(ordemServico)
-        this.props.setKitProdutoList(ordemServico.kitProdutoList)
+        this.props.setKitProdutoList([])
     }
 
     alterarStatusTabela = (ordemServico, statusNota, titulo) => {
@@ -78,6 +78,25 @@ class Tabela extends Component {
         // this.props.setOrdemServico(ordemServico)
         // this.props.setKitProdutoList(ordemServico.kitProdutoList)
     }
+
+    getVezesLogistica = (record) => {
+        const { ordemServicoStatusList = [] } = record || {}
+
+        let statusReabertoList = ordemServicoStatusList.filter(c=> c.statusAtual == 'R')
+
+        return (
+            <div>
+                <Tooltip title="Quantas vezes que foi na logística">
+              {/* <Popover placement="bottom" title={"Pendências"} content={this.getPendenciasContent(pendencias)}> */}
+                <Badge count={statusReabertoList.length} showZero>
+                  <Icon type="redo" 
+                    style={{ fontSize: '22px', color: '#08c', marginLeft: '8px' }} theme="outlined" />
+                </Badge>
+              {/* </Popover>                 */}
+              </Tooltip>
+            </div>
+        )
+    }    
 
     getAcoes = (record) => {
         //console.log(getUser())
@@ -238,13 +257,20 @@ class Tabela extends Component {
                     <Table.Column key={'funcionario.nome'} 
                                     dataIndex={'funcionario.nome'} 
                                     title={'Vendedor'} 
-                                    align={ "left" }/>                                    
+                                    align={ "left" }/>
+                    <Table.Column key={'logistica'} 
+                                    dataIndex={'logistica'} 
+                                    title={'Logís.'} 
+                                    align={ "center" }
+                                    width={'5%'}
+                                    render={(text, record) => this.getVezesLogistica(record) }
+                                    />                                    
                     <Table.Column key={'acoes'} 
                                     dataIndex={'acoes'} 
                                     title={'Ações'} 
                                     align={ "center" }
                                     width={'15%'}
-                                    render={(text, record) =>  this.getAcoes(record) }
+                                    render={(text, record) => this.getAcoes(record) }
                                     />
                 </Table>
             </Card>

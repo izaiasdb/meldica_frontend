@@ -20,6 +20,25 @@ export function * fetch (api)  {
   }
 }
 
+export function * obter(api, { id })  {
+  try {    
+    const response = yield call(api.OrdemServico.obter, id)
+
+    if (response.ok) {
+      const ordemServico = get(response, ['data'], {})
+      console.log(ordemServico)
+      yield put(Actions.ordemServicoSetOrdemServico(ordemServico))
+      yield put(Actions.ordemServicoSetKitProdutoList(ordemServico.kitProdutoList))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.ordemServicoFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.ordemServicoFailure())
+  }
+}
+
 export function * pesquisar (api, { ordemServico })  {
   try {    
     const response = yield call(api.OrdemServico.pesquisar, ordemServico)

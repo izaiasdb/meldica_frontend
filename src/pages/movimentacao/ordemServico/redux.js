@@ -8,6 +8,7 @@ import { MESSAGE_ERROR_DEFAULT } from '../../util/messages'
 
 const { Types, Creators } = createActions({
    ordemServicoInit: null,
+   ordemServicoObter: ['id'],
    ordemServicoSuccess: ['dados'],
    ordemServicoPesquisar: ['ordemServico'],
    ordemServicoFailure: ['message'],
@@ -21,6 +22,7 @@ const { Types, Creators } = createActions({
    ordemServicoSetDrawerKitVisivel: ['drawerKitVisivel'],
    ordemServicoSetKitProdutoList: ['kitProdutoList'],
    ordemServicoImprimir : ['id'],
+   
 });
 
 export const OrdemServicoTypes = Types;
@@ -75,7 +77,7 @@ export const cleanMessage = (state) => state.merge({data: {...state.data, messag
 export const cleanTable = (state) => state.merge({data: {...state.data, list: []}})
 
 export const setStateView = (state, action) => state.merge({stateView: action.stateView})
-export const setOrdemServico = (state, { ordemServico }) => state.merge({ordemServico})
+export const setOrdemServico = (state, { ordemServico }) => state.merge({ordemServico, fetching: false})
 
 export const setOrdemServicoItems = (state, { ordemServicoItems }) => state.merge({
   ordemServico: {
@@ -93,18 +95,19 @@ export const setKitProdutoList = (state, { kitProdutoList }) => state.merge( { k
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.ORDEM_SERVICO_INIT]              : request,
-  [Types.ORDEM_SERVICO_SUCCESS]           : success,
-  [Types.ORDEM_SERVICO_PESQUISAR]         : request,
-  [Types.ORDEM_SERVICO_IMPRIMIR]          : request,
-  [Types.ORDEM_SERVICO_FAILURE]           : failure,
-  [Types.ORDEM_SERVICO_CLEAN_MESSAGE]     : cleanMessage,
-  [Types.ORDEM_SERVICO_SALVAR]            : request,
-  [Types.ORDEM_SERVICO_SET_STATE_VIEW]    : setStateView,
-  [Types.ORDEM_SERVICO_SET_ORDEM_SERVICO] : setOrdemServico,
-  [Types.ORDEM_SERVICO_CLEAN_TABLE]       : cleanTable,
-  [Types.ORDEM_SERVICO_ALTERAR_STATUS]    : request,
-  [Types.ORDEM_SERVICO_SET_DRAWER_VISIVEL]: setDrawerVisivel,
+  [Types.ORDEM_SERVICO_INIT]                  : request,
+  [Types.ORDEM_SERVICO_OBTER]                 : request,
+  [Types.ORDEM_SERVICO_PESQUISAR]             : request,
+  [Types.ORDEM_SERVICO_IMPRIMIR]              : request,  
+  [Types.ORDEM_SERVICO_ALTERAR_STATUS]        : request,
+  [Types.ORDEM_SERVICO_SUCCESS]               : success,
+  [Types.ORDEM_SERVICO_FAILURE]               : failure,
+  [Types.ORDEM_SERVICO_CLEAN_MESSAGE]         : cleanMessage,
+  [Types.ORDEM_SERVICO_SALVAR]                : request,
+  [Types.ORDEM_SERVICO_SET_STATE_VIEW]        : setStateView,
+  [Types.ORDEM_SERVICO_SET_ORDEM_SERVICO]     : setOrdemServico,
+  [Types.ORDEM_SERVICO_CLEAN_TABLE]           : cleanTable,  
+  [Types.ORDEM_SERVICO_SET_DRAWER_VISIVEL]    : setDrawerVisivel,
   [Types.ORDEM_SERVICO_SET_DRAWER_KIT_VISIVEL]: setDrawerKitVisivel,
-  [Types.ORDEM_SERVICO_SET_KIT_PRODUTO_LIST]: setKitProdutoList,
+  [Types.ORDEM_SERVICO_SET_KIT_PRODUTO_LIST]  : setKitProdutoList,
 })

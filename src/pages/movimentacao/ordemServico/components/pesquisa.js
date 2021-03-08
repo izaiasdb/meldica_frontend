@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Row, Col, Input, Button, Select, Form, DatePicker, Divider } from 'antd'
+import { Card, Row, Col, Input, Button, Select, Form, DatePicker, Divider, InputNumber } from 'antd'
 import { connect } from 'react-redux'
 import { get, isEmpty, isEqual } from 'lodash'
 import moment from 'moment'
@@ -117,8 +117,24 @@ class Pesquisa extends Component {
                             }
                         </Form.Item>
                     </Col>     */}
+                    <Col span={ 3 }>
+                        <Form.Item label={"Número pedido"}>
+                        {
+                            getFieldDecorator('ordemServico.id', {
+                                rules: [{ required: false, message: "Por favor, informe o nível."}],
+                                initialValue: null,
+                            })(
+                                <InputNumber style={{ width: '100%'}} 
+                                            //max={300} 
+                                            //min={0} 
+                                            maxLength={10}
+                                            formatter={value => new String(value).replace(/([a-zA-Z]*)/g,'') } />
+                            )
+                        }                                
+                        </Form.Item>                            
+                    </Col>                     
                     <Col span={4}>
-                        <Form.Item label={"Tipo Pedido"}>
+                        <Form.Item label={"Status Pedido"}>
                             {
                                 getFieldDecorator('ordemServico.statusNota', {
                                     initialValue: null
@@ -174,8 +190,9 @@ class Pesquisa extends Component {
                         <Form.Item label={"Período data venda"} >
                             {
                                 getFieldDecorator('ordemServico.periodoVenda', {
-                                    initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
-                                    rules: [{required: true, message: 'Por favor, informe um período.'}],
+                                    //initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
+                                    initialValue: [null, null],
+                                    rules: [{required: false, message: 'Por favor, informe um período.'}],
                                 })(
                                     <DatePicker.RangePicker 
                                         format={'DD/MM/YYYY'} 
@@ -187,7 +204,7 @@ class Pesquisa extends Component {
                             }
                         </Form.Item>
                     </Col>
-                    {/* <Col span={6}>
+                    <Col span={6}>
                         <Form.Item label={"Período data entrega"} >
                             {
                                 getFieldDecorator('ordemServico.periodoEntrega', {
@@ -234,7 +251,7 @@ class Pesquisa extends Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>                                          */}
+                    </Col>                                         
                 </Row>
                 <Row gutter={12}>                    
                     <Col span={ 12 }>

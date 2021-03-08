@@ -83,6 +83,8 @@ const TabDados = (props) => {
         });        
     }
 
+    const clienteEscolhido = clienteList.find(c => c.id == idCliente)
+
     return (<div>
         <Card title={"Informe os dados referente ao Pedido"}>
             <Row gutter={ 12 }>
@@ -234,6 +236,22 @@ const TabDados = (props) => {
                         }
                     </Form.Item>
                 </Col>                             
+            </Row>   
+            <Row gutter={12}>                
+                <Col span={ 4 }>
+                    <Form.Item label={"CPF / CNPJ"}>
+                        {
+                            <Input value={!isNil(clienteEscolhido) && !isNil(clienteEscolhido.cpfCnpj) ? clienteEscolhido.cpfCnpj : ''} disabled/>
+                        }
+                    </Form.Item>
+                </Col>            
+                <Col span={ 4 }>
+                    <Form.Item label={"Inscrição Estadual"}>
+                        {
+                            <Input value={!isNil(clienteEscolhido) && !isNil(clienteEscolhido.inscricaoEstadual) ? clienteEscolhido.inscricaoEstadual : ''} disabled/>
+                        }
+                    </Form.Item>
+                </Col>                          
             </Row>   
             <Row gutter={12}>
                 <Col span={ 8 }>

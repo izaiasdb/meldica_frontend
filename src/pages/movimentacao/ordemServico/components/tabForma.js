@@ -275,6 +275,31 @@ export default class TabForma extends React.Component {
 
         const formaPagamentoNome = getFieldValue("osForma.formaCondicaoPagamento.formaPagamento.nome") || formaCondicaoDescricao
         const condicaoPagamentoNome = getFieldValue("osForma.formaCondicaoPagamento.condicaoPagamento.nome") || formaCondicaoDescricao
+
+        const expandedRowRender = (record, index, indent, expanded) => {
+            const { formaCondicaoPagamento } = record
+            let dataSourceList = formaCondicaoList.filter(c => c.id == record.formaCondicaoPagamento.id)
+
+            if (!isNil(dataSourceList) && dataSourceList.length > 0) {
+                return (
+                    <Table dataSource={dataSourceList}
+                        rowKey={(row) => row.id}
+                        pagination={false}>
+                        {/* <Table.Column title={<center>Perc. Desc. Forma Condição</center>} key={"condicaoPagamento.percDesconto"} dataIndex={"condicaoPagamento.percDescontoFormaCondicao"} align={"center"} /> */}
+                        <Table.Column title={<center>Quantidade parcelas</center>} key={"condicaoPagamento.qtdParcela"} dataIndex={"condicaoPagamento.qtdParcela"} align={"center"} />
+                        {/* diasParcela, prazoDias, entrada */}                
+                        <Table.Column title={<center>Valor parcelas</center>} key={"valorParcelas"} dataIndex={"valorParcelas"} align={"center"}
+                            render={(text, recordItem) => record.valor / recordItem.condicaoPagamento.qtdParcela} />    
+                    
+                    </Table>
+                )
+            } else {
+                return (
+                    <Table dataSource={[]}
+                        pagination={false} />
+                )
+            }
+        };  
         
         return (<div>
             <Card title={"Informe os dados referente as formas de pagamento do pedido"} extra={this.getExtra()}>
@@ -417,15 +442,22 @@ export default class TabForma extends React.Component {
                                 valuePropName: 'dataSource'
                             })(
                                 <Table rowKey={(row) => row.id || row.formaCondicaoPagamento && row.formaCondicaoPagamento.id} size={"small"} 
+                                expandedRowRender={(record, index, indent, expanded) => expandedRowRender(record, index, indent, expanded) }
                                     pagination={false} bordered>
                                     <Table.Column title={<center>Forma pagamento</center>} key={"nomeFormaPagamento"} dataIndex={"nomeFormaPagamento"} align={"center"} />
                                     <Table.Column title={<center>Condição pagamento</center>} key={"nomeCondicaoPagamento"} dataIndex={"nomeCondicaoPagamento"} align={"center"} />
                                     <Table.Column title={<center>Valor</center>} key={"valor"} dataIndex={"valor"} align={"center"} />
                                     <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
-                                    <Table.Column title={<center>Perc. Desc. Forma Condição</center>} key={"percDescontoFormaCondicao"} dataIndex={"percDescontoFormaCondicao"} align={"center"} />
-                                    <Table.Column title={<center>Desconto Forma Condição</center>} key={"descontoFormaCondicao"} dataIndex={"descontoFormaCondicao"} align={"center"} />
-                                    <Table.Column title={<center>Total</center>} key={"total"} dataIndex={"total"} align={"center"}
-                                        render={(text, record) => record.valor - record.desconto - record.descontoFormaCondicao } />
+                                    {/* <Table.Column title={<center>Perc. Desc. Forma Condição</center>} key={"percDescontoFormaCondicao"} dataIndex={"percDescontoFormaCondicao"} align={"center"} /> */}
+                                    {/* <Table.Column title={<center>Desconto Forma Condição</center>} key={"descontoFormaCondicao"} dataIndex={"descontoFormaCondicao"} align={"center"} /> */}
+                                    <Table.Column title={<center>Total c/ desconto</center>} key={"total"} dataIndex={"total"} align={"center"}
+                                        render={
+                                            (text, record) => record.valor - record.desconto
+                                        } />
+                                    {/* <Table.Column title={<center>Total a receber</center>} key={"total"} dataIndex={"total"} align={"center"}
+                                        render={
+                                            (text, record) => record.valor - record.desconto - record.descontoFormaCondicao                                             
+                                        } />                                         */}
                                     <Table.Column title={<center>Ações</center>} key={"actions"} 
                                                 dataIndex={"actions"} 
                                                 align={"center"} 

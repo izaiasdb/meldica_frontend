@@ -138,10 +138,42 @@ export default class TabKit extends React.Component {
             drawerKitVisivel,
             setKitProdutoListEvent,
         } = this.props
-        const { kitList = [] } = ordemServico || {}
+        const { kitList = [], kitProdutoList = [] } = ordemServico || {}
         const { getFieldDecorator, getFieldValue } = form
 
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };        
+
+        const expandedRowRender = (record, index, indent, expanded) => {
+            let dataSourceList = kitProdutoList.filter(c => c.idOrdemServicoKit == record.id)
+            console.log('debug record' , record)
+            //const dataSourceList = !isNil(record) && !isNil(record.unidade) ? record.unidade : [] 
+
+            if (!isNil(dataSourceList) && dataSourceList.length > 0) {
+                return (
+                    <Table dataSource={dataSourceList}
+                        rowKey={(row) => row.id}
+                        pagination={false}>
+                        
+                        <Table.Column title={<center>Produto</center>} key={"nomeProduto"} dataIndex={"nomeProduto"} align={"center"} />  
+                        <Table.Column title={<center>Qtd. unids.</center>} key={"quantidadeUnidade"} dataIndex={"quantidadeUnidade"} align={"center"} />
+                        <Table.Column title={<center>Valor(unit)</center>} key={"valorUnidade"} dataIndex={"valorUnidade"} align={"center"} />
+                        <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
+                        <Table.Column title={<center>Valor c/ desc.</center>} key={"total2"} dataIndex={"total2"} align={"center"}
+                            render={(text, record) => (record.valorUnidade - record.desconto) } />
+                        <Table.Column title={<center>NF unit.</center>} key={"valorNfUnidade"} dataIndex={"valorNfUnidade"} align={"center"} />
+                        <Table.Column title={<center>Total(C/ Desc.)</center>} key={"total"} dataIndex={"total"} align={"center"} />
+                        <Table.Column title={<center>Bonif.</center>} key={"bonificacao"} dataIndex={"bonificacao"} align={"center"}
+                            render={(text, record) => record.bonificacao ? 'SIM' : 'NÃO'} />    
+                    
+                    </Table>
+                )
+            } else {
+                return (
+                    <Table dataSource={[]}
+                        pagination={false} />
+                )
+            }
+        };            
 
         const idForm = getFieldValue("osKit.id") || null
         const codigoForm = getFieldValue("osKit.codigo") || null
@@ -215,7 +247,8 @@ export default class TabKit extends React.Component {
                                 valuePropName: 'dataSource'
                             })(
                                 <Table rowKey={(row) => row.id || row.codigo } size={"small"} 
-                                    pagination={false} bordered>
+                                    pagination={false} bordered
+                                    expandedRowRender={(record, index, indent, expanded) => expandedRowRender(record, index, indent, expanded) }>
                                     <Table.Column title={<center>Nome Kit</center>} key={"nome"} dataIndex={"nome"} align={"center"} />  
                                     <Table.Column title={<center>Valor NF</center>} key={"valorNf"} dataIndex={"valorNf"} align={"center"} />
                                     <Table.Column title={<center>Peso</center>} key={"peso"} dataIndex={"peso"} align={"center"} />

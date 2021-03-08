@@ -198,6 +198,7 @@ export default function * root () {
 
         //************************************ Movimentação ************************************/
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_INIT, OrdemServico.fetch, api),
+        takeLatest(OrdemServicoTypes.ORDEM_SERVICO_OBTER, OrdemServico.obter, api),
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_SALVAR, OrdemServico.salvar, api),
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_PESQUISAR, OrdemServico.pesquisar, api),                        
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_ALTERAR_STATUS, OrdemServico.alterarStatus, api),
