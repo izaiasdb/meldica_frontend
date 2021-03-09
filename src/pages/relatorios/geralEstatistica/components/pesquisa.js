@@ -10,6 +10,7 @@ import {
     STATE_RELATORIO_CONTAS_A_RECEBER,
     STATE_RELATORIO_CONTAS_PAGAS,
     STATE_RELATORIO_CONTAS_RECEBIDAS,
+    STATE_RELATORIO_RESUMO_MENSAL,
 } from '../../../util/state'
 import Action from '../redux'
 
@@ -42,6 +43,9 @@ class Pesquisa extends Component {
             case 4:
                 this.props.setState(STATE_RELATORIO_CONTAS_RECEBIDAS);
                 break;
+            case 5:
+                this.props.setState(STATE_RELATORIO_RESUMO_MENSAL);
+                break;                
             default:
                 this.props.setState(SEARCHING);
         }
@@ -76,6 +80,11 @@ class Pesquisa extends Component {
                                                 <TreeNode value={4} title="RELATÓRIO BALANCETE CONTAS RECEBIDAS" //disabled={!hasAnyAuthority("RELATORIO_ATENDIMENTO_MEDICO_CONSULTAR")} 
                                                 />                                                
                                             </TreeNode>
+
+                                            <TreeNode value={6} title="RELATÓRIOS PEDIDO">
+                                                <TreeNode value={5} title="RELATÓRIO RESUMO MENSAL" //disabled={!hasAnyAuthority("RELATORIO_ATENDIMENTO_MEDICO_CONSULTAR")} 
+                                                />
+                                            </TreeNode>                                            
 {/* 
                                             <TreeNode value={18} title="RELATÓRIOS POPULAÇÃO CARCERÁRIA" >
                                                 <TreeNode value={1} title="RELATÓRIO POPULAÇÃO CARCERÁRIA GERAL" disabled={!hasAnyAuthority("RELATORIO_POPULACAO_CARCERARIA_CONSULTAR")} />

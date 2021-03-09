@@ -8,13 +8,15 @@ import Pesquisa from '../components/pesquisa'
 import Action from '../redux'
 import RelatorioPagarReceber from '../../relatorioPagarReceber/container/relatorioPagarReceber'
 import RelatorioPagasRecebidas from '../../relatorioPagasRecebidas/container/relatorioPagasRecebidas'
+import RelatorioResumoMensal from '../../relatorioResumoMensal/container/relatorioResumoMensal'
 
 import {
     SEARCHING,
     STATE_RELATORIO_CONTAS_A_PAGAR,
     STATE_RELATORIO_CONTAS_A_RECEBER,
     STATE_RELATORIO_CONTAS_PAGAS,
-    STATE_RELATORIO_CONTAS_RECEBIDAS,    
+    STATE_RELATORIO_CONTAS_RECEBIDAS,
+    STATE_RELATORIO_RESUMO_MENSAL,
 } from '../../../util/state'
 
 class Relatorio extends Component {
@@ -61,6 +63,12 @@ class Relatorio extends Component {
                     </span>
                 }
 
+                {isEqual(state, STATE_RELATORIO_RESUMO_MENSAL) &&
+                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                        {'Relatório Resumo Mensal'}
+                    </span>
+                }                
+
             </>
         )
     }
@@ -91,7 +99,12 @@ class Relatorio extends Component {
 
                 {isEqual(state, STATE_RELATORIO_CONTAS_RECEBIDAS) &&
                     <RelatorioPagasRecebidas tipoTela={"RECEBIDAS"} />
-                }                
+                }       
+
+                {isEqual(state, STATE_RELATORIO_RESUMO_MENSAL) &&
+                    <RelatorioResumoMensal />
+                }
+
             </Card>
 
         </Spin>)

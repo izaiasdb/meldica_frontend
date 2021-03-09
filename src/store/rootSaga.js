@@ -79,11 +79,12 @@ import * as ContasReceber from '../pages/financeiro/contasReceber/sagas';
 import { RelatorioGeralTypes } from '../pages/relatorios/geralEstatistica/redux';
 import { RelatorioPagarReceberTypes } from '../pages/relatorios/relatorioPagarReceber/redux';
 import { RelatorioPagasRecebidasTypes } from '../pages/relatorios/relatorioPagasRecebidas/redux';
+import { RelatorioResumoMensalTypes } from '../pages/relatorios/relatorioResumoMensal/redux';
 
 import * as RelatorioGeral from '../pages/relatorios/geralEstatistica/sagas';
 import * as RelatorioPagarReceber from '../pages/relatorios/relatorioPagarReceber/sagas';
 import * as RelatorioPagasRecebidas from '../pages/relatorios/relatorioPagasRecebidas/sagas';
-
+import * as RelatorioResumoMensal from '../pages/relatorios/relatorioResumoMensal/sagas';
 
 
 const api = API.create();
@@ -223,5 +224,8 @@ export default function * root () {
 
         takeLatest(RelatorioPagasRecebidasTypes.RELATORIO_PAGAS_RECEBIDAS_INIT, RelatorioPagasRecebidas.fetch, api),
         takeLatest(RelatorioPagasRecebidasTypes.RELATORIO_PAGAS_RECEBIDAS_PESQUISAR, RelatorioPagasRecebidas.pesquisar, api),
+
+        takeLatest(RelatorioResumoMensalTypes.RELATORIO_RESUMO_MENSAL_INIT, RelatorioResumoMensal.fetch, api),
+        takeLatest(RelatorioResumoMensalTypes.RELATORIO_RESUMO_MENSAL_PESQUISAR, RelatorioResumoMensal.pesquisar, api),
     ])
 }

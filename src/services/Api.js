@@ -228,6 +228,11 @@ const create = () => {
     pesquisar: (obj) => api.post('/relatorio/pagarReceber/pesquisar', obj),
   }
 
+  const RelatorioOrdemServico = {
+    init: () => api.post('/relatorio/ordemServico/init'),
+    pesquisar: (obj) => api.post('/relatorio/ordemServico/relatorioResumoMensal', obj),
+  }
+
   return {
     Login,
     AlterarSenha,
@@ -257,7 +262,8 @@ const create = () => {
     GrupoProduto,
     ContasReceber,
     RelatorioGeral,
-    RelatorioPagarReceber
+    RelatorioPagarReceber,
+    RelatorioOrdemServico,
   }
 }
 
