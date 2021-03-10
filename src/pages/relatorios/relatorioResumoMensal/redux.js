@@ -11,6 +11,7 @@ const { Types, Creators } = createActions({
   relatorioResumoMensalFailure: ['msgError'],
   relatorioResumoMensalCleanMessage: null,
   relatorioResumoMensalCleanTable: null,
+  relatorioResumoMensalImprimir: ['obj'],
 });
 
 export const RelatorioResumoMensalTypes = Types;
@@ -49,8 +50,9 @@ export const cleanTable = (state) => state.merge({ data: { ...state.data, list: 
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.RELATORIO_RESUMO_MENSAL_INIT]: request,
-  [Types.RELATORIO_RESUMO_MENSAL_SUCCESS]: success,
   [Types.RELATORIO_RESUMO_MENSAL_PESQUISAR]: request,
+  [Types.RELATORIO_RESUMO_MENSAL_IMPRIMIR]: request,
+  [Types.RELATORIO_RESUMO_MENSAL_SUCCESS]: success,
   [Types.RELATORIO_RESUMO_MENSAL_FAILURE]: failure,
   [Types.RELATORIO_RESUMO_MENSAL_CLEAN_MESSAGE]: cleanMessage,
   [Types.RELATORIO_RESUMO_MENSAL_CLEAN_TABLE]: cleanTable,

@@ -231,6 +231,8 @@ const create = () => {
   const RelatorioOrdemServico = {
     init: () => api.post('/relatorio/ordemServico/init'),
     pesquisar: (obj) => api.post('/relatorio/ordemServico/relatorioResumoMensal', obj),
+    imprimir: (obj) => api.post('/relatorio/ordemServico/imprimiResumoMensal', obj),   
+    //imprimir: (obj) => api.post('/relatorio/ordemServico/imprimiResumoMensal', {...obj,}),   
   }
 
   return {

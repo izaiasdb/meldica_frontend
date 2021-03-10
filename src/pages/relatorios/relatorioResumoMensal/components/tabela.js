@@ -15,7 +15,7 @@ const Column = Workbook.Column
 
 class Tabela extends Component {
     render() {
-        const { list = [], tipoTela } = this.props
+        const { list = [] } = this.props
 
         const produtoExpandedRowRender = (record, recordFilho, index, indent, expanded) => {
             const {itemList = []} = record
@@ -110,9 +110,7 @@ class Tabela extends Component {
         return length && length > 0 ? this.getDownloadExcel() : null
     }
 
-    getDownloadExcel = () => {
-        const { tipoTela } = this.props
-
+    getDownloadExcel = () => {        
         return (<Workbook filename='relatorio_pagas_recebidas.xlsx'
             element={
                 <Tooltip title='Click para baixar os registros.' placement='left'>
@@ -123,7 +121,7 @@ class Tabela extends Component {
                 <Column label='Número da Conta' value={row => row.numeroConta } />
                 <Column label='Plano de Conta' value={row => row.planoConta } />
                 <Column label='Valor' value={row => row.valor } />
-                <Column label={`Valor ${isEqual(tipoTela, 'PAGAS') ? 'pago': 'recebido'}`} value={row => row.valorPago } />
+                <Column label={`Valor pago`} value={row => row.valorPago } />
             </Sheet>
         </Workbook>)
     }

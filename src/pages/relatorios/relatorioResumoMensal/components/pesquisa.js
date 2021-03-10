@@ -33,7 +33,8 @@ class Pesquisa extends Component {
                     return
                 }
 
-                this.props.pesquisar(obj)
+                //this.props.pesquisar(obj)
+                this.props.imprimir(obj)                
             } else {
                 openNotification({ tipo: 'warning', descricao: 'Existem campos obrigatórios a serem preenchidos.' })
             }
@@ -52,8 +53,9 @@ class Pesquisa extends Component {
     }
 
     render() {
-        const { tipoTerminalList = [], 
+        const { 
             form: { getFieldDecorator }, 
+            list = [],
         } = this.props
 
         const primeiroDiaMes = moment().clone().startOf('month').format('DD/MM/YYYY');
@@ -82,13 +84,19 @@ class Pesquisa extends Component {
                         onClick={this.pesquisar}
                         //disabled={!hasAnyAuthority("RELATORIO_TERMINAL_LOG_CONSULTAR")}
                         style={{ marginLeft: '10px' }} >
-                        Pesquisar
+                        Imprimir
                     </Button>
                     <Button type={"primary"}
                         style={{ marginLeft: '10px' }}
                         onClick={this.limpar}>
                         Limpar
                     </Button>
+                    {/* <Button type={"primary"}
+                        style={{ marginLeft: '10px' }}
+                        disabled={}
+                        onClick={this.limpar}>
+                        Imprimir
+                    </Button>                     */}
                 </Row>
             </Form>
         )
@@ -106,6 +114,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     cleanTable: () => dispatch(Action.relatorioResumoMensalCleanTable()),
     pesquisar: (obj) => dispatch(Action.relatorioResumoMensalPesquisar(obj)),
+    imprimir: (obj) => dispatch(Action.relatorioResumoMensalImprimir(obj)),
 })
 
 const wrapedPesquisa = Form.create()(Pesquisa)

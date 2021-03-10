@@ -227,5 +227,6 @@ export default function * root () {
 
         takeLatest(RelatorioResumoMensalTypes.RELATORIO_RESUMO_MENSAL_INIT, RelatorioResumoMensal.fetch, api),
         takeLatest(RelatorioResumoMensalTypes.RELATORIO_RESUMO_MENSAL_PESQUISAR, RelatorioResumoMensal.pesquisar, api),
+        takeLatest(RelatorioResumoMensalTypes.RELATORIO_RESUMO_MENSAL_IMPRIMIR, RelatorioResumoMensal.imprimir, api),
     ])
 }
