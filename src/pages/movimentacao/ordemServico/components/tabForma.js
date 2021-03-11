@@ -26,18 +26,20 @@ export default class TabForma extends React.Component {
 
         let { osForma } = getFieldsValue(['osForma'])
         let formaItemsList = getFieldValue("ordemServico.formaItemsList")
-        let { id, formaCondicaoPagamento, valor, desconto, total } = osForma      
+        let { id, formaCondicaoPagamento, valor, desconto, total, idEmpresa, tipoForma } = osForma      
         
         if(!(formaCondicaoPagamento && formaCondicaoPagamento.id && valor)){
             openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes a forma.'})
             return null
         }     
 
-        let recordInserido = formaItemsList.find(c=> c.formaCondicaoPagamento.id == formaCondicaoPagamento.id)
+        let recordInserido = formaItemsList
+            .find(c=> c.formaCondicaoPagamento.id == formaCondicaoPagamento.id && 
+                c.idEmpresa == idEmpresa && c.tipoForma == tipoForma)
 
         if ((isEqual(viewStateTab, INSERTING) && recordInserido) || 
             (isEqual(viewStateTab, EDITING) && recordInserido && recordInserido.id != id)) {
-            openNotification({tipo: 'warning', descricao: 'Forma já cadastrada.'})
+            openNotification({tipo: 'warning', descricao: 'Forma já cadastrada para esta empresa.'})
             return null            
         }      
 
@@ -66,6 +68,8 @@ export default class TabForma extends React.Component {
             setFieldsValue({
                 osForma: { id: null,
                     formaCondicaoPagamento: { id: null},
+                    idEmpresa: 1,
+                    tipoForma: 'P',
                     valor: 0,
                     percDesconto: 0,
                     desconto: 0,
@@ -92,7 +96,11 @@ export default class TabForma extends React.Component {
         let formaItemsList = getFieldValue("ordemServico.formaItemsList")
 
         formaItemsList.splice(formaItemsList.findIndex((item) => {            
-            return (item.formaCondicaoPagamento && item.formaCondicaoPagamento.id === record.formaCondicaoPagamento.id)
+            return (item.formaCondicaoPagamento && 
+                item.formaCondicaoPagamento.id === record.formaCondicaoPagamento.id &&
+                item.idEmpresa === record.idEmpresa &&
+                item.tipoForma === record.tipoForma
+                )
         }), 1)
 
         setFieldsValue({ordemServico: { formaItemsList } })
@@ -129,6 +137,8 @@ export default class TabForma extends React.Component {
         fields.osForma = {
             id: null,
             formaCondicaoPagamento: { id: null},
+            idEmpresa: 1,
+            tipoForma: 'P',            
             valor: 0,
             percDesconto: 0,
             desconto: 0,
@@ -253,6 +263,7 @@ export default class TabForma extends React.Component {
         const { 
             form,        
             formaCondicaoList = [],
+            empresaList = [],
             ordemServico = {},
             stateView        
         } = this.props
@@ -307,7 +318,7 @@ export default class TabForma extends React.Component {
                 { getFieldDecorator("osForma.nomeFormaPagamento", { initialValue: formaPagamentoNome })(<Input type="hidden" />) }        
                 { getFieldDecorator("osForma.nomeCondicaoPagamento", { initialValue: condicaoPagamentoNome })(<Input type="hidden" />) }        
                 <Row gutter = { 12 }>
-                    <Col span = { 8 }>
+                    <Col span = { 6 }>
                         <Form.Item label={"Forma condição de pagamento"}>
                             {
                                 getFieldDecorator('osForma.formaCondicaoPagamento.id', {})(
@@ -324,7 +335,45 @@ export default class TabForma extends React.Component {
                                 )
                             }
                         </Form.Item>               
-                    </Col>              
+                    </Col>
+                    <Col span = { 3 }>
+                        <Form.Item label={"Empresa"}>
+                            {
+                                getFieldDecorator('osForma.idEmpresa', {})(
+                                    <Select 
+                                        showSearch
+                                        optionFilterProp="children"
+                                        placeholder={"Digite para buscar"}
+                                        //onChange={(value) => this.handleChangeForma(value)}
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        disabled= {isEqual(stateView, VIEWING)}
+                                        >
+                                        {generateOptions(empresaList)}
+                                    </Select>
+                                )
+                            }
+                        </Form.Item>               
+                    </Col>                    
+                    <Col span={ 3 }>
+                        <Form.Item label={"Tipo Forma"}>
+                            {
+                                getFieldDecorator('osForma.tipoForma', {
+                                    //rules: [{required: true, message: 'Por favor, informe o tipo da empresa.'}],
+                                    initialValue: 'P'
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        disabled= {isEqual(stateView, VIEWING)}
+                                        >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        <Option key={2} value={'P'}>{"PRODUTO"}</Option>
+                                        <Option key={3} value={'F'}>{"FRETE"}</Option>
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                                   
                     <Col span={2}>
                         <Form.Item label={"Valor"}>
                             {
@@ -381,7 +430,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                    <Col span={3}>
+                    <Col span={2}>
                         <Form.Item label={"Perc. desc. da forma"}>
                             {
                                 getFieldDecorator('osForma.percDescontoFormaCondicao', {
@@ -398,7 +447,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                    <Col span={3}>
+                    <Col span={2}>
                         <Form.Item label={"Desconto da forma"}>
                             {
                                 getFieldDecorator('osForma.descontoFormaCondicao', {
@@ -415,7 +464,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                    <Col span={3}>
+                    <Col span={2}>
                         <Form.Item label={"Total"}>
                             {
                                 getFieldDecorator('osForma.total', {
@@ -446,6 +495,18 @@ export default class TabForma extends React.Component {
                                     pagination={false} bordered>
                                     <Table.Column title={<center>Forma pagamento</center>} key={"nomeFormaPagamento"} dataIndex={"nomeFormaPagamento"} align={"center"} />
                                     <Table.Column title={<center>Condição pagamento</center>} key={"nomeCondicaoPagamento"} dataIndex={"nomeCondicaoPagamento"} align={"center"} />
+                                    <Table.Column title={<center>Empresa</center>} 
+                                            key={"idEmpresa"} 
+                                            dataIndex={"idEmpresa"} 
+                                            align={"center"} 
+                                            render={ (text) => empresaList.map(d => { if(d.id == text) return d.nome }) }
+                                            />    
+                                    <Table.Column title={<center>Tipo Forma</center>} 
+                                            key={"tipoForma"} 
+                                            dataIndex={"tipoForma"} 
+                                            align={"center"} 
+                                            render={ (text) => text == "P" ? "PRODUTO" : "FRETE" }
+                                            />                                                                              
                                     <Table.Column title={<center>Valor</center>} key={"valor"} dataIndex={"valor"} align={"center"} />
                                     <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
                                     {/* <Table.Column title={<center>Perc. Desc. Forma Condição</center>} key={"percDescontoFormaCondicao"} dataIndex={"percDescontoFormaCondicao"} align={"center"} /> */}

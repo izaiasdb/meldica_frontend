@@ -63,6 +63,7 @@ export const success = (state, { dados }) =>  {
     clienteEnderecoList:        get(dados, ['clienteEnderecoList'], get(state.data, ['clienteEnderecoList'], [])),
     transportadoraEnderecoList: get(dados, ['transportadoraEnderecoList'], get(state.data, ['transportadoraEnderecoList'], [])),
     configuracaoList:           get(dados, ['configuracaoList'], get(state.data, ['configuracaoList'], [])),
+    empresaList:                get(dados, ['empresaList'], get(state.data, ['empresaList'], [])),
   }
 
    state = state.merge({fetching: false, data})

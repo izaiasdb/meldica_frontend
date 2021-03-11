@@ -94,7 +94,7 @@ const TabDados = (props) => {
                 <Form.Item label={"Tipo Cliente"}>
                     {
                         getFieldDecorator('cliente.fisicaJuridica', {
-                            rules: [{required: true, message: 'Por favor, informe o sexo.'}],
+                            rules: [{required: true, message: 'Por favor, informe o tipo do cliente.'}],
                             initialValue: fisicaJuridica || 'J'
                         })(
                         <Select showSearch
