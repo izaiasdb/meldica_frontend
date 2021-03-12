@@ -92,6 +92,7 @@ class Formulario extends Component {
         let totalVolumeProd = produtoItemsListForm.reduce((acum,{quantidadeUnidade, quantidadeNaCaixa}) => acum + (Number(quantidadeUnidade) / Number(quantidadeNaCaixa)), 0);
         let totalVolumeKit = kitList.reduce((acum,) => acum + 1, 0);
         let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);
+        let totalDescForma = formaItemsListForm.filter(c=> c.tipoForma == "P").reduce((acum,{desconto}) => acum + Number(desconto), 0);
         let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
         let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
         let totalPedido = (totalProduto ? totalProduto : 0) +  (totalProdutoKit ? totalProdutoKit : 0) + (totalFrete ? totalFrete : 0);
@@ -184,7 +185,12 @@ class Formulario extends Component {
                         {
                             getCard('Tot. desc. produto', '#FBC658', 'code-sandbox', totalProdutoDesconto, true, false)
                         }  
-                        </Col>           
+                        </Col>     
+                        <Col span={ 4 }>
+                        {
+                            getCard('Tot. desc. forma', '#FBC658', 'code-sandbox', totalDescForma, true, false)
+                        }  
+                        </Col>     
                         <Col span={ 4 }>                            
                         {
                             getCard('Total Nota Fiscal', '#6BD098', 'dollar', totalNF ? totalNF : 0)
