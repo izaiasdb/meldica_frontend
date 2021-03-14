@@ -8,6 +8,7 @@ import { MESSAGE_ERROR_DEFAULT } from '../../util/messages'
 
 const { Types, Creators } = createActions({
    clienteInit: null,
+   clienteObter: ['id'],
    clienteSuccess: ['dados'],
    clientePesquisar: ['cliente'],
    clienteFailure: ['message'],
@@ -59,7 +60,7 @@ export const cleanMessage = (state) => state.merge({data: {...state.data, messag
 export const cleanTable = (state) => state.merge({data: {...state.data, list: []}})
 
 export const setStateView = (state, action) => state.merge({stateView: action.stateView})
-export const setCliente = (state, { cliente }) => state.merge({cliente})
+export const setCliente = (state, { cliente }) => state.merge({cliente, fetching: false})
 
 export const setClienteItems = (state, { clienteItems }) => state.merge({
   cliente: {
@@ -74,6 +75,7 @@ export const setDrawerVisivel = (state, { drawerVisivel }) => state.merge( { dra
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.CLIENTE_INIT]              : request,
+  [Types.CLIENTE_OBTER]             : request,
   [Types.CLIENTE_SUCCESS]           : success,
   [Types.CLIENTE_PESQUISAR]         : request,
   [Types.CLIENTE_FAILURE]           : failure,

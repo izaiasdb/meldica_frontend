@@ -142,6 +142,7 @@ const create = () => {
 
   const Cliente = {
     init: () => api.post('/cliente/init'),
+    obter: (id) => api.get(`/cliente/${id}`),
     pesquisar: (obj) => api.post('/cliente/pesquisar', obj),
     salvar: (obj) => api.post('/cliente/salvar', obj),
   }  
@@ -194,7 +195,6 @@ const create = () => {
     salvar: (obj) => api.post('/grupoProduto/salvar', obj),
   } 
 
-  
   //************************************ Movimentações ************************************/
   const OrdemServico = {
     init: () => api.post('/ordemServico/init'),

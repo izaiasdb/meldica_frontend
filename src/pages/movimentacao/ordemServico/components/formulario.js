@@ -81,7 +81,8 @@ class Formulario extends Component {
         let transportadoraItemsListForm = isNil(getFieldValue("ordemServico.transportadoraItemsList"))  ? transportadoraItemsList : getFieldValue("ordemServico.transportadoraItemsList"); 
 
         //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
-        let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);        
+        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.produto.empresa.id != 2).reduce((acum, {total}) => acum + total, 0);        
+        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.produto.empresa.id == 2).reduce((acum, {total}) => acum + total, 0);        
         let totalProdutoKit = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
         let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
         let totalProdutoCxDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado == false).reduce((acum, {desconto, quantidadeCaixa}) => acum + desconto * quantidadeCaixa, 0);
@@ -95,9 +96,9 @@ class Formulario extends Component {
         let totalDescForma = formaItemsListForm.filter(c=> c.tipoForma == "P").reduce((acum,{desconto}) => acum + Number(desconto), 0);
         let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
         let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
-        let totalPedido = (totalProduto ? totalProduto : 0) +  (totalProdutoKit ? totalProdutoKit : 0) + (totalFrete ? totalFrete : 0);
+        let totalPedido = (totalProdutoMeldica ? totalProdutoMeldica : 0) + (totalProdutoCosmetico ? totalProdutoCosmetico : 0) +  (totalProdutoKit ? totalProdutoKit : 0) + (totalFrete ? totalFrete : 0);
         //let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalFormaDescontos ? totalFormaDescontos : 0);
-        let faltaReceber = totalPedido - (valorPago ? valorPago : 0);// - (totalFormaDescontos ? totalFormaDescontos : 0);
+        let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalDescForma ? totalDescForma : 0);
         let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeCaixa}) => acum + (Number(quantidadeCaixa) * Number(valorNfCaixa)), 0);
         let totalNFUnidade = produtoItemsListForm.filter(c=> c.fracionado == true).reduce((acum,{ valorNfUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfUnidade)), 0);
         let totalNFKit = kitList.reduce((acum,{ valorNf}) => acum + valorNf, 0);
@@ -128,37 +129,42 @@ class Formulario extends Component {
                             //dollar, global, solution, safety
                             //#51BCDA
                         } */}
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard(`${id ? 'Nota: ' + id : 'Status Nota'}`, '#6BD098', 'file-protect', statusNovaDescricao ? statusNovaDescricao : 'ABERTA', false)
                         }   
                         </Col>                                  
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
-                            getCard('Total produtos(Méldica)', '#FBC658', 'code-sandbox', totalProduto)
+                            getCard('Produtos(Méldica)', '#FBC658', 'code-sandbox', totalProdutoMeldica)
                         }
                         </Col>
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
+                        {
+                            getCard('Produtos(Cosmético)', '#FBC658', 'code-sandbox', totalProdutoCosmetico)
+                        }
+                        </Col>                        
+                        <Col span={ 3 }>
                         {
                             getCard('Total kit produtos', '#FBC658', 'code-sandbox', totalProdutoKit)
                         }
                         </Col>                                                
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard('Total frete', '#6BD098', 'car', totalFrete ? totalFrete : 0)
                         }
                         </Col>
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard('Total a pagar', '#6BD098', 'dollar', totalPedido ? totalPedido : 0)
                         }
                         </Col>                            
-                        {/* <Col span={ 4 }>
+                        {/* <Col span={ 3 }>
                         {
                             getCard('Forma pgto.', '#6BD098', 'sketch', totalForma)
                         }
                         </Col> */}
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago : 0)
                         }
@@ -166,42 +172,42 @@ class Formulario extends Component {
                       
                     </Row>   
                     <Row gutter={2}>
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard('Total peso', '#FBC658', 'arrow-down', totalPeso ? totalPeso : 0, true, false)
                         } 
                         </Col>
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard('Total volume', '#FBC658', 'appstore', totalVolume, true, false)
                         }  
                         </Col>
-                        {/* <Col span={ 4 }>
+                        <Col span={ 3 }>                            
+                        {
+                            getCard('Total Nota Fiscal', '#6BD098', 'dollar', totalNF ? totalNF : 0)
+                        }
+                        </Col>                          
+                        {/* <Col span={ 3 }>
                         {
                             getCard('Tot. produtos(Cosméticos)', '#FBC658', 'code-sandbox', totalProduto)
                         }
                         </Col>                           */}
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard('Tot. desc. produto', '#FBC658', 'code-sandbox', totalProdutoDesconto, true, false)
                         }  
                         </Col>     
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard('Tot. desc. forma', '#FBC658', 'code-sandbox', totalDescForma, true, false)
                         }  
                         </Col>     
-                        <Col span={ 4 }>                            
-                        {
-                            getCard('Total Nota Fiscal', '#6BD098', 'dollar', totalNF ? totalNF : 0)
-                        }
-                        </Col>                            
-                        {/* <Col span={ 4 }>
+                        {/* <Col span={ 3 }>
                         {
                             getCard('Falta forma.', '#DA120B', 'sketch', faltaFormaPgto)
                         }
                         </Col> */}
-                        <Col span={ 4 }>
+                        <Col span={ 3 }>
                         {
                             getCard('Falta receber', '#DA120B', 'dollar', faltaReceber)
                         }   
@@ -325,6 +331,7 @@ class Formulario extends Component {
         this.props.form.validateFields((err, { ordemServico }) => {
             if (!err) {         
                 const { produtoItemsList = [], formaItemsList = [], transportadoraItemsListForm = [] } = ordemServico
+                /*
                 let totalProduto = produtoItemsList.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
                 let totalForma = formaItemsList.reduce((acum,{valor}) => acum + Number(valor), 0);
                 let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
@@ -332,7 +339,7 @@ class Formulario extends Component {
                 if ((totalProduto + totalFrete) < totalForma){
                     openNotification({tipo: 'warning', descricao: 'Total de forma de pagamento não pode ser menor que o total de produtos e frete.'})
                     return 
-                }       
+                } */    
                 
                 if (isNil(ordemServico.kitProdutoList)) {
                     ordemServico.kitProdutoList = kitProdutoList

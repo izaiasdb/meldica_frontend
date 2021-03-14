@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { getTitle } from '../../../util/helper'
 import { hasAnyAuthority } from '../../../../services/authenticationService'
 import Workbook from 'react-excel-workbook'
+import { isNil } from 'lodash'
 
 const Sheet = Workbook.Sheet
 const Column = Workbook.Column
@@ -27,7 +28,7 @@ class Tabela extends Component {
                         }>
                         <Sheet data={this.props.list || []} name='clientes'>
                             <Column label='Nome' value={row => row.nome ?  row.nome : '' } />
-                            <Column label='Valor' value={row => row.valorVenda ? row.valorVenda : ''} />
+                            {/* <Column label='Valor' value={row => row.valorVenda ? row.valorVenda : ''} /> */}
                         </Sheet>
                     </Workbook>
                 </div>)
@@ -56,17 +57,43 @@ class Tabela extends Component {
 
     render() {
         const { list = [] , remover } = this.props
+
+        const expandedRowRender = (record, index, indent, expanded) => {
+            const { clienteEnderecoList } = record
+
+            if (!isNil(clienteEnderecoList) && clienteEnderecoList.length > 0) {
+                return (
+                    <Table dataSource={clienteEnderecoList}
+                        rowKey={(row) => row.id}
+                        pagination={false}>
+                        <Table.Column title={<center>Estado</center>} key={"uf"} dataIndex={"uf"} align={"center"} />
+                        <Table.Column title={<center>Cidade</center>} key={"cidade"} dataIndex={"cidade"} align={"center"} />
+                    
+                    </Table>
+                )
+            } else {
+                return (
+                    <Table dataSource={[]}
+                        pagination={false} />
+                )
+            }
+        };  
         return (
             list.length > 0 &&
             <Card title={ getTitle("Listagem") } extra={ this.getExtra(list.length)} >
                 <Table rowKey={ (row) => row.id} 
                         dataSource={list} 
                         size={"middle"}
+                        expandedRowRender={(record, index, indent, expanded) => expandedRowRender(record, index, indent, expanded) }
                         pagination={Pagination()}>                        
                     <Table.Column key={'nome'} 
                                     dataIndex={'nome'} 
                                     title={'Nome'} 
                                     align={ "left" }/>
+                    <Table.Column key={'cpfCnpj'} 
+                                    dataIndex={'cpfCnpj'} 
+                                    title={'Cpf / Cnpj'} 
+                                    align={ "left" }/>                                    
                     <Table.Column key={'acoes'} 
                                     dataIndex={'acoes'} 
                                     title={'Ações'} 

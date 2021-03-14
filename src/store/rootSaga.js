@@ -161,6 +161,7 @@ export default function * root () {
         takeLatest(FormaCondicaoPagamentoTypes.FORMA_CONDICAO_PAGAMENTO_PESQUISAR, FormaCondicaoPagamento.pesquisar, api),
 
         takeLatest(ClienteTypes.CLIENTE_INIT, Cliente.fetch, api),
+        takeLatest(ClienteTypes.CLIENTE_OBTER, Cliente.obter, api),
         takeLatest(ClienteTypes.CLIENTE_SALVAR, Cliente.salvar, api),
         takeLatest(ClienteTypes.CLIENTE_PESQUISAR, Cliente.pesquisar, api),        
 

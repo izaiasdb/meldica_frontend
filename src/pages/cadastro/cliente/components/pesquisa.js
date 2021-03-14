@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { Card, Row, Col, Input, Button, Select, Form, DatePicker, Divider } from 'antd'
 import { connect } from 'react-redux'
 import { get, isEmpty } from 'lodash'
+
+import Actions from '../redux'
+import NumericInput from '../../../util/numericInput'
 import { generateOptions, getTitle } from '../../../util/helper'
 import { hasAnyAuthority } from '../../../../services/authenticationService'
 import { openNotification } from '../../../util/notification'
-import Actions from '../redux'
 import { INSERTING } from '../../../util/state'
 
 const Option = Select.Option
@@ -76,8 +78,12 @@ class Pesquisa extends Component {
     };
 
     render() {
-        const { form } = this.props
+        const { form, 
+            ufList = [],
+            municipioList = [],
+        } = this.props
         const { getFieldDecorator, getFieldValue } = form
+        const estado = getFieldValue("cliente.uf")
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };
 
         return (
@@ -87,7 +93,7 @@ class Pesquisa extends Component {
                 style={{ marginBottom: '10px' }}
                 >
                 <Row gutter={12}>
-                    <Col span={10}>
+                    <Col span={8}>
                         <Form.Item label={"Nome"}>
                             {
                                 getFieldDecorator('cliente.nome', {
@@ -98,26 +104,73 @@ class Pesquisa extends Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>    
-                    {/* <Col span={4}>
-                        <Form.Item label={"Tipo Cliente"}>
+                    </Col> 
+                    <Col span={ 4 }>
+                        <Form.Item label={"CNPJ / CPF"}>
                             {
-                                getFieldDecorator('cliente.tipo', {
+                                getFieldDecorator('cliente.cpfCnpj', {
+                                    rules: [
+                                        { required: false, message: "Por favor, informe um CPF ou CNPJ." },
+                                        //{ validator: validarCampoCPF },
+                                    ],
                                     initialValue: null
                                 })(
-                                    <Select showSearch
-                                        optionFilterProp="children"
-                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                    >
-                                        <Option key={1} value={null}>{"Selecione"}</Option>
-                                        <Option key={2} value={'P'}>{"PRODUTO"}</Option>
-                                        <Option key={3} value={'I'}>{"INSUMO"}</Option>
-                                        <Option key={3} value={'C'}>{"COMBINADO"}</Option>
-                                    </Select>
+                                    <NumericInput maxLength={ 20 } />
                                 )
                             }
                         </Form.Item>
-                    </Col>                                    */}
+                    </Col> 
+                </Row>
+                <Row gutter={12}>
+                    <Col span={ 4 }>
+                        <Form.Item label={"Estado/UF"}>
+                            {
+                                getFieldDecorator('cliente.uf', {
+                                    initialValue: null
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        {
+                                            ufList.map(({id, nome}) => (<Option key={id} value={id} >
+                                                {
+                                                    `${nome}-${id}`
+                                                }
+                                            </Option>))
+                                        }
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 8 }>
+                        <Form.Item label={"Município"}>
+                            {
+                                getFieldDecorator('cliente.cidade', {
+                                    initialValue: null
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        {
+                                            estado && 
+                                            municipioList.filter(({uf}) => uf.id == estado)
+                                                    .map(({nome}) => 
+                                                        (<Option key={nome} value={nome} >
+                                                            {
+                                                                `${nome}`
+                                                            }
+                                                        </Option>))
+                                        }
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
                 </Row>
             </Card>
             </Form>

@@ -19,6 +19,24 @@ export function * fetch (api)  {
   }
 }
 
+export function * obter(api, { id })  {
+  try {    
+    console.log(id)
+    const response = yield call(api.Cliente.obter, id)
+
+    if (response.ok) {
+      const cliente = get(response, ['data'], {})
+      yield put(Actions.clienteSetCliente(cliente))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.clienteFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.clienteFailure())
+  }
+}
+
 export function * pesquisar (api, { cliente })  {
   try {    
     const response = yield call(api.Cliente.pesquisar, cliente)

@@ -20,6 +20,15 @@ class Formulario extends Component {
         this.state = { activeKey: "1" }
     }
 
+    componentDidMount() {
+        const { cliente, obter } = this.props
+        const { id } = isNil(cliente) ? {} : cliente        
+
+        if(!isNil(id)){
+            obter(id)
+        }
+    }
+
     UNSAFE_componentWillReceiveProps(nextProps){
         const message = get(nextProps, ['message'], "")
 
@@ -155,6 +164,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+    obter: (id) => dispatch(Actions.clienteObter(id)),    
     cleanMessage: ()  => dispatch(Actions.clienteCleanMessage()),
     cleanTable: () => dispatch(Actions.clienteCleanTable()),
     setStateView: (stateView) => dispatch(Actions.clienteSetStateView(stateView)),
