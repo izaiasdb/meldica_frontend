@@ -64,13 +64,13 @@ export default class TabEndereco extends React.Component {
                 numero: ''
             }
         })
-        this.setStateView({ viewStateTab: INSERTING })
+        this.setState({ viewStateTab: INSERTING })
     }
 
     prepareUpdate = (endereco) => {
         const { form: { setFieldsValue } } = this.props
         setFieldsValue({ endereco: {...endereco } } )
-        this.setStateView({ viewStateTab: EDITING })
+        this.setState({ viewStateTab: EDITING })
     }    
     
     remover = (index) => {
@@ -78,7 +78,7 @@ export default class TabEndereco extends React.Component {
         let clienteEnderecoList = getFieldValue("cliente.clienteEnderecoList")
         clienteEnderecoList = clienteEnderecoList.filter((e, indexx) => indexx != index)
         setFieldsValue({cliente: { clienteEnderecoList }})
-        this.setStateView({ viewStateTab: INSERTING })
+        this.setState({ viewStateTab: INSERTING })
     }
 
     buscarPorCEP = () => {
