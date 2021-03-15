@@ -74,6 +74,7 @@ export default class TabProduto extends React.Component {
         osProduto.qtdEstoqueUnidade = produtoForm.qtdEstoqueUnidade;
         osProduto.quantidadeNaCaixa = produtoForm.quantidadeCaixa;
         osProduto.idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id");
+        osProduto.produto = { empresa: { id: produtoForm.empresa.id }};
 
         if (produtoForm.fracionado) {
             osProduto.valorCaixa = 0;
@@ -89,7 +90,7 @@ export default class TabProduto extends React.Component {
             setFieldsValue({
                 osProduto: { 
                     id: null,
-                    produto: { id: null},
+                    produto: { id: null, empresa: {id: null }},
                     bonificacao: false, 
                     quantidadeUnidade: 1,
                     quantidadeCaixa: 1, 
@@ -253,7 +254,7 @@ export default class TabProduto extends React.Component {
         const fields = getFieldsValue()
         fields.osProduto = {
             id: null,
-            produto: { id: null},
+            produto: { id: null, empresa: {id: null }},
             bonificacao: false, 
             quantidadeUnidade: 1, 
             quantidadeCaixa: 1, 
@@ -315,6 +316,7 @@ export default class TabProduto extends React.Component {
         const idProdutoForm = getFieldValue("osProduto.produto.id") || null 
         const valorCaixaForm = getFieldValue("osProduto.valorCaixa") || 0 
         const valorUnidadeForm = getFieldValue("osProduto.valorUnidade") || 0 
+        let idEmpresa = getFieldValue("osProduto.produto.empresa.id") || 0
         let fracionado = false; 
         let produto = null;  
         let percDescontoMaximo = 0;
@@ -324,6 +326,7 @@ export default class TabProduto extends React.Component {
             produto = produtoList.find(c=> c.id == idProdutoForm);
             fracionado = produto.fracionado;
             percDescontoMaximo = produto.percDescontoMaximo;
+            idEmpresa = produto.empresa.id
 
             if (fracionado){
                 descontoMaximo = obterValorDesconto(percDescontoMaximo, valorUnidadeForm);
@@ -338,6 +341,7 @@ export default class TabProduto extends React.Component {
             <Card title={"Informe os dados referente aos produtos da Ordem de Serviço"} extra={this.getExtra()}>
                 { getFieldDecorator("osProduto.id", { initialValue: idForm })(<Input type="hidden" />) }
                 { getFieldDecorator("osProduto.produto.nome", { initialValue: produtoNome })(<Input type="hidden" />) }     
+                { getFieldDecorator("osProduto.produto.empresa.id", { initialValue: idEmpresa })(<Input type="hidden" />) } 
                 { getFieldDecorator("osProduto.fracionado", { initialValue: fracionado })(<Input type="hidden" />) } 
                 <Row gutter = { 12 }>
                     <Col span = { 6 }>
