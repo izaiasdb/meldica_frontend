@@ -63,7 +63,13 @@ class Tabela extends Component {
                                       render={(text, record) => (
                                         <span>
                                             {hasAnyAuthority("CONDICOES_DE_PAGAMENTO_ALTERAR") &&
-                                                <Icon style={{cursor: 'pointer'}} type={ 'edit' } onClick={(e) => this.prepareUpdate(record)}></Icon>
+                                                <Icon style={{cursor: 'pointer'}} type={ 'edit' } className={'tabela-icone'} onClick={(e) => this.prepareUpdate(record)}></Icon>
+                                            }
+                                            <Divider type="vertical"/>
+                                            {hasAnyAuthority("CONDICOES_DE_PAGAMENTO_EXCLUIR") &&
+                                            <Tooltip title="Cancelar">
+                                                <Icon style={{cursor: 'pointer'}} type={ 'close-circle' } className={'tabela-icone'} onClick={(e) => this.props.cancelar(record)}></Icon>
+                                            </Tooltip>      
                                             }
                                         </span>
                                         )}/>
@@ -83,6 +89,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+    cancelar: (cancelar) => dispatch(Actions.condicaoPagamentoCancelar(cancelar)),
     setStateView: (stateView) => dispatch(Actions.condicaoPagamentoSetStateView(stateView)),
     setCondicaoPagamento: (condicaoPagamento) => dispatch(Actions.condicaoPagamentoSetCondicaoPagamento(condicaoPagamento)),
 })

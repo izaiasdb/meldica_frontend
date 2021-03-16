@@ -152,17 +152,21 @@ export default function * root () {
 
         takeLatest(FormaPagamentoTypes.FORMA_PAGAMENTO_SALVAR, FormaPagamento.salvar, api),
         takeLatest(FormaPagamentoTypes.FORMA_PAGAMENTO_PESQUISAR, FormaPagamento.pesquisar, api),    
+        takeLatest(FormaPagamentoTypes.FORMA_PAGAMENTO_CANCELAR, FormaPagamento.cancelar, api),          
 
         takeLatest(CondicaoPagamentoTypes.CONDICAO_PAGAMENTO_SALVAR, CondicaoPagamento.salvar, api),
-        takeLatest(CondicaoPagamentoTypes.CONDICAO_PAGAMENTO_PESQUISAR, CondicaoPagamento.pesquisar, api),            
+        takeLatest(CondicaoPagamentoTypes.CONDICAO_PAGAMENTO_PESQUISAR, CondicaoPagamento.pesquisar, api),  
+        takeLatest(CondicaoPagamentoTypes.CONDICAO_PAGAMENTO_CANCELAR, CondicaoPagamento.cancelar, api),          
 
         takeLatest(FormaCondicaoPagamentoTypes.FORMA_CONDICAO_PAGAMENTO_INIT, FormaCondicaoPagamento.fetch, api),
         takeLatest(FormaCondicaoPagamentoTypes.FORMA_CONDICAO_PAGAMENTO_SALVAR, FormaCondicaoPagamento.salvar, api),
         takeLatest(FormaCondicaoPagamentoTypes.FORMA_CONDICAO_PAGAMENTO_PESQUISAR, FormaCondicaoPagamento.pesquisar, api),
+        takeLatest(FormaCondicaoPagamentoTypes.FORMA_CONDICAO_PAGAMENTO_CANCELAR, FormaCondicaoPagamento.cancelar, api),
 
         takeLatest(ClienteTypes.CLIENTE_INIT, Cliente.fetch, api),
         takeLatest(ClienteTypes.CLIENTE_OBTER, Cliente.obter, api),
         takeLatest(ClienteTypes.CLIENTE_SALVAR, Cliente.salvar, api),
+        takeLatest(ClienteTypes.CLIENTE_CANCELAR, Cliente.cancelar, api),
         takeLatest(ClienteTypes.CLIENTE_PESQUISAR, Cliente.pesquisar, api),        
 
         takeLatest(FornecedorTypes.FORNECEDOR_INIT, Fornecedor.fetch, api),

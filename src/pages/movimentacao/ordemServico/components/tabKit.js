@@ -230,13 +230,13 @@ export default class TabKit extends React.Component {
                             }
                         </Form.Item>            
                     </Col>                    
-                    <Col span={ 4 }>
+                    {/* <Col span={ 4 }>
                         <Button type="primary" 
                             onClick={showDrawerKit} style={{ marginTop: "40px" }}
                             disabled={isNil(codigoForm) || !isEqual(stateView, EDITING)}>
                             <Icon type="plus" /> Itens do Kit
                         </Button>
-                    </Col>
+                    </Col> */}
                 </Row>  
                 <Row gutter = { 12 }>
                     <Form.Item label={"Kit de Produtos"}>

@@ -63,3 +63,26 @@ export function * salvar (api, { obj })  {
     yield put(Actions.formaPagamentoFailure())
   }
 }
+
+export function * cancelar (api, { obj })  {
+  try {
+    const { id } = getUser();
+    const response = yield call(api.FormaPagamento.cancelar, {...obj, idUsuarioAlteracao: id })
+    
+    if (response.ok) {
+      yield put(Actions.formaPagamentoSuccess({
+        message: {
+          tipo: 'success', descricao: `Registro ${obj && obj.id ? 'alterado' : 'cancelado'} com sucesso.`
+        }
+      }))
+      yield put(Actions.formaPagamentoCleanTable());
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.formaPagamentoFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.formaPagamentoFailure())
+  }
+}
+

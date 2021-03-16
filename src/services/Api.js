@@ -126,18 +126,21 @@ const create = () => {
     init: () => api.post('/formaPagamento/init'),
     pesquisar: (obj) => api.post('/formaPagamento/pesquisar', obj),
     salvar: (obj) => api.post('/formaPagamento/salvar', obj),
+    cancelar: (obj) => api.post('/formaPagamento/cancelar', obj),
   }  
 
   const CondicaoPagamento = {
     init: () => api.post('/condicaoPagamento/init'),
     pesquisar: (obj) => api.post('/condicaoPagamento/pesquisar', obj),
     salvar: (obj) => api.post('/condicaoPagamento/salvar', obj),
+    cancelar: (obj) => api.post('/condicaoPagamento/cancelar', obj),
   }
 
   const FormaCondicaoPagamento = {
     init: () => api.post('/formaCondicaoPagamento/init'),
     pesquisar: (obj) => api.post('/formaCondicaoPagamento/pesquisar', obj),
     salvar: (obj) => api.post('/formaCondicaoPagamento/salvar', obj),
+    cancelar: (obj) => api.post('/formaCondicaoPagamento/cancelar', obj),
   }
 
   const Cliente = {
@@ -145,6 +148,7 @@ const create = () => {
     obter: (id) => api.get(`/cliente/${id}`),
     pesquisar: (obj) => api.post('/cliente/pesquisar', obj),
     salvar: (obj) => api.post('/cliente/salvar', obj),
+    cancelar: (obj) => api.post('/cliente/cancelar', obj),
   }  
   
   const Fornecedor = {

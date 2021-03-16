@@ -80,6 +80,28 @@ export function * salvar (api, { obj })  {
   }
 }
 
+export function * cancelar (api, { obj })  {
+  try {
+    const { id } = getUser();
+    const response = yield call(api.Cliente.cancelar, {...obj, idUsuarioAlteracao: id })
+    
+    if (response.ok) {
+      yield put(Actions.clienteSuccess({
+        message: {
+          tipo: 'success', descricao: `Registro ${obj && obj.id ? 'alterado' : 'cancelado'} com sucesso.`
+        }
+      }))
+      yield put(Actions.clienteCleanTable());
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.clienteFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.clienteFailure())
+  }
+}
+
 /*
 export function * pesquisarCliente (api, { obj })  {
   try {    

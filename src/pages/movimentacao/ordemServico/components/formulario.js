@@ -81,8 +81,8 @@ class Formulario extends Component {
         let transportadoraItemsListForm = isNil(getFieldValue("ordemServico.transportadoraItemsList"))  ? transportadoraItemsList : getFieldValue("ordemServico.transportadoraItemsList"); 
 
         //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
-        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.produto.empresa.id != 2).reduce((acum, {total}) => acum + total, 0);        
-        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.produto.empresa.id == 2).reduce((acum, {total}) => acum + total, 0);        
+        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.produto.idEmpresaProduto != 2).reduce((acum, {total}) => acum + total, 0);        
+        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.produto.idEmpresaProduto == 2).reduce((acum, {total}) => acum + total, 0);        
         let totalProdutoKit = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
         let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
         let totalProdutoCxDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado == false).reduce((acum, {desconto, quantidadeCaixa}) => acum + desconto * quantidadeCaixa, 0);
@@ -136,7 +136,7 @@ class Formulario extends Component {
                         </Col>                                  
                         <Col span={ 3 }>
                         {
-                            getCard('Produtos(Méldica)', '#FBC658', 'code-sandbox', totalProdutoMeldica)
+                            getCard('Produtos(Naturais)', '#FBC658', 'code-sandbox', totalProdutoMeldica)
                         }
                         </Col>
                         <Col span={ 3 }>
@@ -144,11 +144,11 @@ class Formulario extends Component {
                             getCard('Produtos(Cosmético)', '#FBC658', 'code-sandbox', totalProdutoCosmetico)
                         }
                         </Col>                        
-                        <Col span={ 3 }>
+                        {/* <Col span={ 3 }>
                         {
                             getCard('Total kit produtos', '#FBC658', 'code-sandbox', totalProdutoKit)
                         }
-                        </Col>                                                
+                        </Col>                                                 */}
                         <Col span={ 3 }>
                         {
                             getCard('Total frete', '#6BD098', 'car', totalFrete ? totalFrete : 0)

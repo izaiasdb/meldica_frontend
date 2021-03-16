@@ -40,17 +40,26 @@ class Tabela extends Component {
         this.props.setCliente(cliente)
     }
 
+    cancelar = (cliente) => {
+        this.props.cancelar(cliente)
+    }
+
     getAcoes = (record) => {
         return (
             <div>
                 {hasAnyAuthority("CLIENTES_ALTERAR") && 
                 <>
                 <Tooltip title="Editar cliente">
-                    <Icon style={{cursor: 'pointer'}} type={ 'edit' } onClick={(e) => this.prepareUpdate(record)}></Icon>
+                    <Icon style={{cursor: 'pointer'}} type={ 'edit' } className={'tabela-icone'} onClick={(e) => this.prepareUpdate(record)}></Icon>
                 </Tooltip>
                 <Divider type="vertical"/>
+
                 </>
                 }
+                {hasAnyAuthority("CLIENTES_EXCLUIR") &&
+                <Tooltip title="Cancelar">
+                    <Icon style={{cursor: 'pointer'}} type={ 'close-circle' } className={'tabela-icone'} onClick={(e) => this.cancelar(record)}></Icon>
+                </Tooltip>}
             </div> 
         )       
     }
@@ -117,7 +126,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    remover: (id) => dispatch(Actions.clienteRemover(id)),
+    cancelar: (cancelar) => dispatch(Actions.clienteCancelar(cancelar)),
     setStateView: (stateView) => dispatch(Actions.clienteSetStateView(stateView)),
     setCliente: (cliente) => dispatch(Actions.clienteSetCliente(cliente)),
 })
