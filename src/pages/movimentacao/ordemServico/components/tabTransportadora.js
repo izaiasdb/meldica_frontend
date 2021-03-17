@@ -58,6 +58,7 @@ export default class TabTransportadora extends React.Component {
                 idTipoEndereco: 1,
                 ordem: 1,
                 valorFrete: 0,
+                valorRedespacho: 0,
                 cep: '',
                 logradouro: '',
                 bairro: '',
@@ -119,6 +120,7 @@ export default class TabTransportadora extends React.Component {
                 idTipoEndereco: 1,
                 ordem: 1,
                 valorFrete: 0,
+                valorRedespacho: 0,
                 cep: '',
                 logradouro: '',
                 bairro: '',
@@ -140,6 +142,7 @@ export default class TabTransportadora extends React.Component {
                         idTipoEndereco: 1,
                         ordem: 1,
                         valorFrete: 0,
+                        valorRedespacho: 0,
                         id: null,
                         cep: '',
                         logradouro: '',
@@ -174,7 +177,8 @@ export default class TabTransportadora extends React.Component {
             idTransportadoraDestino: null,
             idTipoEndereco: 1, 
             ordem: 1,
-            valorFrete: 0,    
+            valorFrete: 0,
+            valorRedespacho: 0,    
             cep: '',
             logradouro: '',
             bairro: '',
@@ -267,7 +271,7 @@ export default class TabTransportadora extends React.Component {
             <Card title={"Informe os dados referente ao Transporte de Mercadorias."} extra={this.getExtra()}>
                 { getFieldDecorator("ordemServicoTransportadora.id", { initialValue: id })(<Input type="hidden" />) }
                 <Row gutter = { 12 }>
-                    <Col span={ 9 }>
+                    <Col span={ 8 }>
                         <Form.Item label={"Transportadora"}>
                             {
                                 getFieldDecorator('ordemServicoTransportadora.transportadora.id', {
@@ -312,6 +316,23 @@ export default class TabTransportadora extends React.Component {
                                     initialValue: 0
                                 })(
                                     <InputNumber 
+                                        style={{ width: "100" }}
+                                        min={0}
+                                        precision={2}
+                                        step={1}
+                                        disabled= {isEqual(stateView, VIEWING)}
+                                    />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 2 }>
+                        <Form.Item label={"Valor redespacho"}>
+                            {
+                                getFieldDecorator('ordemServicoTransportadora.valorRedespacho', {
+                                    initialValue: 0
+                                })(
+                                    <InputNumber 
                                         style={{ width: "150" }}
                                         min={0}
                                         precision={2}
@@ -321,9 +342,8 @@ export default class TabTransportadora extends React.Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>  
-                                        
-                    <Col span={ 9 }>
+                    </Col>                      
+                    <Col span={ 8 }>
                         <Form.Item label={"Transportadora Destino"}>
                             {
                                 getFieldDecorator('ordemServicoTransportadora.idTransportadoraDestino', {
@@ -518,6 +538,7 @@ export default class TabTransportadora extends React.Component {
                                             render={(text, record) => `${text ? text : ''}${isNil(record.uf) ? '' : ' - '+record.uf}`}
                                                 />
                                 <Table.Column title={<center>Vl. Frete</center>} key={"valorFrete"} dataIndex={"valorFrete"} align={"center"} />
+                                <Table.Column title={<center>Vl. redespacho</center>} key={"valorRedespacho"} dataIndex={"valorRedespacho"} align={"center"} />
                                 <Table.Column title={<center>Ações</center>} key={"actions"} 
                                             dataIndex={"actions"} 
                                             align={"center"} 

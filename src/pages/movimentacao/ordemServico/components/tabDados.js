@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, DatePicker, InputNumber, Switch, Card, Button, Icon  } from 'antd'
+import { Row, Col, Form, Select, Input, DatePicker, InputNumber, Switch, Card, Button, Icon, Tooltip  } from 'antd'
 import { generateOptions } from '../../../util/helper'
 import { isNil, isEqual } from 'lodash'
 import moment from 'moment'
@@ -46,6 +46,7 @@ const TabDados = (props) => {
         clienteTabelaPrecoList = [],
         stateView,
         showDrawer,
+        showDrawerInfoCliente,
     } = props
     const {
         cliente = {},
@@ -197,6 +198,13 @@ const TabDados = (props) => {
                         }
                     </Form.Item>
                 </Col>
+                <Col span={ 1 }>
+                    <Tooltip title='Mais informações sobre o cliente' placement='left'>
+                        <Button type="primary" onClick={showDrawerInfoCliente} style={{ marginTop: "40px" }}>
+                            <Icon type="plus" />
+                        </Button>
+                    </Tooltip>
+                </Col>                
                 <Col span={ 8 }>
                     <Form.Item label={"Cliente Razão Social"}>
                         {
@@ -224,7 +232,7 @@ const TabDados = (props) => {
                         <Icon type="plus" /> Última compra cliente
                     </Button>
                 </Col>
-                <Col span={ 4 }>
+                <Col span={ 3 }>
                     <Form.Item label={"NF Méldica"}>
                         {
                             getFieldDecorator('ordemServico.nfMeldica', {
@@ -237,7 +245,7 @@ const TabDados = (props) => {
                     </Form.Item>
                 </Col>                             
             </Row>   
-            <Row gutter={12}>                
+            {/* <Row gutter={12}>                
                 <Col span={ 4 }>
                     <Form.Item label={"CPF / CNPJ"}>
                         {
@@ -252,7 +260,7 @@ const TabDados = (props) => {
                         }
                     </Form.Item>
                 </Col>                          
-            </Row>   
+            </Row>    */}
             <Row gutter={12}>
                 <Col span={ 8 }>
                     <Form.Item label={"Vendedor"}>

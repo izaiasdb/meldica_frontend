@@ -27,7 +27,7 @@ export default class TabEndereco extends React.Component {
         let endereco = getFieldValue("endereco")
         let error = false
         Object.keys(endereco).forEach(key => {
-            if(key != "id" && key != "complemento" && key != "cep" &&
+            if(key != "id" && key != "complemento" && key != "cep" &&  key != "idClienteRazao" &&
                 (isNil(endereco[key]) || isEmpty(trim(endereco[key])))) {
                 openNotification({tipo: 'warning', descricao: `Por favor, preencha o(a) ${key.toUpperCase()}.`})
                 error = true
@@ -53,7 +53,8 @@ export default class TabEndereco extends React.Component {
             cliente: { clienteEnderecoList },
             endereco: {
                 id: null,
-                //tipoEnderecoPessoa: { id: 2},                
+                //tipoEnderecoPessoa: { id: 2}, 
+                idClienteRazao: null,               
                 idTipoEndereco: 2,
                 cep: '',
                 logradouro: '',
@@ -91,6 +92,7 @@ export default class TabEndereco extends React.Component {
             const fields = getFieldsValue()
             fields.endereco = {
                 id: null,
+                idClienteRazao: null,
                 //tipoEnderecoPessoa: { id: 2},                
                 idTipoEndereco: 2,
                 cep: '',
@@ -111,6 +113,7 @@ export default class TabEndereco extends React.Component {
                     fields.endereco = {
                         //tipoEnderecoPessoa: { id: 2},
                         idTipoEndereco: 2,
+                        idClienteRazao: null,
                         id: null,
                         cep: '',
                         logradouro: '',
@@ -142,6 +145,7 @@ export default class TabEndereco extends React.Component {
         const fields = getFieldsValue()
         fields.endereco = {
             id: null,
+            idClienteRazao: null,
             //tipoEnderecoPessoa: { id: 2},  
             idTipoEndereco: 2,          
             cep: '',
@@ -185,7 +189,9 @@ export default class TabEndereco extends React.Component {
                 descricao: "RESIDENCIAL"
             }],
         } = this.props
-        const { clienteEnderecoList = [] } = cliente || {}
+        const { clienteEnderecoList = [],
+            clienteRazaoList = []
+         } = cliente || {}
 
         //const cepInput = useRef(null);
         const estado = getFieldValue("endereco.uf")
@@ -196,8 +202,24 @@ export default class TabEndereco extends React.Component {
             <Card title={"Busque pelo CEP ou digite os dados referente ao endereço e clique no botão 'Adicionar'."} extra={this.getExtra()}>
                 { getFieldDecorator("endereco.id", { initialValue: id })(<Input type="hidden" />) }
                 <Row gutter = { 12 }>
-                    <Col span={ 4 }>
-                        <Form.Item label={"Tipo de Endereco"}>
+                    <Col span={ 6 }>
+                        <Form.Item label={"Razão Social"}>
+                            {
+                                getFieldDecorator('endereco.idClienteRazao', {
+                                    initialValue: null
+                                })(
+                                <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        >
+                                        {generateOptions(clienteRazaoList.map(({id, nomeFantasia}) => ({id, descricao: nomeFantasia})))}
+                                </Select>
+                                )
+                            }
+                        </Form.Item>
+                    </Col>
+                    <Col span={ 3 }>
+                        <Form.Item label={"Tipo de Endereço"}>
                             {
                                 //getFieldDecorator('endereco.tipoEndereco.id', {
                                 getFieldDecorator('endereco.idTipoEndereco', {
@@ -214,8 +236,8 @@ export default class TabEndereco extends React.Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>
-                    <Col span={ 4 }>
+                    </Col>                    
+                    <Col span={ 2 }>
                         <Form.Item label={"CEP"}>
                             {
                                 getFieldDecorator('endereco.cep', {
@@ -224,7 +246,7 @@ export default class TabEndereco extends React.Component {
                             }
                         </Form.Item>
                     </Col>            
-                    <Col span={ 12 }>
+                    <Col span={ 10 }>
                         <Form.Item label={"Logradouro"}>
                             {
                                 getFieldDecorator('endereco.logradouro', {
@@ -233,7 +255,7 @@ export default class TabEndereco extends React.Component {
                             }
                         </Form.Item>
                     </Col>      
-                    <Col span={ 4 }>
+                    <Col span={ 3 }>
                         <Form.Item label={"Número"}>
                             {
                                 getFieldDecorator('endereco.numero', {
@@ -325,6 +347,12 @@ export default class TabEndereco extends React.Component {
                                     size={"small"} 
                                     pagination={false}
                                     bordered>
+                                    <Table.Column title={<center>Razão social</center>} 
+                                                key={"idClienteRazao"} 
+                                                dataIndex={"idClienteRazao"} 
+                                                align={"center"} 
+                                                render={ (text) => clienteRazaoList.map(d => { if(d.id == text) return d.nomeFantasia }) }
+                                                />                                        
                                     <Table.Column title={<center>Tipo</center>} 
                                                 key={"idTipoEndereco"} 
                                                 dataIndex={"idTipoEndereco"} 

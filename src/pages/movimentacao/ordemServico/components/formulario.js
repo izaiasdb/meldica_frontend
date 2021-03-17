@@ -15,6 +15,7 @@ import { getTitle } from '../../../util/helper'
 import { openNotification } from '../../../util/notification'
 import { getCard } from '../../../util/miniCard'
 import DrawerTabelaPreco from './drawerTabelaPreco'
+import DrawerInfoCliente from './drawerInfoCliente'
 
 const { Meta } = Card
 
@@ -53,9 +54,34 @@ class Formulario extends Component {
 
     setActiveKey = (activeKey) => this.setState({activeKey})
 
+    getExtra = () => {
+        const { stateView } = this.props
+
+        return (
+            <div>
+                <Button 
+                    type={ "primary"} 
+                    onClick={this.voltar}
+                    style={{marginRight: '10px'}}>
+                        Voltar
+                </Button>
+                <Divider type="vertical" />
+                <Button 
+                    type={"primary"}
+                    disabled= {isEqual(stateView, VIEWING)}                             
+                    //htmlType={"submit"} // Tava comentado
+                    onClick={this.handleSubmit}
+                    //onClick={this.salvar}
+                    >                            
+                    { this.isSaving() ? 'Salvar' : 'Atualizar' } Pedido
+                </Button>
+            </div>
+        )
+    }
+
     render() {
         const { activeKey } = this.state
-        const { fetching, ordemServico, form, stateView, drawerVisivel, drawerKitVisivel, kitProdutoList = []} = this.props
+        const { fetching, ordemServico, form, stateView, drawerVisivel, drawerInfoClienteVisivel, drawerKitVisivel, kitProdutoList = []} = this.props
         const { getFieldDecorator, getFieldValue } = form
         const { 
             id, 
@@ -71,6 +97,8 @@ class Formulario extends Component {
         } = isNil(ordemServico) ? {} : ordemServico
 
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
+        let idClienteFrm = getFieldValue("ordemServico.cliente.id")
+        
         //console.log(getFieldValue("ordemServico.produtoItemsList"))
         //console.log(produtoItemsList)
         //let produtoItemsListForm = getFieldValue("ordemServico.produtoItemsList") || produtoItemsList
@@ -81,8 +109,8 @@ class Formulario extends Component {
         let transportadoraItemsListForm = isNil(getFieldValue("ordemServico.transportadoraItemsList"))  ? transportadoraItemsList : getFieldValue("ordemServico.transportadoraItemsList"); 
 
         //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
-        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.produto.idEmpresaProduto != 2).reduce((acum, {total}) => acum + total, 0);        
-        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.produto.idEmpresaProduto == 2).reduce((acum, {total}) => acum + total, 0);        
+        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto != 2).reduce((acum, {total}) => acum + total, 0);        
+        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto == 2).reduce((acum, {total}) => acum + total, 0);        
         let totalProdutoKit = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
         let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
         let totalProdutoCxDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado == false).reduce((acum, {desconto, quantidadeCaixa}) => acum + desconto * quantidadeCaixa, 0);
@@ -113,7 +141,8 @@ class Formulario extends Component {
         return (
             <Spin spinning={fetching}>
               <Form onSubmit={this.handleSubmit} >
-                <Card title={ getTitle(`${isEqual(stateView, VIEWING) ? 'Visualizando' : (this.isSaving() ? 'Cadastro' : 'Edição')} Pedido`) } >                    
+                <Card title={ getTitle(`${isEqual(stateView, VIEWING) ? 'Visualizando' : (this.isSaving() ? 'Cadastro' : 'Edição')} Pedido`) } 
+                    extra={this.getExtra()}>                    
                     { getFieldDecorator("ordemServico.id", { initialValue: id })(<Input type="hidden" />) }
                     { getFieldDecorator("ordemServico.idUsuarioInclusao", { initialValue: isNil(idUsuarioInclusao) ? null : idUsuarioInclusao})(<Input type="hidden" />) }
                     { getFieldDecorator("ordemServico.statusNota", { initialValue: isNil(statusNota) ? 'A' : statusNota})(<Input type="hidden" />) }
@@ -209,13 +238,17 @@ class Formulario extends Component {
                         </Col> */}
                         <Col span={ 3 }>
                         {
-                            getCard('Falta receber', '#DA120B', 'dollar', faltaReceber)
+                            getCard('Falta receber', '#6BD098', 'dollar', faltaReceber, true, true, true)
                         }   
                         </Col>   
                     </Row>                 
                     {/* <Divider /> */}
                     <Row>
-                        <TabDados {...this.props} showDrawer={this.showDrawer} onCloseDrawer={this.onCloseDrawer} />
+                        <TabDados {...this.props} 
+                            showDrawer={this.showDrawer} 
+                            showDrawerInfoCliente={this.showDrawerInfoCliente} 
+                            onCloseDrawer={this.onCloseDrawer}
+                            onCloseDrawerInfoCliente={this.onCloseDrawerInfoCliente} />
                     </Row>
                     <Row>
                         <TabEndereco {...this.props} />
@@ -261,6 +294,8 @@ class Formulario extends Component {
                 </Card>
             </Form>
             <DrawerTabelaPreco {...this.props} onCloseDrawer={this.onCloseDrawer} drawerVisivel={drawerVisivel} idTabelaPreco={idTabelaPreco} />
+            <DrawerInfoCliente {...this.props} onCloseDrawerInfoCliente={this.onCloseDrawerInfoCliente} drawerInfoClienteVisivel={drawerInfoClienteVisivel} idCliente={idClienteFrm} 
+            />
         </Spin>
         )
     }
@@ -310,6 +345,14 @@ class Formulario extends Component {
 
     onCloseDrawer = () => {
         this.props.setDrawerVisivel(false);
+    };
+
+    showDrawerInfoCliente = () => {
+        this.props.setDrawerInfoClienteVisivel(true);
+    };
+
+    onCloseDrawerInfoCliente = () => {
+        this.props.setDrawerInfoClienteVisivel(false);
     };
 
     showDrawerKit = () => {
@@ -364,7 +407,8 @@ const mapStateToProps = (state) => {
         stateView: state.ordemServico.stateView,
         fetching: state.ordemServico.fetching,  
         drawerVisivel: state.ordemServico.drawerVisivel,  
-        drawerKitVisivel: state.ordemServico.drawerKitVisivel,  
+        drawerKitVisivel: state.ordemServico.drawerKitVisivel, 
+        drawerInfoClienteVisivel: state.ordemServico.drawerInfoClienteVisivel, 
         kitProdutoList: state.ordemServico.kitProdutoList,  
         profile: state.login.data.profile,      
     }
@@ -379,6 +423,7 @@ const mapDispatchToProps = (dispatch) => ({
     salvar: (obj) => dispatch(Actions.ordemServicoSalvar(obj)),
     setDrawerVisivel: (drawerVisivel) => dispatch(Actions.ordemServicoSetDrawerVisivel(drawerVisivel)),
     setDrawerKitVisivel: (drawerKitVisivel) => dispatch(Actions.ordemServicoSetDrawerKitVisivel(drawerKitVisivel)),
+    setDrawerInfoClienteVisivel: (drawerInfoClienteVisivel) => dispatch(Actions.ordemServicoSetDrawerInfoClienteVisivel(drawerInfoClienteVisivel)),
     setKitProdutoList: (kitProdutoList) => dispatch(Actions.ordemServicoSetKitProdutoList(kitProdutoList)),
 })
 

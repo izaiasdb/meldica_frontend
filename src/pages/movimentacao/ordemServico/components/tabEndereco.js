@@ -129,7 +129,19 @@ export default class TabEndereco extends React.Component {
 
         const estado = getFieldValue("ordemServico.uf")
         const toInputUppercase = e => { e.target.value = ("" + e.target.value).toUpperCase(); };  
-        const idCliente = getFieldValue("ordemServico.cliente.id")      
+        const idClienteFrm = getFieldValue("ordemServico.cliente.id")   
+        const idClienteRazaoFrm = getFieldValue("ordemServico.idClienteRazao")   
+        let clienteEnderecoFilterList = []  
+        
+        if (!isNil(idClienteFrm)){
+            if (!isNil(idClienteRazaoFrm)){
+                clienteEnderecoFilterList = clienteEnderecoList.filter(c=> c.idClienteRazao == idClienteRazaoFrm)
+            }
+
+            if (clienteEnderecoFilterList == null || clienteEnderecoFilterList.length == 0){
+                clienteEnderecoFilterList = clienteEnderecoList.filter(c=> c.idCliente == idClienteFrm)
+            }
+        }
 
         return (<div>
             <Card title={"Busque pelo CEP ou digite os dados referente ao endereço de 'ENTREGA DA MERCADORIA.'"}>
@@ -151,7 +163,9 @@ export default class TabEndereco extends React.Component {
                                     onChange={(value, option) => this.handleEnderecoChange(value, option)}
                                     >
                                     <Option key={1} value={null}>{"Selecione"}</Option>
-                                    {generateOptions(idCliente && clienteEnderecoList.filter(c=> c.idCliente == idCliente)
+                                    {/* {generateOptions(idCliente && clienteEnderecoList.filter(c=> c.idCliente == idCliente)
+                                        .map(({id, logradouro}) => ({id, descricao: logradouro})))} */}
+                                    {generateOptions(idClienteFrm && clienteEnderecoFilterList
                                         .map(({id, logradouro}) => ({id, descricao: logradouro})))}
                                 </Select>
                             )

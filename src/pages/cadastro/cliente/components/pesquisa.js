@@ -105,6 +105,18 @@ class Pesquisa extends Component {
                             }
                         </Form.Item>
                     </Col> 
+                    <Col span={8}>
+                        <Form.Item label={"Razão Social"}>
+                            {
+                                getFieldDecorator('cliente.razaoSocial', {
+                                    initialValue: null
+                                })(
+                                    <Input //placeholder={"Digite o nome do cliente"} 
+                                        maxLength={200} onInput={toInputUppercase} />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                     
                     <Col span={ 4 }>
                         <Form.Item label={"CNPJ / CPF"}>
                             {

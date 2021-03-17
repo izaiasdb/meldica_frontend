@@ -30,6 +30,7 @@ const TabDados = (props) => {
         fisicaJuridica,
         cpfCnpj,
         inscricaoEstadual,
+        prazoPagamento,
         ativo,  
         email,
         site,
@@ -138,8 +139,23 @@ const TabDados = (props) => {
                         )
                     }
                 </Form.Item>
-            </Col>     
+            </Col>    
             <Col span={ 4 }>
+                <Form.Item label={"Prazo de pagamento"}>
+                    {
+                        getFieldDecorator('cliente.prazoPagamento', {
+                            rules: [
+                                { required: false, message: "Por favor, informe um CPF ou CNPJ." },
+                                //{ validator: validarCampoCPF },
+                            ],
+                            initialValue: prazoPagamento
+                        })(
+                            <Input maxLength={ 200 } onInput={toInputUppercase} />
+                        )
+                    }
+                </Form.Item>
+            </Col>             
+            <Col span={ 3 }>
                 <Form.Item label={"Limite de crédito"}>
                     {
                         getFieldDecorator('cliente.limiteCredito', {
@@ -155,7 +171,7 @@ const TabDados = (props) => {
                     }
                 </Form.Item>
             </Col>                    
-            <Col span={ 4 }>            
+            <Col span={ 2 }>            
                 <Form.Item label={"Ativo"}>
                 {
                     getFieldDecorator('cliente.ativo', {

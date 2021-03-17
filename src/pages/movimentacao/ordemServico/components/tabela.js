@@ -246,6 +246,24 @@ class Tabela extends Component {
                                     align={ "center" }
                                     render={(text) => text && moment(text, 'YYYY-MM-DD').format('DD/MM/YYYY')}
                                     width={'10%'}/>
+                    <Table.Column key={'dataPrevisaoEntrega'} 
+                                    dataIndex={'dataPrevisaoEntrega'} 
+                                    title={'Data Previsão Entrega'} 
+                                    align={ "center" }
+                                    render={(text) => text && moment(text, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+                                    width={'10%'}/>
+                    <Table.Column key={'dataLiberacao'} 
+                                    dataIndex={'dataLiberacao'} 
+                                    title={'Data liberação'} 
+                                    align={ "center" }
+                                    render={(text) => text && moment(text, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+                                    width={'10%'}/>
+                    <Table.Column key={'dataEntrega'} 
+                                    dataIndex={'dataEntrega'} 
+                                    title={'Data entrega'} 
+                                    align={ "center" }
+                                    render={(text) => text && moment(text, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+                                    width={'10%'}/>                                                                                                            
                     <Table.Column key={'statusNovaDescricao'} 
                                     dataIndex={'statusNovaDescricao'} 
                                     title={'Status Nota'} 
