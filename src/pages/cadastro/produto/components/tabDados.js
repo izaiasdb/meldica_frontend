@@ -257,7 +257,8 @@ const TabDados = (props) => {
                             initialValue: qtdEstoqueUnidade || 0
                         })(
                             <InputNumber style={{ width: "150" }} 
-                            disabled
+                            // Deixar ativo por enquanto que não controla estoque
+                            //disabled
                             min={0}
                             precision={3}
                             step={1}                            
@@ -359,7 +360,8 @@ const TabDados = (props) => {
                             initialValue: qtdEstoqueCaixa || 0
                         })(
                             <InputNumber style={{ width: "150" }} 
-                            disabled
+                            // Deixar ativo por enquanto que não controla estoque
+                            //disabled
                             min={0}
                             precision={3}
                             step={1}                            

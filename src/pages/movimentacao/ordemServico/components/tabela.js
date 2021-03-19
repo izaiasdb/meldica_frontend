@@ -100,20 +100,27 @@ class Tabela extends Component {
 
     getAcoes = (record) => {
         //console.log(getUser())
-        const { funcionario = {}} = getUser()
+        const { funcionario = {}, perfil = {}, } = getUser()
         const { id: idFuncionario } = funcionario || {}
+        const { id: idPerfil } = perfil || {}
 
         return (
             <div>
                 {
                 <>
                     {hasAnyAuthority("VENDAS_ALTERAR") && (
+                    
                     // Se for o vendedor que fez ou se estiver em 'A'
-                    (//record.funcionario.id == idFuncionario &&  
-                        record.statusNota == 'A') || // Só perfil vendedor
-                    // Se for o vendedor que fez ou se estiver em 'R'
-                    (//record.funcionario.id == idFuncionario && 
-                        record.statusNota == 'R' ) || 
+                    //record.funcionario.id == idFuncionario &&  
+                    (record.statusNota == 'A') || // Só perfil vendedor
+
+                    // Se for o administrador
+                    (idPerfil == 1 || idPerfil == 5) ||
+
+                    // Se for o vendedor que fez ou se estiver em 'R'                    
+                    //record.funcionario.id == idFuncionario && 
+                    (record.statusNota == 'R' ) || 
+
                     // Se tiver permissão para 'REABRIR', sinal que é da LOGÍSTICA
                     (record.statusNota == 'L' && hasAnyAuthority("VENDAS_-_REABRIR_ALTERAR")) ) &&
                     <Tooltip title="Editar Pedido">
@@ -239,31 +246,36 @@ class Tabela extends Component {
                                     dataIndex={'id'} 
                                     title={'Número'} 
                                     align={ "left" }
-                                    width={'8%'}/>   
+                                    //width={'8%'}
+                                    />   
                     <Table.Column key={'dataVenda'} 
                                     dataIndex={'dataVenda'} 
                                     title={'Data venda'} 
                                     align={ "center" }
                                     render={(text) => text && moment(text, 'YYYY-MM-DD').format('DD/MM/YYYY')}
-                                    width={'10%'}/>
+                                    //width={'10%'}
+                                    />
                     <Table.Column key={'dataPrevisaoEntrega'} 
                                     dataIndex={'dataPrevisaoEntrega'} 
                                     title={'Data Previsão Entrega'} 
                                     align={ "center" }
                                     render={(text) => text && moment(text, 'YYYY-MM-DD').format('DD/MM/YYYY')}
-                                    width={'10%'}/>
+                                    //width={'10%'}
+                                    />
                     <Table.Column key={'dataLiberacao'} 
                                     dataIndex={'dataLiberacao'} 
                                     title={'Data liberação'} 
                                     align={ "center" }
                                     render={(text) => text && moment(text, 'YYYY-MM-DD').format('DD/MM/YYYY')}
-                                    width={'10%'}/>
+                                    //width={'10%'}
+                                    />
                     <Table.Column key={'dataEntrega'} 
                                     dataIndex={'dataEntrega'} 
                                     title={'Data entrega'} 
                                     align={ "center" }
                                     render={(text) => text && moment(text, 'YYYY-MM-DD').format('DD/MM/YYYY')}
-                                    width={'10%'}/>                                                                                                            
+                                    //width={'10%'}
+                                    />                                                                                                            
                     <Table.Column key={'statusNovaDescricao'} 
                                     dataIndex={'statusNovaDescricao'} 
                                     title={'Status Nota'} 
@@ -276,6 +288,18 @@ class Tabela extends Component {
                                     dataIndex={'funcionario.nome'} 
                                     title={'Vendedor'} 
                                     align={ "left" }/>
+                    <Table.Column key={'nfMeldica'} 
+                                    dataIndex={'nfMeldica'} 
+                                    title={'NF Méldica'} 
+                                    align={ "left" }
+                                    //width={'8%'}
+                                    />
+                    <Table.Column key={'nfCosmetico'} 
+                                    dataIndex={'nfCosmetico'} 
+                                    title={'NF Cosmético'} 
+                                    align={ "left" }
+                                    //width={'8%'}
+                                    />                                                                          
                     <Table.Column key={'logistica'} 
                                     dataIndex={'logistica'} 
                                     title={'Logís.'} 

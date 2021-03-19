@@ -77,6 +77,25 @@ class Pesquisa extends Component {
                                 )
                             }
                         </Form.Item>
+                    </Col> 
+                     <Col span={4}>
+                        <Form.Item label={"Tipo Relatório"}>
+                            {
+                                getFieldDecorator('obj.tipoRelatorio', {
+                                    rules: [{required: true, message: 'Por favor, informe o tipo do relatório.'}],
+                                    initialValue: null
+                                })(
+                                    <Select showSearch
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        <Option key={1} value={null}>{"Selecione"}</Option>
+                                        <Option key={2} value={'N'}>{"MÉLDICA NATURAIS E ENCAPSULADOS"}</Option>
+                                        <Option key={3} value={'C'}>{"MÉLDICA COSMÉTICOS"}</Option>
+                                    </Select>
+                                )
+                            }
+                        </Form.Item>
                     </Col>                    
                 </Row>
                 <Row gutter={12}>
