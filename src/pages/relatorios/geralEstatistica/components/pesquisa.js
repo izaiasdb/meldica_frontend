@@ -12,6 +12,7 @@ import {
     STATE_RELATORIO_CONTAS_RECEBIDAS,
     STATE_RELATORIO_RESUMO_MENSAL,
     STATE_RELATORIO_LISTAGEM_VENDA,
+    STATE_RELATORIO_PRODUZIR,
 } from '../../../util/state'
 import Action from '../redux'
 
@@ -49,7 +50,11 @@ class Pesquisa extends Component {
                 break;
             case 7:
                 this.props.setState(STATE_RELATORIO_LISTAGEM_VENDA);
-                break;                                      
+                break;
+            case 8:
+                this.props.setState(STATE_RELATORIO_PRODUZIR);
+                break;
+                
             default:
                 this.props.setState(SEARCHING);
         }
@@ -89,6 +94,7 @@ class Pesquisa extends Component {
                                                 <TreeNode value={5} title="RELATÓRIO RESUMO MENSAL" //disabled={!hasAnyAuthority("RELATORIO_ATENDIMENTO_MEDICO_CONSULTAR")} 
                                                 />
                                                 <TreeNode value={7} title="RELATÓRIO LISTGAGEM VENDA" />
+                                                <TreeNode value={8} title="RELATÓRIO PRODUZIR" />
                                             </TreeNode>                                            
 {/* 
                                             <TreeNode value={18} title="RELATÓRIOS POPULAÇÃO CARCERÁRIA" >

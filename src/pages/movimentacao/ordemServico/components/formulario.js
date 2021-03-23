@@ -109,19 +109,19 @@ class Formulario extends Component {
         let transportadoraItemsListForm = isNil(getFieldValue("ordemServico.transportadoraItemsList"))  ? transportadoraItemsList : getFieldValue("ordemServico.transportadoraItemsList"); 
 
         //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
-        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto != 2).reduce((acum, {total}) => acum + total, 0).toFixed(2);        
-        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto == 2).reduce((acum, {total}) => acum + total, 0).toFixed(2);        
-        let totalProdutoKit = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0).toFixed(2);
-        let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0).toFixed(2);
+        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto != 2).reduce((acum, {total}) => acum + total, 0);        
+        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto == 2).reduce((acum, {total}) => acum + total, 0);
+        let totalProdutoKit = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
+        let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
         
         //DESCONTOS
-        let totalProdutoCxDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado == false).reduce((acum, {desconto, quantidadeCaixa}) => acum + desconto * quantidadeCaixa, 0).toFixed(2);
-        let totalProdutoUnidadeDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0).toFixed(2);
-        let totalProdutoKitDesconto = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0).toFixed(2);
-        let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0).toFixed(2);
-        let totalDescForma = formaItemsListForm.filter(c=> c.tipoForma == "P").reduce((acum,{desconto}) => acum + Number(desconto), 0).toFixed(2);
+        let totalProdutoCxDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado == false).reduce((acum, {desconto, quantidadeCaixa}) => acum + desconto * quantidadeCaixa, 0);
+        let totalProdutoUnidadeDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0);
+        let totalProdutoKitDesconto = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0);
+        let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);
+        let totalDescForma = formaItemsListForm.filter(c=> c.tipoForma == "P").reduce((acum,{desconto}) => acum + Number(desconto), 0);
         // Idenpendente se é produto ou frete, pois pode ser pago os dois com cartão
-        let totalDescFormaCondicao = formaItemsListForm.reduce((acum,{descontoFormaCondicao}) => acum + Number(descontoFormaCondicao), 0).toFixed(2);
+        let totalDescFormaCondicao = formaItemsListForm.reduce((acum,{descontoFormaCondicao}) => acum + Number(descontoFormaCondicao), 0);
         //let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
         
         //VOLUMES E PESOS
@@ -172,12 +172,12 @@ class Formulario extends Component {
                         </Col>                                  
                         <Col span={ 3 }>
                         {
-                            getCard('Produtos(Naturais)', '#FBC658', 'code-sandbox', totalProdutoMeldica)
+                            getCard('Produtos(Naturais)', '#FBC658', 'code-sandbox', totalProdutoMeldica.toFixed(2))
                         }
                         </Col>
                         <Col span={ 3 }>
                         {
-                            getCard('Produtos(Cosmético)', '#FBC658', 'code-sandbox', totalProdutoCosmetico)
+                            getCard('Produtos(Cosmético)', '#FBC658', 'code-sandbox', totalProdutoCosmetico.toFixed(2))
                         }
                         </Col>                        
                         {/* <Col span={ 3 }>
@@ -187,12 +187,12 @@ class Formulario extends Component {
                         </Col>                                                 */}
                         <Col span={ 3 }>
                         {
-                            getCard('Total frete', '#6BD098', 'car', totalFrete ? totalFrete : 0)
+                            getCard('Total frete', '#6BD098', 'car', totalFrete ? totalFrete.toFixed(2) : 0)
                         }
                         </Col>
                         <Col span={ 3 }>
                         {
-                            getCard('Total a pagar', '#6BD098', 'dollar', totalPedido ? totalPedido : 0)
+                            getCard('Total a pagar', '#6BD098', 'dollar', totalPedido ? totalPedido.toFixed(2) : 0)
                         }
                         </Col>                            
                         {/* <Col span={ 3 }>
@@ -202,7 +202,7 @@ class Formulario extends Component {
                         </Col> */}
                         <Col span={ 3 }>
                         {
-                            getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago : 0)
+                            getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago.toFixed(2) : 0)
                         }
                         </Col>                          
                       
@@ -220,7 +220,7 @@ class Formulario extends Component {
                         </Col>
                         <Col span={ 3 }>                            
                         {
-                            getCard('Total Nota Fiscal', '#6BD098', 'dollar', totalNF ? totalNF : 0)
+                            getCard('Total Nota Fiscal', '#6BD098', 'dollar', totalNF ? totalNF.toFixed(2) : 0)
                         }
                         </Col>                          
                         {/* <Col span={ 3 }>
@@ -230,12 +230,12 @@ class Formulario extends Component {
                         </Col>                           */}
                         <Col span={ 3 }>
                         {
-                            getCard('Tot. desc. produto', '#FBC658', 'code-sandbox', totalProdutoDesconto, true, false)
+                            getCard('Tot. desc. produto', '#FBC658', 'code-sandbox', totalProdutoDesconto.toFixed(2), true, false)
                         }  
                         </Col>     
                         <Col span={ 3 }>
                         {
-                            getCard('Tot. desc. forma', '#FBC658', 'code-sandbox', totalDescForma, true, false)
+                            getCard('Tot. desc. forma', '#FBC658', 'code-sandbox', totalDescForma.toFixed(2), true, false)
                         }  
                         </Col>     
                         {/* <Col span={ 3 }>
@@ -245,7 +245,7 @@ class Formulario extends Component {
                         </Col> */}
                         <Col span={ 3 }>
                         {
-                            getCard('Falta receber', '#6BD098', 'dollar', faltaReceber, true, true, true)
+                            getCard('Falta receber', '#6BD098', 'dollar', faltaReceber.toFixed(2), true, true, true)
                         }   
                         </Col>   
                     </Row>                 

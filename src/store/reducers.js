@@ -39,13 +39,14 @@ const rootReducer = combineReducers({
   
     //************************************ Financeiro ************************************/      
     contasReceber: require('../pages/financeiro/contasReceber/redux').reducer,    
-
+ 
     //************************************ Relatórios ************************************/
     relatorioGeral: require('../pages/relatorios/geralEstatistica/redux').reducer,
     relatorioPagarReceber: require('../pages/relatorios/relatorioPagarReceber/redux').reducer,
     relatorioPagasRecebidas: require('../pages/relatorios/relatorioPagasRecebidas/redux').reducer,
     relatorioResumoMensal: require('../pages/relatorios/relatorioResumoMensal/redux').reducer,
     relatorioListagemVenda: require('../pages/relatorios/relatorioListagemVenda/redux').reducer,
+    relatorioProduzir: require('../pages/relatorios/relatorioProduzir/redux').reducer,
 
 });
 

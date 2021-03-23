@@ -81,12 +81,14 @@ import { RelatorioPagarReceberTypes } from '../pages/relatorios/relatorioPagarRe
 import { RelatorioPagasRecebidasTypes } from '../pages/relatorios/relatorioPagasRecebidas/redux';
 import { RelatorioResumoMensalTypes } from '../pages/relatorios/relatorioResumoMensal/redux';
 import { RelatorioListagemVendaTypes } from '../pages/relatorios/relatorioListagemVenda/redux';
+import { RelatorioProduzirTypes } from '../pages/relatorios/relatorioProduzir/redux';
 
 import * as RelatorioGeral from '../pages/relatorios/geralEstatistica/sagas';
 import * as RelatorioPagarReceber from '../pages/relatorios/relatorioPagarReceber/sagas';
 import * as RelatorioPagasRecebidas from '../pages/relatorios/relatorioPagasRecebidas/sagas';
 import * as RelatorioResumoMensal from '../pages/relatorios/relatorioResumoMensal/sagas';
 import * as RelatorioListagemVenda from '../pages/relatorios/relatorioListagemVenda/sagas';
+import * as RelatorioProduzir from '../pages/relatorios/relatorioProduzir/sagas';
 
 
 const api = API.create();
@@ -238,5 +240,9 @@ export default function * root () {
 
         takeLatest(RelatorioListagemVendaTypes.RELATORIO_LISTAGEM_VENDA_INIT, RelatorioListagemVenda.fetch, api),
         takeLatest(RelatorioListagemVendaTypes.RELATORIO_LISTAGEM_VENDA_IMPRIMIR, RelatorioListagemVenda.imprimir, api),
+
+        takeLatest(RelatorioProduzirTypes.RELATORIO_PRODUZIR_INIT, RelatorioProduzir.fetch, api),
+        takeLatest(RelatorioProduzirTypes.RELATORIO_PRODUZIR_IMPRIMIR, RelatorioProduzir.imprimir, api),
+        
     ])
 }

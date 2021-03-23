@@ -10,6 +10,7 @@ import RelatorioPagarReceber from '../../relatorioPagarReceber/container/relator
 import RelatorioPagasRecebidas from '../../relatorioPagasRecebidas/container/relatorioPagasRecebidas'
 import RelatorioResumoMensal from '../../relatorioResumoMensal/container/relatorioResumoMensal'
 import RelatorioListagemVenda from '../../relatorioListagemVenda/container/relatorioListagemVenda'
+import RelatorioProduzir from '../../relatorioProduzir/container/relatorioProduzir'
 
 import {
     SEARCHING,
@@ -19,6 +20,7 @@ import {
     STATE_RELATORIO_CONTAS_RECEBIDAS,
     STATE_RELATORIO_RESUMO_MENSAL,
     STATE_RELATORIO_LISTAGEM_VENDA,
+    STATE_RELATORIO_PRODUZIR
 } from '../../../util/state'
 
 class Relatorio extends Component {
@@ -75,7 +77,15 @@ class Relatorio extends Component {
                     <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
                         {'Relatório Listagem Venda'}
                     </span>
-                }             
+                }
+
+                {isEqual(state, STATE_RELATORIO_PRODUZIR) &&
+                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                        {'Relatório Produzir'}
+                    </span>
+                }           
+
+                          
 
             </>
         )
@@ -115,6 +125,10 @@ class Relatorio extends Component {
 
                 {isEqual(state, STATE_RELATORIO_LISTAGEM_VENDA) &&
                     <RelatorioListagemVenda />
+                }
+
+                {isEqual(state, STATE_RELATORIO_PRODUZIR) &&
+                    <RelatorioProduzir />
                 }
 
 

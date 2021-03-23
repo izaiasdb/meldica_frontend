@@ -12,7 +12,8 @@ export const getCard = (nome, color, icon, value, formata = true, currency = tru
     let valorFormatado = value;
 
     if (formata) {
-        valorFormatado = value.toFixed(2)
+        //valorFormatado = value.toFixed(2)
+        valorFormatado = value
     }
     
     return (
