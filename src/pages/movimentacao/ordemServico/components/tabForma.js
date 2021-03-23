@@ -491,7 +491,7 @@ export default class TabForma extends React.Component {
                                 valuePropName: 'dataSource'
                             })(
                                 <Table rowKey={(row) => row.id || row.formaCondicaoPagamento && row.formaCondicaoPagamento.id} size={"small"} 
-                                expandedRowRender={(record, index, indent, expanded) => expandedRowRender(record, index, indent, expanded) }
+                                    expandedRowRender={(record, index, indent, expanded) => expandedRowRender(record, index, indent, expanded) }
                                     pagination={false} bordered>
                                     <Table.Column title={<center>Forma pagamento</center>} key={"nomeFormaPagamento"} dataIndex={"nomeFormaPagamento"} align={"center"} />
                                     <Table.Column title={<center>Condição pagamento</center>} key={"nomeCondicaoPagamento"} dataIndex={"nomeCondicaoPagamento"} align={"center"} />
@@ -513,7 +513,7 @@ export default class TabForma extends React.Component {
                                     {/* <Table.Column title={<center>Desconto Forma Condição</center>} key={"descontoFormaCondicao"} dataIndex={"descontoFormaCondicao"} align={"center"} /> */}
                                     <Table.Column title={<center>Total c/ desconto</center>} key={"total"} dataIndex={"total"} align={"center"}
                                         render={
-                                            (text, record) => record.valor - record.desconto
+                                            (text, record) => (record.valor - record.desconto).toFixed(2)
                                         } />
                                     {/* <Table.Column title={<center>Total a receber</center>} key={"total"} dataIndex={"total"} align={"center"}
                                         render={

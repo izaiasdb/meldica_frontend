@@ -45,7 +45,7 @@ const rootReducer = combineReducers({
     relatorioPagarReceber: require('../pages/relatorios/relatorioPagarReceber/redux').reducer,
     relatorioPagasRecebidas: require('../pages/relatorios/relatorioPagasRecebidas/redux').reducer,
     relatorioResumoMensal: require('../pages/relatorios/relatorioResumoMensal/redux').reducer,
-    
+    relatorioListagemVenda: require('../pages/relatorios/relatorioListagemVenda/redux').reducer,
 
 });
 

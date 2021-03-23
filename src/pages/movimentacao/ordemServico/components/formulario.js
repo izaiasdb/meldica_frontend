@@ -109,24 +109,31 @@ class Formulario extends Component {
         let transportadoraItemsListForm = isNil(getFieldValue("ordemServico.transportadoraItemsList"))  ? transportadoraItemsList : getFieldValue("ordemServico.transportadoraItemsList"); 
 
         //let totalProduto = produtoItemsListForm.filter(c=> c.bonificacao == false).reduce((acum,{valor, quantidade}) => acum + (Number(quantidade) * Number(valor)), 0);
-        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto != 2).reduce((acum, {total}) => acum + total, 0);        
-        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto == 2).reduce((acum, {total}) => acum + total, 0);        
-        let totalProdutoKit = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0);
-        let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
-        let totalProdutoCxDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado == false).reduce((acum, {desconto, quantidadeCaixa}) => acum + desconto * quantidadeCaixa, 0);
-        let totalProdutoUnidadeDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0);
-        let totalProdutoKitDesconto = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0);
+        let totalProdutoMeldica = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto != 2).reduce((acum, {total}) => acum + total, 0).toFixed(2);        
+        let totalProdutoCosmetico = produtoItemsListForm.filter(c=> c.bonificacao == false && c.idEmpresaProduto == 2).reduce((acum, {total}) => acum + total, 0).toFixed(2);        
+        let totalProdutoKit = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {total}) => acum + total, 0).toFixed(2);
+        let totalPesoProd = produtoItemsListForm.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0).toFixed(2);
+        
+        //DESCONTOS
+        let totalProdutoCxDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado == false).reduce((acum, {desconto, quantidadeCaixa}) => acum + desconto * quantidadeCaixa, 0).toFixed(2);
+        let totalProdutoUnidadeDesconto = produtoItemsListForm.filter(c=> c.bonificacao == false && c.fracionado).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0).toFixed(2);
+        let totalProdutoKitDesconto = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0).toFixed(2);
+        let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0).toFixed(2);
+        let totalDescForma = formaItemsListForm.filter(c=> c.tipoForma == "P").reduce((acum,{desconto}) => acum + Number(desconto), 0).toFixed(2);
+        // Idenpendente se é produto ou frete, pois pode ser pago os dois com cartão
+        let totalDescFormaCondicao = formaItemsListForm.reduce((acum,{descontoFormaCondicao}) => acum + Number(descontoFormaCondicao), 0).toFixed(2);
+        //let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
+        
+        //VOLUMES E PESOS
         //let totalPesoKit = kitProdutoList.reduce((acum,{pesoUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(pesoUnidade)), 0);
         let totalPesoKit = kitList.reduce((acum,{peso}) => acum + peso, 0);
         let totalVolumeProd = produtoItemsListForm.reduce((acum,{quantidadeUnidade, quantidadeNaCaixa}) => acum + (Number(quantidadeUnidade) / Number(quantidadeNaCaixa)), 0);
         let totalVolumeKit = kitList.reduce((acum,) => acum + 1, 0);
-        let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);
-        let totalDescForma = formaItemsListForm.filter(c=> c.tipoForma == "P").reduce((acum,{desconto}) => acum + Number(desconto), 0);
-        let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
         let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
         let totalPedido = (totalProdutoMeldica ? totalProdutoMeldica : 0) + (totalProdutoCosmetico ? totalProdutoCosmetico : 0) +  (totalProdutoKit ? totalProdutoKit : 0) + (totalFrete ? totalFrete : 0);
+        
         //let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalFormaDescontos ? totalFormaDescontos : 0);
-        let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalDescForma ? totalDescForma : 0);
+        let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - ( (totalDescForma ? totalDescForma : 0) + (totalDescFormaCondicao ? totalDescFormaCondicao : 0));
         let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeCaixa}) => acum + (Number(quantidadeCaixa) * Number(valorNfCaixa)), 0);
         let totalNFUnidade = produtoItemsListForm.filter(c=> c.fracionado == true).reduce((acum,{ valorNfUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfUnidade)), 0);
         let totalNFKit = kitList.reduce((acum,{ valorNf}) => acum + valorNf, 0);

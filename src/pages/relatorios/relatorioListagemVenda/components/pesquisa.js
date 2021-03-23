@@ -33,7 +33,6 @@ class Pesquisa extends Component {
                     return
                 }
 
-                //this.props.pesquisar(obj)
                 this.props.imprimir(obj)                
             } else {
                 openNotification({ tipo: 'warning', descricao: 'Existem campos obrigatórios a serem preenchidos.' })
@@ -110,12 +109,6 @@ class Pesquisa extends Component {
                         onClick={this.limpar}>
                         Limpar
                     </Button>
-                    {/* <Button type={"primary"}
-                        style={{ marginLeft: '10px' }}
-                        disabled={}
-                        onClick={this.limpar}>
-                        Imprimir
-                    </Button>                     */}
                 </Row>
             </Form>
         )
@@ -124,16 +117,16 @@ class Pesquisa extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        ...state.relatorioResumoMensal.data,
-        fetching: state.relatorioResumoMensal.fetching,
+        ...state.relatorioListagemVenda.data,
+        fetching: state.relatorioListagemVenda.fetching,
         profile: state.login.data.profile, 
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    cleanTable: () => dispatch(Action.relatorioResumoMensalCleanTable()),
-    pesquisar: (obj) => dispatch(Action.relatorioResumoMensalPesquisar(obj)),
-    imprimir: (obj) => dispatch(Action.relatorioResumoMensalImprimir(obj)),
+    cleanTable: () => dispatch(Action.relatorioListagemVendaCleanTable()),
+    pesquisar: (obj) => dispatch(Action.relatorioListagemVendaPesquisar(obj)),
+    imprimir: (obj) => dispatch(Action.relatorioListagemVendaImprimir(obj)),
 })
 
 const wrapedPesquisa = Form.create()(Pesquisa)

@@ -9,6 +9,7 @@ import Action from '../redux'
 import RelatorioPagarReceber from '../../relatorioPagarReceber/container/relatorioPagarReceber'
 import RelatorioPagasRecebidas from '../../relatorioPagasRecebidas/container/relatorioPagasRecebidas'
 import RelatorioResumoMensal from '../../relatorioResumoMensal/container/relatorioResumoMensal'
+import RelatorioListagemVenda from '../../relatorioListagemVenda/container/relatorioListagemVenda'
 
 import {
     SEARCHING,
@@ -17,6 +18,7 @@ import {
     STATE_RELATORIO_CONTAS_PAGAS,
     STATE_RELATORIO_CONTAS_RECEBIDAS,
     STATE_RELATORIO_RESUMO_MENSAL,
+    STATE_RELATORIO_LISTAGEM_VENDA,
 } from '../../../util/state'
 
 class Relatorio extends Component {
@@ -67,7 +69,13 @@ class Relatorio extends Component {
                     <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
                         {'Relatório Resumo Mensal'}
                     </span>
-                }                
+                }   
+
+                {isEqual(state, STATE_RELATORIO_LISTAGEM_VENDA) &&
+                    <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                        {'Relatório Listagem Venda'}
+                    </span>
+                }             
 
             </>
         )
@@ -104,6 +112,11 @@ class Relatorio extends Component {
                 {isEqual(state, STATE_RELATORIO_RESUMO_MENSAL) &&
                     <RelatorioResumoMensal />
                 }
+
+                {isEqual(state, STATE_RELATORIO_LISTAGEM_VENDA) &&
+                    <RelatorioListagemVenda />
+                }
+
 
             </Card>
 
