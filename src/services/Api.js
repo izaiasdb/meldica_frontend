@@ -206,7 +206,9 @@ const create = () => {
     pesquisar: (obj) => api.post('/ordemServico/pesquisar', obj),
     salvar: (obj) => api.post('/ordemServico/salvar', obj),
     alterarStatus: (obj) => api.post('/ordemServico/alterarStatus', obj), 
-    imprimir: (obj) => api.post('/ordemServico/imprimir', {...obj,}),   
+    imprimir: (obj) => api.post('/ordemServico/imprimir', {...obj,}),
+    gerarFinanceiro: (id) => api.get(`/ordemServico/gerarfinanceiro/${id}`),
+    deletarFinanceiro: (id) => api.get(`/ordemServico/deletarfinanceiro/${id}`),
   }
 
    //************************************ Financeiro ************************************/

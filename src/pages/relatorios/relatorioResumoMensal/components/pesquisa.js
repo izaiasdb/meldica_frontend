@@ -10,7 +10,17 @@ import { hasAnyAuthority } from '../../../../services/authenticationService'
 import { openNotification } from '../../../util/notification'
 import Action from '../redux'
 
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+
 class Pesquisa extends Component {
+
+    constructor(props){
+        super(props)
+
+        this.state = { 
+            periodo: "01/" + moment().format('MM/YYYY')
+        }
+    }
 
     componentDidMount() {
         const { state, form: { setFieldsValue }, obj } = this.props
@@ -25,16 +35,17 @@ class Pesquisa extends Component {
 
     pesquisar = e => {
         this.handleCleanTable();
+        const { periodo } = this.state
         e.preventDefault();
         this.props.form.validateFields((err, { obj }) => {
             if (!err) {
-                if (isNil(obj.periodoVenda) || obj.periodoVenda.length == 0) {
-                    openNotification({tipo: 'warning', descricao: 'Por favor, período deve ser informado.'})
-                    return
-                }
+                // if (isNil(obj.periodoVenda) || obj.periodoVenda.length == 0) {
+                //     openNotification({tipo: 'warning', descricao: 'Por favor, período deve ser informado.'})
+                //     return
+                // }
 
-                //this.props.pesquisar(obj)
-                this.props.imprimir(obj)                
+                //console.log(obj)
+                this.props.imprimir({...obj, dataInicio: periodo})                
             } else {
                 openNotification({ tipo: 'warning', descricao: 'Existem campos obrigatórios a serem preenchidos.' })
             }
@@ -50,6 +61,10 @@ class Pesquisa extends Component {
     handleCleanTable() {
         const { cleanTable } = this.props
         cleanTable()
+    }
+
+    dataHandleChange = (date, dateString) => {
+        this.setState({ periodo: "01/" + dateString })
     }
 
     render() {
@@ -68,13 +83,25 @@ class Pesquisa extends Component {
                     <Col span={6}>
                         <Form.Item label={"Período"} >
                             {
-                                getFieldDecorator('obj.periodoVenda', {
+                                // getFieldDecorator('obj.periodoVenda', {
+                                //     rules: [{required: true, message: 'Por favor, informe o período.'}],
+                                //     initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
+                                // })(
+                                //     <DatePicker.RangePicker format={'DD/MM/YYYY'} moment='YYYY-MM-DD'
+                                //         onChange={() => this.handleCleanTable()} />
+                                // )
+
+                                getFieldDecorator('obj.dataInicio', {
                                     rules: [{required: true, message: 'Por favor, informe o período.'}],
-                                    initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
+                                    initialValue: new moment(),
                                 })(
-                                    <DatePicker.RangePicker format={'DD/MM/YYYY'} moment='YYYY-MM-DD'
-                                        onChange={() => this.handleCleanTable()} />
-                                )
+                                    <MonthPicker 
+                                        placeholder="Selecione o mês"
+                                        format={'MM/YYYY'}
+                                        //value={new moment()} 
+                                        onChange={this.dataHandleChange} 
+                                    />
+                                )                                
                             }
                         </Form.Item>
                     </Col> 

@@ -113,6 +113,46 @@ export function * alterarStatus (api, { obj })  {
   }
 }
 
+export function * gerarFinanceiro (api, { id })  {
+  try {
+    const response = yield call(api.OrdemServico.gerarFinanceiro, id)
+    
+    if (response.ok) {
+      yield put(Actions.ordemServicoSuccess({
+        message: {
+          tipo: 'success', descricao: `Registro salvo com sucesso.`
+        }
+      }))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.ordemServicoFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.ordemServicoFailure())
+  }
+}
+
+export function * deletarFinanceiro (api, { id })  {
+  try {
+    const response = yield call(api.OrdemServico.deletarFinanceiro, id)
+    
+    if (response.ok) {
+      yield put(Actions.ordemServicoSuccess({
+        message: {
+          tipo: 'success', descricao: `Registro salvo com sucesso.`
+        }
+      }))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.ordemServicoFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.ordemServicoFailure())
+  }
+}
+
 export function* imprimir(api, { id }) {
   try {
     //const { id: idUsuario, unidadeAtual = {} } = getUser();

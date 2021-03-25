@@ -71,7 +71,39 @@ class Tabela extends Component {
               console.log('Cancelar');
             },
         });
+    } 
+    
+    gerarFinanceiro = (ordemServico) => {
+        const { confirm } = Modal;
+        const { gerarFinanceiro } = this.props;
+
+        confirm({
+            title: `Tem certeza que deseja gerar financeiro?`,
+            content: 'GERAR FINANCEIRO!',
+            onOk() {
+                gerarFinanceiro(ordemServico.id)
+            },
+            onCancel() {
+              console.log('Cancelar');
+            },
+        });
     }  
+
+    deletarFinanceiro = (ordemServico) => {
+        const { confirm } = Modal;
+        const { deletarFinanceiro } = this.props;
+
+        confirm({
+            title: `Tem certeza que deseja deletar financeiro?`,
+            content: 'DELETAR FINANCEIRO!',
+            onOk() {
+                deletarFinanceiro(ordemServico.id)
+            },
+            onCancel() {
+              console.log('Cancelar');
+            },
+        });
+    }      
     
     imprimirEvent = (ordemServico) => {
         // this.props.setStateView(stateView)
@@ -108,6 +140,36 @@ class Tabela extends Component {
             <div>
                 {
                 <>
+                    {
+                    hasAnyAuthority("VENDAS_ALTERAR") &&
+                      // Se for o administrador
+                    (idPerfil == 1 || idPerfil == 5) &&
+                    <>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Gerar financeiro">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'dollar' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.gerarFinanceiro(record)}></Icon>
+                    </Tooltip>
+                    </>
+                    }
+
+                    {
+                    hasAnyAuthority("VENDAS_ALTERAR") &&
+                      // Se for o administrador
+                    (idPerfil == 1 || idPerfil == 5) &&
+                    <>
+                    <Divider type="vertical"/>
+                    <Tooltip title="Deletar financeiro">
+                        <Icon style={{cursor: 'pointer'}} 
+                            type={ 'stop' } 
+                            className={'tabela-icone'}
+                            onClick={(e) => this.deletarFinanceiro(record)}></Icon>
+                    </Tooltip>
+                    </>
+                    }
+
                     {hasAnyAuthority("VENDAS_ALTERAR") && (
                     
                     // Se for o vendedor que fez ou se estiver em 'A'
@@ -338,7 +400,8 @@ const mapDispatchToProps = (dispatch) => ({
     cleanTable: () => dispatch(Actions.ordemServicoCleanTable()),
     setKitProdutoList: (kitProdutoList) => dispatch(Actions.ordemServicoSetKitProdutoList(kitProdutoList)),
     imprimir: (id) => dispatch(Actions.ordemServicoImprimir(id)),
-    
+    gerarFinanceiro: (id) => dispatch(Actions.ordemServicoGerarFinanceiro(id)),
+    deletarFinanceiro: (id) => dispatch(Actions.ordemServicoDeletarFinanceiro(id)),
 })
 
 export default connect(

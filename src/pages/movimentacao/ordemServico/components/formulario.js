@@ -210,7 +210,7 @@ class Formulario extends Component {
                     <Row gutter={2}>
                         <Col span={ 3 }>
                         {
-                            getCard('Total peso', '#FBC658', 'arrow-down', totalPeso ? totalPeso : 0, true, false)
+                            getCard('Total peso', '#FBC658', 'arrow-down', totalPeso ? totalPeso.toFixed(2) : 0, true, false)
                         } 
                         </Col>
                         <Col span={ 3 }>

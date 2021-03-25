@@ -25,12 +25,8 @@ class Dashboard extends Component {
     }   
 
     componentDidMount() {
-        //this.props.getTotalColaboradorPorTipo();
-        //this.props.getPopulacaoTotalPorUnidade();
-
         const { idTipoDashboard, periodo } = this.state
-
-        this.pesquisarVenda(idTipoDashboard, periodo)
+        //this.pesquisarVenda(idTipoDashboard, periodo)
     }
 
     // getDatasetForColaboradorTotal = (colaboradorTotal) => {
@@ -100,31 +96,41 @@ class Dashboard extends Component {
     getCard = (nome, color, icon, value) => {
         return (<Col span={6}>
             <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} >
-                <Meta avatar = { <Avatar size={72} icon={icon} style = {{ color, backgroundColor: '#fff' }}/> }
-                      title={<span style={{ 'fontSize': '16px', 'fontWeight' : 'bold'}}>{nome}</span>}
-                      description = {
-                            <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '2em', 'color' : '#000'}}>
-                                { value }
-                            </div>
-                      }
+                <Meta 
+                    // avatar = { 
+                    //     <Avatar size={72} icon={icon} style = {{ color, backgroundColor: '#fff' }}/> 
+                    // }
+                    title={<span style={{ 'fontSize': '16px', 'fontWeight' : 'bold'}}>{nome}</span>}
+                    description = {
+                        <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '2em', 'color' : '#000'}}>
+                            { value }
+                        </div>
+                    }
                 />
             </Card>
         </Col>)
     }
 
+    getDescricao = (vendaList) => {
+        if (vendaList.length > 0) {
+            return ( vendaList[0].descricao )
+        } else {
+            return ( "" )
+        }
+    }
+
     render(){
         let { 
             fetching, 
-            //totalColaboradorPorTipo = [], 
             vendaList = []  
         } = this.props
         
         const { 
-            //unidade = {}, 
-            idTipoDashboard 
+            idTipoDashboard,
+            periodo,
         } = this.state
-        //populacaoTotalPorUnidade = unidade.id ? populacaoTotalPorUnidade.filter(i => i.unidade == unidade.abreviacao) : populacaoTotalPorUnidade
         //populacaoTotalPorUnidade = cloneDeep(populacaoTotalPorUnidade).sort((a, b) => b.total - a.total)
+        let pula = 1;
 
         return (
             <Spin spinning={ fetching }>
@@ -161,15 +167,21 @@ class Dashboard extends Component {
                                             onChange={this.dataHandleChange} 
                                             placeholder="Selecione o mês"
                                             format={'MM/YYYY'}
-                                            value={new moment()} />
+                                            value={new moment()} 
+                                            //value={new moment(periodo)}
+                                        />
                                         }
                                     </Form.Item>
                                 </Col>
                             </Row>
-                            { idTipoDashboard == '1' && vendaList.length > 0 &&
+                            
+                            { 
+                            // EMPRESA
+                            idTipoDashboard == '1' && vendaList.length > 0 &&
+                            <>
                             <Row gutter={24}>
                                 <Card 
-                                    title={"VENDAS GERAL"} 
+                                    title={`TOTAL VENDA - POR EMPRESA` + this.getDescricao(vendaList)} 
                                     style={{ 'borderRadius' : '1em', margin: '20px',// 'height': '400px' 
                                     }}
                                     >
@@ -177,117 +189,121 @@ class Dashboard extends Component {
                                         {
                                             vendaList.map((venda, index) => {
                                                 return (
-                                                    this.getCard(venda.descricao, '#51BCDA', 'global', venda.valor + " cx")
+                                                    this.getCard(venda.empresa, '#51BCDA', 'global', venda.valor.toFixed(2))
                                                 )
                                             })
                                         }
                                     </Row>
                                 </Card>                                                              
                             </Row>
-                            }
-                            { idTipoDashboard == '2' && vendaList.length > 0 &&
                             <Row gutter={24}>
                                 <Card 
-                                    title={"VENDAS POR FUNCIONÁRIO"} 
-                                    style={{ 'borderRadius' : '1em', margin: '20px' }}
+                                    title={`QUANTIDADE CAIXA - POR EMPRESA` + this.getDescricao(vendaList)} 
+                                    style={{ 'borderRadius' : '1em', margin: '20px',// 'height': '400px' 
+                                    }}
                                     >
                                     <Row gutter={24}>
                                         {
-                                        vendaList.map((venda, index) => {
-                                            return (
-                                                this.getCard(venda.descricao, '#6BD098', 'global', venda.valor + " cx")
-                                            )
-                                        })
+                                            vendaList.map((venda, index) => {
+                                                return (
+                                                    this.getCard(venda.empresa, '#51BCDA', 'global', venda.caixa.toFixed(2))
+                                                )
+                                            })
                                         }
                                     </Row>
                                 </Card>                                                              
                             </Row>
+                            <Row gutter={24}>
+                                <Card 
+                                    title={`QUANTIDADE VENDA - POR EMPRESA` + this.getDescricao(vendaList)} 
+                                    style={{ 'borderRadius' : '1em', margin: '20px',// 'height': '400px' 
+                                    }}
+                                    >
+                                    <Row gutter={24}>
+                                        {
+                                            vendaList.map((venda, index) => {
+                                                return (
+                                                    this.getCard(venda.empresa, '#51BCDA', 'global', venda.venda)
+                                                )
+                                            })
+                                        }
+                                    </Row>
+                                </Card>                                                              
+                            </Row>                                                       
+                            </>
+                            }
+                            { idTipoDashboard == '2' && vendaList.length > 0 &&
+                            <>
+                            <Row gutter={24}>
+                                <Card 
+                                    title={`TOTAL VENDA - POR FUNCIONÁRIO` + this.getDescricao(vendaList)} 
+                                    style={{ 'borderRadius' : '1em', margin: '20px',// 'height': '400px' 
+                                    }}
+                                    >
+                                    <Row gutter={24}>
+                                    {
+                                        vendaList.map((venda, index) => {
+                                            return (
+                                                this.getCard(venda.empresa + " - " + venda.funcionario, '#51BCDA', 'global', venda.valor.toFixed(2))
+                                            )
+                                        })
+                                    }
+                                    </Row>
+                                    {/* {
+                                        vendaList.map((venda, index) => {
+                                            // if (pula == 2) {
+                                            return (
+                                                <Row gutter={24}>
+                                                {                                                
+                                                    this.getCard(venda.empresa + " - " + venda.funcionario, '#51BCDA', 'global', venda.valor.toFixed(2))
+                                                }
+                                                </Row>
+                                            )
+                                            // } else {
+                                            //     pula = 1;
+                                            // }
+                                        }) 
+                                    }                                        */}
+                                </Card>                                                              
+                            </Row>
+                            <Row gutter={24}>
+                                <Card 
+                                    title={`QUANTIDADE CAIXA - POR FUNCIONÁRIO` + this.getDescricao(vendaList)} 
+                                    style={{ 'borderRadius' : '1em', margin: '20px',// 'height': '400px' 
+                                    }}
+                                    >
+                                    <Row gutter={24}>
+                                        {
+                                            vendaList.map((venda, index) => {
+                                                return (
+                                                    this.getCard(venda.empresa + " - " + venda.funcionario, '#51BCDA', 'global', venda.caixa.toFixed(2))
+                                                )
+                                            })
+                                        }
+                                    </Row>
+                                </Card>                                                              
+                            </Row>
+                            <Row gutter={24}>
+                                <Card 
+                                    title={`QUANTIDADE VENDA - POR FUNCIONÁRIO` + this.getDescricao(vendaList)} 
+                                    style={{ 'borderRadius' : '1em', margin: '20px',// 'height': '400px' 
+                                    }}
+                                    >
+                                    <Row gutter={24}>
+                                        {
+                                            vendaList.map((venda, index) => {
+                                                return (
+                                                    this.getCard(venda.empresa + " - " + venda.funcionario, '#51BCDA', 'global', venda.venda)
+                                                )
+                                            })
+                                        }
+                                    </Row>
+                                </Card>                                                              
+                            </Row>                                                       
+                            </>
                             }      
                         </Card>
                     </Col>
-                </Row>
-                
-                <Row gutter={24}>
-                    {/* <Col span={6}>
-                        <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} >
-                            <Meta avatar = {
-                                    <Avatar size={72} icon={"global"} style = {{ color : '#FBC658', backgroundColor : '#fff' }}/>
-                                }
-                                title={<span style={{ 'fontWeight' : 'bold'}}>População Total</span>}
-                                description = {
-                                    <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '2em', 'color' : '#000'}}>
-                                    {
-                                        isNil(populacaoTotalPorUnidade) || isEmpty(populacaoTotalPorUnidade) ? "" : populacaoTotalPorUnidade.reduce((acum,{total}) => acum+Number(total), 0)
-                                    }
-                                    </div>
-                                }
-                            />
-                        </Card>
-                    </Col> */}
-                    {/* <Col span={6}>
-                        <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}}>
-                            <Meta avatar = {
-                                    <Avatar size={72} icon={"solution"} style = {{ color : '#6BD098', backgroundColor : '#fff' }}/>
-                                }
-                                title={<div style={{ 'fontWeight' : 'bold', 'textAlign': 'center'}}>Servidores</div>}
-                                description = {
-                                    <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '2em', 'color' : '#000'}}>
-                                    {
-                                        isNil(totalColaboradorPorTipo) || isEmpty(totalColaboradorPorTipo) ? "" : totalColaboradorPorTipo.find(i => i.tipo === 'SERVIDOR').qtd
-                                    }
-                                    </div>
-                                }
-                            />
-                        </Card>
-                    </Col> */}
-                    {/* <Col span={6}>
-                        <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}}>
-                            <Meta avatar = {
-                                    <Avatar size={72} icon={"solution"} style = {{ color : '#51BCDA', backgroundColor : '#fff' }}/>
-                                }
-                                title={<div style={{ 'fontWeight' : 'bold', 'textAlign': 'center'}}>Terceirizados</div>}
-                                description = {
-                                    <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '2em', 'color' : '#000'}}>
-                                    {
-                                        isNil(totalColaboradorPorTipo) || isEmpty(totalColaboradorPorTipo) ? "" : totalColaboradorPorTipo.find(i => i.tipo === 'TERCEIRIZADO').qtd
-                                    }
-                                    </div>
-                                }
-                            />
-                        </Card>
-                    </Col> */}
-                    {/* <Col span={6}>
-                        <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}}>
-                            <Meta avatar = {
-                                    <Avatar size={72} icon={"solution"} style = {{ color : '#DA120B', backgroundColor : '#fff' }}/>
-                                }
-                                title={<div style={{ 'fontWeight' : 'bold', 'textAlign': 'center' }}>Egressos</div>}
-                                description = {
-                                    <div style={{'textAlign' : 'center', 'fontWeight' : 'bold', 'fontSize' : '2em', 'color' : '#000'}}>
-                                    {
-                                        isNil(totalColaboradorPorTipo) || isEmpty(totalColaboradorPorTipo) ? "" : totalColaboradorPorTipo.find(i => i.tipo === 'EGRESSO').qtd
-                                    }
-                                    </div>
-                                }
-                            />
-                        </Card>
-                    </Col> */}
-                </Row>                
-                <Row gutter={24}>
-                    {/* <Col span={24}>
-                        <Card style={{ 'borderRadius' : '1em', 'marginBottom' : '10px'}} extra={this.getExtra()}>
-                        {
-                            unidade && unidade.id == null &&
-                            <Bar data={this.getDatasetForPopulacaoTotalPorUnidade(populacaoTotalPorUnidade)}></Bar>
-                        }
-                        {
-                            unidade && unidade.id != null && 
-                            <Carousel effect={'fade'} autoplay>
-                                { this.listarMensagenUnidades() }
-                            </Carousel>
-                        }
-                        </Card>
-                    </Col> */}
                 </Row>
             </Spin>
         )

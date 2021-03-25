@@ -213,6 +213,8 @@ export default function * root () {
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_PESQUISAR, OrdemServico.pesquisar, api),                        
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_ALTERAR_STATUS, OrdemServico.alterarStatus, api),
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_IMPRIMIR, OrdemServico.imprimir, api),
+        takeLatest(OrdemServicoTypes.ORDEM_SERVICO_GERAR_FINANCEIRO, OrdemServico.gerarFinanceiro, api),
+        takeLatest(OrdemServicoTypes.ORDEM_SERVICO_DELETAR_FINANCEIRO, OrdemServico.deletarFinanceiro, api),
 
         //************************************ Financeiro ************************************/
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_INIT_RECEBER, ContasReceber.initReceber, api),

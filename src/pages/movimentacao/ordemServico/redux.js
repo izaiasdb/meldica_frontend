@@ -23,6 +23,8 @@ const { Types, Creators } = createActions({
    ordemServicoSetDrawerKitVisivel: ['drawerKitVisivel'],
    ordemServicoSetKitProdutoList: ['kitProdutoList'],
    ordemServicoImprimir : ['id'],
+   ordemServicoGerarFinanceiro : ['id'],
+   ordemServicoDeletarFinanceiro : ['id'],
    
 });
 
@@ -103,6 +105,8 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.ORDEM_SERVICO_OBTER]                 : request,
   [Types.ORDEM_SERVICO_PESQUISAR]             : request,
   [Types.ORDEM_SERVICO_IMPRIMIR]              : request,  
+  [Types.ORDEM_SERVICO_GERAR_FINANCEIRO]      : request,  
+  [Types.ORDEM_SERVICO_DELETAR_FINANCEIRO]    : request,  
   [Types.ORDEM_SERVICO_ALTERAR_STATUS]        : request,
   [Types.ORDEM_SERVICO_SUCCESS]               : success,
   [Types.ORDEM_SERVICO_FAILURE]               : failure,
