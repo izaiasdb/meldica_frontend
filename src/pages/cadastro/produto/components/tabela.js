@@ -72,11 +72,11 @@ class Tabela extends Component {
                                     title={'Tipo Produto'} 
                                     align={ "left" }
                                     render={ (text, record) => text}/>
-                    <Table.Column key={'valorVenda'} 
+                    <Table.Column key={'valorVendaUnidade'} 
                                     dataIndex={'valorVendaUnidade'} 
                                     title={'Valor Venda Unidade'} 
                                     align={ "left" }/>
-                    <Table.Column key={'valorVenda'} 
+                    <Table.Column key={'valorVendaCaixa'} 
                                     dataIndex={'valorVendaCaixa'} 
                                     title={'Valor Venda Caixa'} 
                                     align={ "left" }/> 

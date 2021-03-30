@@ -311,6 +311,8 @@ export default class TabForma extends React.Component {
                 )
             }
         };  
+
+        let empresaFilterList = empresaList.filter(c=> c.id != 3);
         
         return (<div>
             <Card title={"Informe os dados referente as formas de pagamento do pedido"} extra={this.getExtra()}>
@@ -336,7 +338,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>               
                     </Col>
-                    <Col span = { 3 }>
+                    <Col span = { 4 }>
                         <Form.Item label={"Empresa"}>
                             {
                                 getFieldDecorator('osForma.idEmpresa', {})(
@@ -348,13 +350,13 @@ export default class TabForma extends React.Component {
                                         filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                         disabled= {isEqual(stateView, VIEWING)}
                                         >
-                                        {generateOptions(empresaList)}
+                                        {generateOptions(empresaFilterList)}
                                     </Select>
                                 )
                             }
                         </Form.Item>               
                     </Col>                    
-                    <Col span={ 3 }>
+                    <Col span={ 2 }>
                         <Form.Item label={"Tipo Forma"}>
                             {
                                 getFieldDecorator('osForma.tipoForma', {

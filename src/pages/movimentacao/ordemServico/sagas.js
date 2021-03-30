@@ -153,11 +153,11 @@ export function * deletarFinanceiro (api, { id })  {
   }
 }
 
-export function* imprimir(api, { id }) {
+export function* imprimir(api, { obj }) {
   try {
     //const { id: idUsuario, unidadeAtual = {} } = getUser();
     //const { id: idUnidade } = unidadeAtual  
-    const response = yield call(api.OrdemServico.imprimir, { id })
+    const response = yield call(api.OrdemServico.imprimir, {...obj })
     
     if (response.ok) {
       const report = get(response, ['data'], {})

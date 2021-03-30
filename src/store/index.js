@@ -6,7 +6,12 @@ import rootSaga from "./rootSaga";
 const sagaMiddleware = createSagaMiddleware();
 let middleware = applyMiddleware(sagaMiddleware);
 
-const finalCreateStore = compose(middleware)(createStore);
+var composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+//var composeEnhancers = (window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()) || compose;
+
+// Antes
+//const finalCreateStore = compose(middleware)(createStore);
+const finalCreateStore = composeEnhancers(middleware)(createStore);
 
 export const configureStore = function configureStore(devTools) {
     

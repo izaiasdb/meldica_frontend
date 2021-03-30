@@ -282,13 +282,21 @@ class Tabela extends Component {
                             onClick={(e) => this.setModo(record, VIEWING)} />
                     </Tooltip>  
                     <Divider type="vertical"/>
-                    <Tooltip title="Imprimir">
+                    <Tooltip title="Imprimir Naturais e Encapsulados">
                         <Icon 
                             className={'tabela-icone'}
                             type={ 'printer' } 
-                            onClick={(e) => this.props.imprimir(record.id)}
+                            onClick={(e) => this.props.imprimir({ ...record, tipoRelatorio: "N" })}
                             />
-                    </Tooltip>                                   
+                    </Tooltip>  
+                    <Divider type="vertical"/>
+                    <Tooltip title="Imprimir Cosméticos">
+                        <Icon 
+                            className={'tabela-icone'}
+                            type={ 'printer' } 
+                            onClick={(e) => this.props.imprimir({ ...record, tipoRelatorio: "C" })}
+                            />
+                    </Tooltip>                                                       
                 </>
                 }
             </div> 
@@ -399,7 +407,7 @@ const mapDispatchToProps = (dispatch) => ({
     cleanMessage: ()  => dispatch(Actions.ordemServicoCleanMessage()),
     cleanTable: () => dispatch(Actions.ordemServicoCleanTable()),
     setKitProdutoList: (kitProdutoList) => dispatch(Actions.ordemServicoSetKitProdutoList(kitProdutoList)),
-    imprimir: (id) => dispatch(Actions.ordemServicoImprimir(id)),
+    imprimir: (obj) => dispatch(Actions.ordemServicoImprimir(obj)),
     gerarFinanceiro: (id) => dispatch(Actions.ordemServicoGerarFinanceiro(id)),
     deletarFinanceiro: (id) => dispatch(Actions.ordemServicoDeletarFinanceiro(id)),
 })

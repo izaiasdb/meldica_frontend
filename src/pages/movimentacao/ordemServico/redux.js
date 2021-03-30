@@ -22,7 +22,7 @@ const { Types, Creators } = createActions({
    ordemServicoSetDrawerInfoClienteVisivel: ['drawerInfoClienteVisivel'],
    ordemServicoSetDrawerKitVisivel: ['drawerKitVisivel'],
    ordemServicoSetKitProdutoList: ['kitProdutoList'],
-   ordemServicoImprimir : ['id'],
+   ordemServicoImprimir : ['obj'],
    ordemServicoGerarFinanceiro : ['id'],
    ordemServicoDeletarFinanceiro : ['id'],
    
