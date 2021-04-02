@@ -109,9 +109,9 @@ class Pesquisa extends Component {
                     <Col span={6}>
                         <Form.Item label={"Período"} >
                             {
-                                getFieldDecorator('contasReceber.periodo', {
+                                getFieldDecorator('contasReceber.periodoVencimento', {
                                     initialValue: [moment(primeiroDiaMes, dateFormat), moment(ultimoDiaMes, dateFormat)],
-                                    rules: [{required: true, message: 'Por favor, informe um período.'}],
+                                    rules: [{required: false, message: 'Por favor, informe um período.'}],
                                 })(
                                     <DatePicker.RangePicker 
                                         format={'DD/MM/YYYY'} 
@@ -142,7 +142,21 @@ class Pesquisa extends Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>                      
+                    </Col> 
+                    <Col span={ 3 }>
+                        <Form.Item label={"Competência"}>
+                            {
+                                getFieldDecorator('contasReceber.competencia', {
+                                    rules: [{required: false, message: 'Por favor, informe o cliente.'}],
+                                })(
+                                    <Input 
+                                        placeholder={"Competência"} 
+                                        maxLength={6} 
+                                    />
+                                )
+                            }
+                        </Form.Item>
+                    </Col>                                         
                 </Row>
                 <Row gutter={12}>
                     <Col span={ 12 }>

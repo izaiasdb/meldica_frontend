@@ -219,6 +219,7 @@ export default function * root () {
         //************************************ Financeiro ************************************/
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_INIT_RECEBER, ContasReceber.initReceber, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_INIT_PAGAR, ContasReceber.initPagar, api),
+        takeLatest(ContasReceberTypes.CONTAS_RECEBER_OBTER, ContasReceber.obter, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_SALVAR, ContasReceber.salvar, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_PESQUISAR_RECEBER, ContasReceber.pesquisarReceber, api),
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_PESQUISAR_PAGAR, ContasReceber.pesquisarPagar, api),

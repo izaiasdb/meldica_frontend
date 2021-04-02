@@ -35,6 +35,23 @@ export function * initPagar (api)  {
   }
 }
 
+export function * obter(api, { id })  {
+  try {    
+    const response = yield call(api.ContasReceber.obter, id)
+
+    if (response.ok) {
+      const contasReceber = get(response, ['data'], {})
+      yield put(Actions.contasReceberSetContasReceber(contasReceber))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.contasReceberFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.contasReceberFailure())
+  }
+}
+
 export function * pesquisarPagar (api, { contasReceber })  {
   try {
     console.log('opa')    

@@ -140,10 +140,12 @@ class Tabela extends Component {
             <div>
                 {
                 <>
-                    {
+                    {// GERAR FINANCEIRO
                     hasAnyAuthority("VENDAS_ALTERAR") &&
                       // Se for o administrador
                     (idPerfil == 1 || idPerfil == 5) &&
+                    // Só pode gerar se estiver FECHADA, TRANSPORTE, ENTREGUE
+                    (record.statusNota == 'F' || record.statusNota == 'T' || record.statusNota == 'E') && 
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Gerar financeiro">
@@ -155,10 +157,12 @@ class Tabela extends Component {
                     </>
                     }
 
-                    {
+                    {// DELETAR FINANCEIRO
                     hasAnyAuthority("VENDAS_ALTERAR") &&
                       // Se for o administrador
                     (idPerfil == 1 || idPerfil == 5) &&
+                    // Só pode deletar se estiver FECHADA, TRANSPORTE, ENTREGUE
+                    (record.statusNota == 'F' || record.statusNota == 'T' || record.statusNota == 'E' || record.statusNota == 'C') && 
                     <>
                     <Divider type="vertical"/>
                     <Tooltip title="Deletar financeiro">
@@ -170,8 +174,8 @@ class Tabela extends Component {
                     </>
                     }
 
-                    {hasAnyAuthority("VENDAS_ALTERAR") && (
-                    
+                    {// EDITAR PEDIDO
+                    hasAnyAuthority("VENDAS_ALTERAR") && (
                     // Se for o vendedor que fez ou se estiver em 'A'
                     //record.funcionario.id == idFuncionario &&  
                     (record.statusNota == 'A') || // Só perfil vendedor
@@ -192,7 +196,8 @@ class Tabela extends Component {
                             onClick={(e) => this.setModo(record, EDITING)}></Icon>
                     </Tooltip>
                     }
-                    {
+
+                    {// ENVIAR PARA LOGÍSTICA
                     //record.funcionario.id == idFuncionario && 
                     record.statusNota == 'A' && hasAnyAuthority("VENDAS_-_LOGISTICA_ALTERAR") &&
                     <>
@@ -205,7 +210,8 @@ class Tabela extends Component {
                     </Tooltip>
                     </>
                     }
-                    {
+
+                    {// REABRIR PEDIDO
                     record.statusNota == 'L' && hasAnyAuthority("VENDAS_-_REABRIR_ALTERAR") && //LÓGISTICA
                     // record.statusNota == 'N'  //CONCLUÍDA
                     <>
@@ -217,8 +223,9 @@ class Tabela extends Component {
                             onClick={(e) => this.alterarStatusTabela(record, 'R', 'REABRIR')}></Icon>
                     </Tooltip>
                     </>
-                    }                    
-                    {
+                    }  
+
+                    {// FECHAR PEDIDO
                     record.statusNota == 'R' && hasAnyAuthority("VENDAS_-_FECHAR_ALTERAR") && // REABERTA
                     // record.statusNota != 'C' && record.formaGerada == false &&
                     // hasAnyAuthority("VENDAS_-_APROVAR_ALTERAR") && //CONCLUÍDA
@@ -232,7 +239,8 @@ class Tabela extends Component {
                     </Tooltip>
                     </>
                     }  
-                    { 
+
+                    {// LIBERAR PEDIDO
                     record.statusNota == 'F' && hasAnyAuthority("VENDAS_-_LIBERAR_ALTERAR") && 
                     // record.statusNota != 'C' && record.estoqueGerado == false &&
                     // hasAnyAuthority("VENDAS_-_LIBERAR_ALTERAR") && //APROVADA
@@ -245,7 +253,8 @@ class Tabela extends Component {
                     </Tooltip>
                     </>
                     }
-                    {
+
+                    {// ENTREGAR PEDIDO
                         record.statusNota == 'T' && //record.estoqueGerado == true && 
                         hasAnyAuthority("VENDAS_-_ENTREGAR_ALTERAR") && //LIBERADA
                         <>
@@ -256,8 +265,9 @@ class Tabela extends Component {
                                 type={ 'audit' } onClick={(e) => this.alterarStatusTabela(record, 'E', 'ENTREGAR')}></Icon>
                         </Tooltip>
                         </>
-                    }                     
-                    {
+                    } 
+
+                    {// CANCELAR PEDIDO
                     // CONCLUÍDA(N) APROVADA(O) PAGA(P) LIBERADA (L)
                     //(record.statusNota == 'N' || record.statusNota == 'O'
                     // || record.statusNota == 'P' || record.statusNota == 'L'

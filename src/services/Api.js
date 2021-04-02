@@ -216,6 +216,7 @@ const create = () => {
    const ContasReceber = {
     initReceber: () => api.post('/pagarReceber/initReceber'),
     initPagar: () => api.post('/pagarReceber/initPagar'),
+    obter: (id) => api.get(`/pagarReceber/${id}`),
     pesquisarReceber: (obj) => api.post('/pagarReceber/pesquisar', {...obj, receitaDespesa: 'R'} ),
     pesquisarPagar: (obj) => api.post('/pagarReceber/pesquisar', {...obj, receitaDespesa: 'D'} ),
     salvar: (obj) => api.post('/pagarReceber/salvar', obj),

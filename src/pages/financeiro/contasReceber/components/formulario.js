@@ -38,6 +38,15 @@ class Formulario extends Component {
         }
     }
 
+    componentDidMount() {
+        const { contasReceber, obter } = this.props
+        const { id } = isNil(contasReceber) ? {} : contasReceber        
+
+        if(!isNil(id)){
+            obter(id)
+        }
+    }
+
     setActiveKey = (activeKey) => this.setState({activeKey})
 
     showModal = (record) => {
@@ -208,6 +217,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+    obter: (id) => dispatch(Actions.contasReceberObter(id)), 
     cleanMessage: ()  => dispatch(Actions.contasReceberCleanMessage()),
     cleanTable: () => dispatch(Actions.contasReceberCleanTable()),
     setStateView: (stateView) => dispatch(Actions.contasReceberSetStateView(stateView)),

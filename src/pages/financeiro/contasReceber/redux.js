@@ -9,6 +9,7 @@ import { MESSAGE_ERROR_DEFAULT } from '../../util/messages'
 const { Types, Creators } = createActions({
    contasReceberInitReceber: null,
    contasReceberInitPagar: null,
+   contasReceberObter: ['id'],
    contasReceberSuccess: ['dados'],
    contasReceberPesquisarReceber: ['contasReceber'],
    contasReceberPesquisarPagar: ['contasReceber'],
@@ -67,7 +68,7 @@ export const cleanTable = (state) => state.merge({data: {...state.data, list: []
 
 export const setStateView = (state, action) => state.merge({stateView: action.stateView})
 export const setTipoTela = (state, action) => state.merge({tipoTela: action.tipoTela})
-export const setContasReceber = (state, { contasReceber }) => state.merge({contasReceber})
+export const setContasReceber = (state, { contasReceber }) => state.merge({contasReceber, fetching: false})
 export const setContasReceberItem = (state, { contasReceberItem }) => state.merge({contasReceberItem})
 
 export const setContasReceberItems = (state, { contasReceberItems }) => state.merge({
@@ -84,6 +85,7 @@ export const finalizarContasReceber = (state, { contasReceber }) => state.merge(
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.CONTAS_RECEBER_INIT_RECEBER]            : request,
   [Types.CONTAS_RECEBER_INIT_PAGAR]              : request,
+  [Types.CONTAS_RECEBER_OBTER]                   : request,
   [Types.CONTAS_RECEBER_SUCCESS]                 : success,
   [Types.CONTAS_RECEBER_PESQUISAR_RECEBER]       : request,
   [Types.CONTAS_RECEBER_PESQUISAR_PAGAR]         : request,

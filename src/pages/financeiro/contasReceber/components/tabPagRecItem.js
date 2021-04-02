@@ -78,7 +78,7 @@ export default class TabForma extends React.Component {
         setFieldsValue({contasReceber: { pagarReceberItemsList } }, () => {
             setFieldsValue({
                 pagarReceberItem: { id: null,
-                    formaCondicaoPagamento: { id: null},
+                    formaCondicaoPagamento: { id: 1},
                     valor: 0,
                     juros: 0,
                     acrescimo: 0,
@@ -134,7 +134,7 @@ export default class TabForma extends React.Component {
         const { form: { getFieldsValue, setFieldsValue }, } = this.props
         const fields = getFieldsValue()
         fields.pagarReceberItem = {
-            formaCondicaoPagamento: { id: null},
+            formaCondicaoPagamento: { id: 1},
             valor: 0,
             juros: 0,
             acrescimo: 0,
@@ -176,37 +176,12 @@ export default class TabForma extends React.Component {
                 { getFieldDecorator("pagarReceberItem.nomeFormaPagamento", { initialValue: formaPagamentoNome })(<Input type="hidden" />) }
                 { getFieldDecorator("pagarReceberItem.nomeCondicaoPagamento", { initialValue: condicaoPagamentoNome })(<Input type="hidden" />) }
                 <Row gutter={12}>
-                    {/* <Col span={ 24 }>
-                        <Form.Item label={"Forma condição de pagamento"}>
-                            {
-                                getFieldDecorator('pagarReceberItem.formaCondicaoPagamento.id', {})(
-                                    <Select showSearch
-                                            optionFilterProp="children"
-                                            //placeholder={"Digite para buscar"}
-                                            //onChange={(value) => this.handleChangeForma(value)}
-                                            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                            >
-                                        <Option key={1} value={null}>{"Selecione"}</Option>
-                                        {generateOptions(formaCondicaoList.map(({id, formaPagamento, condicaoPagamento }) => ({id, descricao: formaPagamento.nome + ' - ' + condicaoPagamento.nome})))}
-                                    </Select>
-                                )
-
-                                // <Select showSearch
-                                // optionFilterProp="children"
-                                // filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                // >
-                                // <Option key={1} value={null}>{"Selecione"}</Option>
-                                // {generateOptions(clienteList)}
-                        // </Select>
-                            }
-                        </Form.Item>
-                    </Col> */}
                     <Col span={ 24 }>
                         <Form.Item label={`Forma condição de ${isEqual(tipoTela, 'PAGAR') ? 'pagamento': 'recebimento'}`}>
                             {
                                 getFieldDecorator('pagarReceberItem.formaCondicaoPagamento.id', {
                                     rules: [{required: false, message: 'Por favor, informe o cliente.'}],
-                                    initialValue: 1//isNil(cliente) ? null : cliente.id
+                                    initialValue: 1
                                 })(
                                 <Select showSearch
                                         optionFilterProp="children"
@@ -262,7 +237,7 @@ export default class TabForma extends React.Component {
                     <Col span={ 24 }>
                         <Form.Item label={"Observação"} >
                             {
-                                getFieldDecorator('pagarReceberItem.observacoes', {
+                                getFieldDecorator('pagarReceberItem.observacao', {
                                     rules: [{ required: false, message: "Por favor, informe a observação."}],
                                 })(<Input.TextArea 
                                         disabled= {isEqual(stateView, VIEWING)}
