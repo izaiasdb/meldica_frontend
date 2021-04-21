@@ -8,7 +8,7 @@ import Actions from '../redux'
 import '../../assets/css/topo.css'
 import logo from '../../assets/images/logo.png';
 import { getUser } from '../../services/authenticationService';
-// import BuscaRapida from './pages/buscaRapida/buscaRapida';
+import BuscaRapida from '../../pages/buscaRapida/buscaRapida';
 import LoginActions from '../../pages/login/redux'
 import { generateOptions } from '../../pages/util/helper'
 import AlterarSenha from '../../pages/alterarSenha/alterarSenha'
@@ -161,7 +161,9 @@ class MainLayout extends Component {
                 {/* Méldica */}
               </div>
               
-              {/* <BuscaRapida /> */}       
+              <div className="topoBuscaRapida">
+                <BuscaRapida />
+              </div>                
 
               <div style={{ float: "right", width: '8%', height: '65px', display: 'flex'}}>
                 {/* <div style={{ float: "right", marginLeft: '8px'}} >

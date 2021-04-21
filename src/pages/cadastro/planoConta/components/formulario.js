@@ -18,7 +18,6 @@ class Formulario extends Component {
         this.props.init()
     }   
 
-
     UNSAFE_componentWillReceiveProps(nextProps){
         const message = get(nextProps, ['message'], "")
 

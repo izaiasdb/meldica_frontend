@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import BuscaRapidaActions from './redux'
 import { connect } from 'react-redux'
 import { Select } from 'antd';
-import ImageUtil from '../util/imageUtil'
-import { PRESTADOR_SERVICO, ADVOGADO_DEFENSOR, VISITANTE_FAMILIAR, CUSTODIADO } from '../util/tipoPessoa'
+import { CLIENTE, FORNECEDOR, FUNCIONARIO } from '../util/tipoPessoa'
 import { Link, withRouter, Redirect } from 'react-router-dom'
 
 const { Option } = Select;
@@ -17,7 +16,7 @@ class BuscaRapida extends Component {
 
     handleSearch = (searchValue = '') => {
         if(searchValue.length >= 3) {
-            this.props.search(searchValue)
+            this.props.search({nome : searchValue})
         } else {
             this.props.cleanSearch();
         }
@@ -28,106 +27,63 @@ class BuscaRapida extends Component {
         this.setState({redirect: true, pessoa: result.find(i => i.id == value) })
     }
 
-    getLink = (pessoaTipos, id) =>{
-        if (pessoaTipos.length > 0){
-            const idTipoPessoa = pessoaTipos[0].idTipoPessoa.toString()
-
-            switch (idTipoPessoa) {                                
-                case CUSTODIADO:
-                    return `/ficha/custodiado/${id}`
-                case ADVOGADO_DEFENSOR:
-                    return `/ficha/pessoa/${id}/${ADVOGADO_DEFENSOR}`
-                    break;
-                case VISITANTE_FAMILIAR:
-                    return `/ficha/pessoa/${id}/${VISITANTE_FAMILIAR}`
-                    break;
-                case PRESTADOR_SERVICO:
-                    return `/ficha/pessoa/${id}/${PRESTADOR_SERVICO}`
-                    break;                
-                // default: 
-                //     return `/ficha/${tipo == 'S' ? 'custodiado' : 'visitante'}/${id}`
-                //     break;
-            } 
-        // }  else {
-        //     return `/ficha/${tipo == 'S' ? 'custodiado' : 'visitante'}/${id}`
-        } 
-    }
-
-    getTipo = (pessoaTipos, tipo) => {    
-        if (pessoaTipos.length > 0){
-            const idTipoPessoa = pessoaTipos[0].idTipoPessoa.toString()
-
-            switch (idTipoPessoa) {                                
-                case CUSTODIADO:
-                    return "CUST."
-                    break;                
-                case ADVOGADO_DEFENSOR:
-                    return "ADV."
-                    break;
-                case VISITANTE_FAMILIAR:
-                    return "VIST."
-                    break;
-                case PRESTADOR_SERVICO:
-                    return "PREST."
-                    break;                
-                default: 
-                    return tipo == 'S' ? 'CUST' : 'VIST'
-                    break;
-            } 
-        } else {
-            return tipo == 'S' ? 'CUST' : 'VIST'
-        }                   
+    getLink = (id, tipoPessoa) =>{
+        switch (tipoPessoa) {                                
+            case CLIENTE:
+                return `/ficha/${id}/${CLIENTE}`
+            case FORNECEDOR:
+                return `/ficha/${id}/${FORNECEDOR}`
+            case FUNCIONARIO:
+                return `/ficha/${id}/${FUNCIONARIO}`
+        }         
     }
 
     render() {
         const { redirect, pessoa = {} } = this.state
+
         if(redirect) {
-            const { id, pessoaTipos = [] } = pessoa
+            const { id, tipoPessoa } = pessoa
             this.setState({redirect: false, pessoa: {}})
-            return <Redirect to={this.getLink(pessoaTipos, id)} />
+
+            return <Redirect to={this.getLink(id, tipoPessoa)} />
         }
+
         const { result = [], fetching } = this.props
         const options = result.map((pessoa) => {
-            const { id, foto, nome, ehPreso: tipo, pessoaTipos = [], unidade = {} } = pessoa
+            const { id, nome, tipoPessoa } = pessoa
             
             return (<Option key={id} value={id} >
-                    {/* <Link to={this.getLink(pessoaTipos, id, tipo)}> */}
-                        <a>
-                            <div style={{display: 'flex'}}>
-                                <div style={{paddingRight: '10px'}}>
-                                    {
-                                        `${this.getTipo(pessoaTipos, tipo)} | ${id} | ${nome} | ${unidade.abreviacao}`
-                                    }
-                                </div>
-                                <ImageUtil src={foto} 
-                                           title={nome} 
-                                           size={40} 
-                                           maxHeight={"40px"}
-                                           loading={fetching}
-                                    />
-                            </div>
-                        </a>
-                        {/* </Link> */}
+                    <a>
+                        <div style={{display: 'flex'}}>
+                            <div style={{paddingRight: '10px'}}>
+                                {
+                                    `${tipoPessoa} | ${id} | ${nome}`
+                                }
+                            </div>                            
+                        </div>
+                    </a>
                 </Option>)
         })
 
         return (
-            <div style={{'alignItems': 'center', 'display': 'flex'}}>
-                <Select placeholder={"Busca Rápida"} 
-                        showArrow={false}
-                        defaultActiveFirstOption={false}
-                        onSearch={this.handleSearch}
-                        filterOption={false}
-                        style={{ width: '600px', paddingRight: '10px' }}
-                        notFoundContent={null}
-                        loading={fetching}
-                        onSelect={this.handleSelect}
-                        autoFocus
-                        showSearch
-                        allowClear>
-                    {options}
-                </Select>
-            </div>
+            // <div style={{'alignItems': 'center', 'display': 'flex'}}>
+            <div className="selectBuscaRapida">
+            <Select placeholder={"Busca Rápida"} 
+                    showArrow={false}
+                    defaultActiveFirstOption={false}
+                    onSearch={(value) => this.handleSearch(value)}
+                    filterOption={false}
+                    style={{ width: '100%', paddingRight: '10px' }}
+                    notFoundContent={null}
+                    loading={fetching}
+                    onSelect={this.handleSelect}
+                    autoFocus
+                    showSearch 
+                    dropdownClassName="dropdownBuscaRapida"
+                    allowClear>
+                {options}
+            </Select>
+        </div>
         )
     }
 

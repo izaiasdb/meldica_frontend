@@ -10,6 +10,10 @@ export const VIEWING   = "VIEWING"
     States para FICHA
 */
 export const STATE_CADASTRO          = "STATE_CADASTRO"
+export const STATE_TAB_RAZAO         = "STATE_TAB_RAZAO"
+export const STATE_TAB_PRECO         = "STATE_TAB_PRECO"
+export const STATE_TAB_ORDEM         = "STATE_TAB_ORDEM"
+
 export const STATE_CUSTODIADOS       = "STATE_CUSTODIADOS"
 export const STATE_BLACKLIST         = "STATE_BLACKLIST"
 export const STATE_BLOQUEIOS         = "STATE_BLOQUEIOS"

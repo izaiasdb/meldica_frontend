@@ -16,6 +16,7 @@ import { openNotification } from '../../../util/notification'
 import { getCard } from '../../../util/miniCard'
 import DrawerTabelaPreco from './drawerTabelaPreco'
 import DrawerInfoCliente from './drawerInfoCliente'
+import DrawerUltimaCompra from './drawerUltimaCompra'
 
 const { Meta } = Card
 
@@ -81,7 +82,17 @@ class Formulario extends Component {
 
     render() {
         const { activeKey } = this.state
-        const { fetching, ordemServico, form, stateView, drawerVisivel, drawerInfoClienteVisivel, drawerKitVisivel, kitProdutoList = []} = this.props
+        const { 
+            fetching, 
+            ordemServico, 
+            form, 
+            stateView, 
+            drawerVisivel, 
+            drawerInfoClienteVisivel, 
+            drawerKitVisivel, 
+            drawerUltimaCompraClienteVisivel, 
+            kitProdutoList = []
+        } = this.props
         const { getFieldDecorator, getFieldValue } = form
         const { 
             id, 
@@ -93,7 +104,10 @@ class Formulario extends Component {
             formaGerada,
             valorPago, 
             desconto,
-            produtoItemsList = [], formaItemsList = [], transportadoraItemsList = [], kitList = []
+            produtoItemsList = [], 
+            formaItemsList = [], 
+            transportadoraItemsList = [], 
+            kitList = []
         } = isNil(ordemServico) ? {} : ordemServico
 
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
@@ -254,8 +268,11 @@ class Formulario extends Component {
                         <TabDados {...this.props} 
                             showDrawer={this.showDrawer} 
                             showDrawerInfoCliente={this.showDrawerInfoCliente} 
+                            showDrawerUltimaCompraCliente={this.showDrawerUltimaCompraCliente} 
                             onCloseDrawer={this.onCloseDrawer}
-                            onCloseDrawerInfoCliente={this.onCloseDrawerInfoCliente} />
+                            onCloseDrawerInfoCliente={this.onCloseDrawerInfoCliente} 
+                            onCloseDrawerUltimaCompraCliente={this.onCloseDrawerUltimaCompraCliente}                             
+                            />
                     </Row>
                     <Row>
                         <TabEndereco {...this.props} />
@@ -300,9 +317,18 @@ class Formulario extends Component {
                     </Row>
                 </Card>
             </Form>
-            <DrawerTabelaPreco {...this.props} onCloseDrawer={this.onCloseDrawer} drawerVisivel={drawerVisivel} idTabelaPreco={idTabelaPreco} />
-            <DrawerInfoCliente {...this.props} onCloseDrawerInfoCliente={this.onCloseDrawerInfoCliente} drawerInfoClienteVisivel={drawerInfoClienteVisivel} idCliente={idClienteFrm} 
-            />
+            <DrawerTabelaPreco {...this.props} 
+                onCloseDrawer={this.onCloseDrawer} 
+                drawerVisivel={drawerVisivel} 
+                idTabelaPreco={idTabelaPreco} />
+            <DrawerInfoCliente {...this.props} 
+                onCloseDrawerInfoCliente={this.onCloseDrawerInfoCliente} 
+                drawerInfoClienteVisivel={drawerInfoClienteVisivel} 
+                idCliente={idClienteFrm} />
+            <DrawerUltimaCompra {...this.props} 
+                onCloseDrawer={this.onCloseDrawerUltimaCompraCliente} 
+                drawerVisivel={drawerUltimaCompraClienteVisivel} 
+                idCliente={idClienteFrm} />
         </Spin>
         )
     }
@@ -370,6 +396,28 @@ class Formulario extends Component {
         this.props.setDrawerKitVisivel(false);
     };
 
+    showDrawerUltimaCompraCliente = () => {
+        const { 
+            form, 
+        } = this.props
+        const { getFieldValue } = form
+
+        let idClienteFrm = getFieldValue("ordemServico.cliente.id")
+
+        if (!isNil(idClienteFrm)) {
+            if(!isNil(idClienteFrm)){
+                this.props.obterUltimaCompraCliente(idClienteFrm)
+            }            
+        } else {
+            openNotification({tipo: 'warning', descricao: 'Favor informar um cliente.'})
+            return 
+        }
+    };
+
+    onCloseDrawerUltimaCompraCliente = () => {
+        this.props.setDrawerUltimaCompraClienteVisivel(false);
+    };
+
     setKitProdutoListEvent = (kitProdutoList) => {
         this.props.setKitProdutoList(kitProdutoList);
     };
@@ -415,14 +463,17 @@ const mapStateToProps = (state) => {
         fetching: state.ordemServico.fetching,  
         drawerVisivel: state.ordemServico.drawerVisivel,  
         drawerKitVisivel: state.ordemServico.drawerKitVisivel, 
-        drawerInfoClienteVisivel: state.ordemServico.drawerInfoClienteVisivel, 
+        drawerInfoClienteVisivel: state.ordemServico.drawerInfoClienteVisivel,         
         kitProdutoList: state.ordemServico.kitProdutoList,  
+        drawerUltimaCompraClienteVisivel: state.ordemServico.drawerUltimaCompraClienteVisivel, 
+        ordemServicoUltimaCompraCliente: state.ordemServico.ordemServicoUltimaCompraCliente,  
         profile: state.login.data.profile,      
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
     obter: (id) => dispatch(Actions.ordemServicoObter(id)),    
+    obterUltimaCompraCliente: (idCliente) => dispatch(Actions.ordemServicoObterUltimaCompraCliente(idCliente)),    
     cleanMessage: ()  => dispatch(Actions.ordemServicoCleanMessage()),
     cleanTable: () => dispatch(Actions.ordemServicoCleanTable()),
     setStateView: (stateView) => dispatch(Actions.ordemServicoSetStateView(stateView)),
@@ -431,6 +482,7 @@ const mapDispatchToProps = (dispatch) => ({
     setDrawerVisivel: (drawerVisivel) => dispatch(Actions.ordemServicoSetDrawerVisivel(drawerVisivel)),
     setDrawerKitVisivel: (drawerKitVisivel) => dispatch(Actions.ordemServicoSetDrawerKitVisivel(drawerKitVisivel)),
     setDrawerInfoClienteVisivel: (drawerInfoClienteVisivel) => dispatch(Actions.ordemServicoSetDrawerInfoClienteVisivel(drawerInfoClienteVisivel)),
+    setDrawerUltimaCompraClienteVisivel: (drawerUltimaCompraClienteVisivel) => dispatch(Actions.ordemServicoSetDrawerUltimaCompraClienteVisivel(drawerUltimaCompraClienteVisivel)),
     setKitProdutoList: (kitProdutoList) => dispatch(Actions.ordemServicoSetKitProdutoList(kitProdutoList)),
 })
 

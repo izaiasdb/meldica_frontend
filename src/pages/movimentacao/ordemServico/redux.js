@@ -19,13 +19,15 @@ const { Types, Creators } = createActions({
    ordemServicoCleanTable: null,
    ordemServicoAlterarStatus: ['obj'],
    ordemServicoSetDrawerVisivel: ['drawerVisivel'],
-   ordemServicoSetDrawerInfoClienteVisivel: ['drawerInfoClienteVisivel'],
-   ordemServicoSetDrawerKitVisivel: ['drawerKitVisivel'],
+   ordemServicoSetDrawerInfoClienteVisivel: ['drawerInfoClienteVisivel'],   
+   ordemServicoSetDrawerKitVisivel: ['drawerKitVisivel'],   
    ordemServicoSetKitProdutoList: ['kitProdutoList'],
    ordemServicoImprimir : ['obj'],
    ordemServicoGerarFinanceiro : ['id'],
    ordemServicoDeletarFinanceiro : ['id'],
-   
+   ordemServicoSetDrawerUltimaCompraClienteVisivel: ['drawerUltimaCompraClienteVisivel'],
+   ordemServicoObterUltimaCompraCliente: ['idCliente'],
+   ordemServicoSetOrdemServicoUltimaCompraCliente: ['ordemServicoUltimaCompraCliente'],
 });
 
 export const OrdemServicoTypes = Types;
@@ -41,7 +43,9 @@ export const INITIAL_STATE = Immutable({
     drawerVisivel: false,
     drawerKitVisivel: false,
     drawerInfoClienteVisivel: false,
-    kitProdutoList: []
+    drawerUltimaCompraClienteVisivel: false,
+    kitProdutoList: [],
+    ordemServicoUltimaCompraCliente: null,
 });
 
 /* ------------- Reducers ------------- */
@@ -83,6 +87,7 @@ export const cleanTable = (state) => state.merge({data: {...state.data, list: []
 
 export const setStateView = (state, action) => state.merge({stateView: action.stateView})
 export const setOrdemServico = (state, { ordemServico }) => state.merge({ordemServico, fetching: false})
+export const setOrdemServicoUltimaCompraCliente = (state, { ordemServicoUltimaCompraCliente }) => state.merge({ordemServicoUltimaCompraCliente, fetching: false, drawerUltimaCompraClienteVisivel: true})
 
 export const setOrdemServicoItems = (state, { ordemServicoItems }) => state.merge({
   ordemServico: {
@@ -97,26 +102,30 @@ export const setDrawerVisivel = (state, { drawerVisivel }) => state.merge( { dra
 export const setDrawerKitVisivel = (state, { drawerKitVisivel }) => state.merge( { drawerKitVisivel } )
 export const setDrawerInfoClienteVisivel = (state, { drawerInfoClienteVisivel }) => state.merge( { drawerInfoClienteVisivel } )
 export const setKitProdutoList = (state, { kitProdutoList }) => state.merge( { kitProdutoList } )
+export const setDrawerUltimaCompraClienteVisivel = (state, { drawerUltimaCompraClienteVisivel }) => state.merge( { drawerUltimaCompraClienteVisivel } )
 
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
-  [Types.ORDEM_SERVICO_INIT]                  : request,
-  [Types.ORDEM_SERVICO_OBTER]                 : request,
-  [Types.ORDEM_SERVICO_PESQUISAR]             : request,
-  [Types.ORDEM_SERVICO_IMPRIMIR]              : request,  
-  [Types.ORDEM_SERVICO_GERAR_FINANCEIRO]      : request,  
-  [Types.ORDEM_SERVICO_DELETAR_FINANCEIRO]    : request,  
-  [Types.ORDEM_SERVICO_ALTERAR_STATUS]        : request,
-  [Types.ORDEM_SERVICO_SUCCESS]               : success,
-  [Types.ORDEM_SERVICO_FAILURE]               : failure,
-  [Types.ORDEM_SERVICO_CLEAN_MESSAGE]         : cleanMessage,
-  [Types.ORDEM_SERVICO_SALVAR]                : request,
-  [Types.ORDEM_SERVICO_SET_STATE_VIEW]        : setStateView,
-  [Types.ORDEM_SERVICO_SET_ORDEM_SERVICO]     : setOrdemServico,
-  [Types.ORDEM_SERVICO_CLEAN_TABLE]           : cleanTable,  
-  [Types.ORDEM_SERVICO_SET_DRAWER_VISIVEL]    : setDrawerVisivel,
-  [Types.ORDEM_SERVICO_SET_DRAWER_KIT_VISIVEL]: setDrawerKitVisivel,
-  [Types.ORDEM_SERVICO_SET_DRAWER_INFO_CLIENTE_VISIVEL]    : setDrawerInfoClienteVisivel,
-  [Types.ORDEM_SERVICO_SET_KIT_PRODUTO_LIST]  : setKitProdutoList,
+  [Types.ORDEM_SERVICO_INIT]                                     : request,
+  [Types.ORDEM_SERVICO_OBTER]                                    : request,
+  [Types.ORDEM_SERVICO_PESQUISAR]                                : request,
+  [Types.ORDEM_SERVICO_IMPRIMIR]                                 : request,  
+  [Types.ORDEM_SERVICO_GERAR_FINANCEIRO]                         : request,  
+  [Types.ORDEM_SERVICO_DELETAR_FINANCEIRO]                       : request,  
+  [Types.ORDEM_SERVICO_ALTERAR_STATUS]                           : request,
+  [Types.ORDEM_SERVICO_OBTER_ULTIMA_COMPRA_CLIENTE]              : request,
+  [Types.ORDEM_SERVICO_SUCCESS]                                  : success,
+  [Types.ORDEM_SERVICO_FAILURE]                                  : failure,
+  [Types.ORDEM_SERVICO_CLEAN_MESSAGE]                            : cleanMessage,
+  [Types.ORDEM_SERVICO_SALVAR]                                   : request,
+  [Types.ORDEM_SERVICO_SET_STATE_VIEW]                           : setStateView,
+  [Types.ORDEM_SERVICO_SET_ORDEM_SERVICO]                        : setOrdemServico,
+  [Types.ORDEM_SERVICO_CLEAN_TABLE]                              : cleanTable,  
+  [Types.ORDEM_SERVICO_SET_DRAWER_VISIVEL]                       : setDrawerVisivel,
+  [Types.ORDEM_SERVICO_SET_DRAWER_KIT_VISIVEL]                   : setDrawerKitVisivel,
+  [Types.ORDEM_SERVICO_SET_DRAWER_INFO_CLIENTE_VISIVEL]          : setDrawerInfoClienteVisivel,  
+  [Types.ORDEM_SERVICO_SET_KIT_PRODUTO_LIST]                     : setKitProdutoList,
+  [Types.ORDEM_SERVICO_SET_DRAWER_ULTIMA_COMPRA_CLIENTE_VISIVEL] : setDrawerUltimaCompraClienteVisivel,
+  [Types.ORDEM_SERVICO_SET_ORDEM_SERVICO_ULTIMA_COMPRA_CLIENTE]  : setOrdemServicoUltimaCompraCliente,  
 })

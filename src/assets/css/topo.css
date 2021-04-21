@@ -49,3 +49,27 @@
     padding-right: 10px;
     cursor: pointer;
 }
+
+.topoBuscaRapida {
+    float: right;
+    width: 100%;
+    min-width : 128px;
+    max-width: 700px;
+    height: 65px;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+.selectBuscaRapida {
+    align-items: center;
+    display: flex;
+    width: 100%;
+}
+
+/* até 1200px  */
+/* dropdown do select busca rápida continua grande mesmo em tela pequena. */
+@media screen and (max-width: 1200px) {
+    .dropdownBuscaRapida {
+        width: 70% !important;
+    }    
+}

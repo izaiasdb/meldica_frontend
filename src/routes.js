@@ -35,6 +35,7 @@ import Transportadora from './pages/cadastro/transportadora/container/transporta
 import TabelaPreco from './pages/cadastro/tabelaPreco/container/tabelaPreco'
 import Empresa from './pages/cadastro/empresa/container/empresa'
 import GrupoProduto from './pages/cadastro/grupoProduto/container/grupoProduto'
+import FichaPessoa from './pages/ficha/container/ficha'
 
 //************************************ Movimentação ************************************/
 import OrdemServico from './pages/movimentacao/ordemServico/container/ordemServico'
@@ -87,6 +88,7 @@ const Routes = () => (
             <PrivateRoute path='/cadastro/tabelaPreco' component={TabelaPreco} />
             <PrivateRoute path='/cadastro/empresa' component={Empresa} />
             <PrivateRoute path='/cadastro/grupoProduto' component={GrupoProduto} />
+            <PrivateRoute path='/ficha/:id/:tipoPessoa' component={FichaPessoa} />            
 
             {/************************************* Movimentações *************************************/}
             <PrivateRoute path='/movimentacao/venda' component={OrdemServico} />     

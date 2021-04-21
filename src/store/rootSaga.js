@@ -15,6 +15,7 @@ import * as MainLayout from '../mainLayout/sagas';
 import * as Dashboard from '../pages/dashboard/sagas';
 import * as BuscaRapida from '../pages/buscaRapida/sagas';
 
+
 //************************************ Configuração ************************************/
 import { ConfiguracaoTypes } from '../pages/configuracao/redux';
 
@@ -48,7 +49,7 @@ import { TransportadoraTypes } from '../pages/cadastro/transportadora/redux';
 import { TabelaPrecoTypes } from '../pages/cadastro/tabelaPreco/redux';
 import { EmpresaTypes } from '../pages/cadastro/empresa/redux';
 import { GrupoProdutoTypes } from '../pages/cadastro/grupoProduto/redux';
-
+import { FichaPessoaTypes } from '../pages/ficha/redux';
 
 import * as UnidadeMedida from '../pages/cadastro/unidadeMedida/sagas';
 import * as Produto from '../pages/cadastro/produto/sagas';
@@ -64,6 +65,7 @@ import * as Transportadora from '../pages/cadastro/transportadora/sagas';
 import * as TabelaPreco from '../pages/cadastro/tabelaPreco/sagas';
 import * as Empresa from '../pages/cadastro/empresa/sagas';
 import * as GrupoProduto from '../pages/cadastro/grupoProduto/sagas';
+import * as FichaPessoa from '../pages/ficha/sagas';
 
 //************************************ Movimentações ************************************/
 import { OrdemServicoTypes } from '../pages/movimentacao/ordemServico/redux';
@@ -206,6 +208,16 @@ export default function * root () {
         takeLatest(GrupoProdutoTypes.GRUPO_PRODUTO_SALVAR, GrupoProduto.salvar, api),
         takeLatest(GrupoProdutoTypes.GRUPO_PRODUTO_PESQUISAR, GrupoProduto.pesquisar, api),
 
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_GET_DADOS, FichaPessoa.getDados, api),
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_IMPRIMIR, FichaPessoa.imprimir, api),
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_GET_CLIENTE, FichaPessoa.getCliente, api),
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_GET_SERVIDOR, FichaPessoa.getServidor, api),
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_GET_TERCEIRIZADO, FichaPessoa.getTerceirizado, api),
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_GET_PRESTADOR_SERVICO, FichaPessoa.getPrestadorServico, api),
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_GET_VISITANTE, FichaPessoa.getVisitante, api),
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_GET_VISITANTE_UNIDADE, FichaPessoa.getVisitanteUnidade, api),
+        takeLatest(FichaPessoaTypes.FICHA_PESSOA_ALTERAR_FOTO, FichaPessoa.alterarFoto, api),
+
         //************************************ Movimentação ************************************/
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_INIT, OrdemServico.fetch, api),
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_OBTER, OrdemServico.obter, api),
@@ -215,6 +227,7 @@ export default function * root () {
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_IMPRIMIR, OrdemServico.imprimir, api),
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_GERAR_FINANCEIRO, OrdemServico.gerarFinanceiro, api),
         takeLatest(OrdemServicoTypes.ORDEM_SERVICO_DELETAR_FINANCEIRO, OrdemServico.deletarFinanceiro, api),
+        takeLatest(OrdemServicoTypes.ORDEM_SERVICO_OBTER_ULTIMA_COMPRA_CLIENTE, OrdemServico.obterUltimaCompraCliente, api),
 
         //************************************ Financeiro ************************************/
         takeLatest(ContasReceberTypes.CONTAS_RECEBER_INIT_RECEBER, ContasReceber.initReceber, api),

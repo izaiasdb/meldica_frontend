@@ -4,7 +4,7 @@ import { get } from "lodash";
 
 export function * search ( api, { searchValue } )  {
   try {    
-    const response = yield call(api.BuscaRapida.search, {nome: searchValue})
+    const response = yield call(api.MainLayout.search, searchValue)
       if (response.ok) {
         let dados = get(response, ['data'], {})
         yield put(BuscaRapidaActions.buscaRapidaSuccess({result: dados}))

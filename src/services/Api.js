@@ -52,6 +52,7 @@ const create = () => {
 
   const MainLayout = {
     init: (idUsuario) => api.get('/main/init', { idUsuario: idUsuario }),
+    search: (obj) => api.post('/main/buscaRapida', {...obj}),
     //inativarAlerta: (obj) => api.post('/main/inativarAlerta', obj),
     //marcarLido: (obj) => api.post('/main/marcarLido', obj),
   }
@@ -146,6 +147,7 @@ const create = () => {
   const Cliente = {
     init: () => api.post('/cliente/init'),
     obter: (id) => api.get(`/cliente/${id}`),
+    obterFicha: (id) => api.get(`/cliente/obterFicha/${id}`),    
     pesquisar: (obj) => api.post('/cliente/pesquisar', obj),
     salvar: (obj) => api.post('/cliente/salvar', obj),
     cancelar: (obj) => api.post('/cliente/cancelar', obj),
@@ -210,6 +212,7 @@ const create = () => {
     imprimir: (obj) => api.post('/ordemServico/imprimir', obj),
     gerarFinanceiro: (id) => api.get(`/ordemServico/gerarfinanceiro/${id}`),
     deletarFinanceiro: (id) => api.get(`/ordemServico/deletarfinanceiro/${id}`),
+    obterUltimaCompraCliente: (idCliente) => api.get(`/ordemServico/ultimaCompraCliente/${idCliente}`),
   }
 
    //************************************ Financeiro ************************************/

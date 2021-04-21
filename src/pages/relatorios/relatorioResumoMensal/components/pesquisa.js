@@ -110,15 +110,15 @@ class Pesquisa extends Component {
                             {
                                 getFieldDecorator('obj.tipoRelatorio', {
                                     rules: [{required: true, message: 'Por favor, informe o tipo do relatório.'}],
-                                    initialValue: 'N'
+                                    initialValue: 'NAT'
                                 })(
                                     <Select showSearch
                                         optionFilterProp="children"
                                         filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         <Option key={1} value={null}>{"Selecione"}</Option>
-                                        <Option key={2} value={'N'}>{"MÉLDICA NATURAIS E ENCAPSULADOS"}</Option>
-                                        <Option key={3} value={'C'}>{"MÉLDICA COSMÉTICOS"}</Option>
+                                        <Option key={2} value={'NAT'}>{"MÉLDICA NATURAIS E ENCAPSULADOS"}</Option>
+                                        <Option key={3} value={'COS'}>{"MÉLDICA COSMÉTICOS"}</Option>
                                     </Select>
                                 )
                             }

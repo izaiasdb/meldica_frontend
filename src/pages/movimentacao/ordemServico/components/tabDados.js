@@ -47,6 +47,7 @@ const TabDados = (props) => {
         stateView,
         showDrawer,
         showDrawerInfoCliente,
+        showDrawerUltimaCompraCliente,
     } = props
     const {
         cliente = {},
@@ -204,6 +205,13 @@ const TabDados = (props) => {
                             <Icon type="plus" />
                         </Button>
                     </Tooltip>
+                </Col>
+                <Col span={ 1 }>
+                    <Tooltip title='Última compra do cliente' placement='left'>
+                        <Button type="primary" onClick={showDrawerUltimaCompraCliente} style={{ marginTop: "40px" }}>
+                            <Icon type="plus" />
+                        </Button>
+                    </Tooltip>                    
                 </Col>                
                 <Col span={ 8 }>
                     <Form.Item label={"Cliente Razão Social"}>
@@ -225,12 +233,6 @@ const TabDados = (props) => {
                             )
                         }
                     </Form.Item>
-                </Col>
-                <Col span={ 4 }>
-                    <Button type="primary" //onClick={showDrawer} 
-                        style={{ marginTop: "40px" }}>
-                        <Icon type="plus" /> Última compra cliente
-                    </Button>
                 </Col>
                 <Col span={ 3 }>
                     <Form.Item label={"NF Méldica"}>
@@ -303,7 +305,9 @@ const TabDados = (props) => {
                     </Form.Item>
                 </Col> 
                 <Col span={ 4 }>
-                    <Button type="primary" onClick={showDrawer} style={{ marginTop: "40px" }}>
+                    <Button type="primary" 
+                        onClick={showDrawer} 
+                        style={{ marginTop: "40px" }}>
                         <Icon type="plus" /> Ver tabela Preço
                     </Button>
                 </Col>

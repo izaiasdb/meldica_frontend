@@ -39,6 +39,29 @@ export function * obter(api, { id })  {
   }
 }
 
+//*
+export function * obterUltimaCompraCliente(api, { idCliente })  {
+  try {    
+    const response = yield call(api.OrdemServico.obterUltimaCompraCliente, idCliente)
+
+    if (response.ok) {
+      const ordemServico = get(response, ['data'], {})
+      console.log(ordemServico)
+      yield put(Actions.ordemServicoSetOrdemServicoUltimaCompraCliente(ordemServico))
+      //yield put(Actions.ordemServicoSetDrawerUltimaCompraClienteVisivel(true)
+      //this.props.setDrawerUltimaCompraClienteVisivel(true);
+      //yield put(Actions.ordemServicoSetKitProdutoList(ordemServico.kitProdutoList))
+    } else {
+      const { message } = get(response, ['data'], {})
+      yield put(Actions.ordemServicoFailure(message))
+    }
+  } catch (ex) {
+    console.log(ex)
+    yield put(Actions.ordemServicoFailure())
+  }
+} 
+//*/
+
 export function * pesquisar (api, { ordemServico })  {
   try {    
     const response = yield call(api.OrdemServico.pesquisar, ordemServico)

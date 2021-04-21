@@ -39,7 +39,7 @@ export default class DrawerTabelaPreco extends React.Component {
                         <Col span={ 16 }>
                             <Form.Item label={"Nome"}>
                                 {
-                                        <Input maxLength={ 200 } disabled value={tabelaPreco ? tabelaPreco.nome : ''} />
+                                    <Input maxLength={ 200 } disabled value={tabelaPreco ? tabelaPreco.nome : ''} />
                                 }
                             </Form.Item>
                         </Col>             
