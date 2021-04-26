@@ -8,6 +8,8 @@ import Actions from '../redux'
 import TabDadosPessoais from '../components/tabDadosPessoais'
 import TabRazao from '../components/tabRazao'
 import TabPreco from '../components/tabPreco'
+import TabOrdemServico from '../components/tabOrdemServico'
+
 
 // import { hasAnyAuthority, getUnidadeAtual, getUser, getUnidadesAcesso } from '../../../../services/authenticationService'
 // import VisitanteActions from '../../../sispen/visitante/redux'
@@ -33,12 +35,6 @@ import {
         STATE_TAB_RAZAO, 
         STATE_TAB_PRECO,
         STATE_TAB_ORDEM,
-        STATE_BLOQUEIOS, 
-        STATE_HISTORICO_VISITAS, 
-        STATE_HISTORICO_LOTACAO,
-        STATE_AFASTAMENTO_SERVIDOR,
-        STATE_OFICIO_SERVIDOR,
-        STATE_UNIDADE_ACESSO, 
         STATE_CARTEIRAS} from '../../util/state'
 import { CLIENTE, 
          FUNCIONARIO, 
@@ -291,6 +287,16 @@ class Ficha extends Component {
                                     </Button>
                                     <br/>
                                 </React.Fragment>
+                            }
+                            { ( isEqual(tipoPessoa, CLIENTE)) &&                   
+                                <React.Fragment>
+                                    <Button type={isEqual(state, STATE_TAB_ORDEM) ? "primary" : ""}
+                                            icon="number"
+                                            style={{marginTop: '5px', width: '200px', textAlign: "left" }}
+                                            onClick={() => this.visualizarTab(STATE_TAB_ORDEM)}>Compras
+                                    </Button>
+                                    <br/>
+                                </React.Fragment>
                             }                            
                             {/* {
                                ((isEqual(tipoPessoa, VISITANTE_FAMILIAR) && hasAnyAuthority("FICHA_VISITANTE_-_CARTEIRAS_CONSULTAR")) || 
@@ -333,12 +339,25 @@ class Ficha extends Component {
                             ) &&
                             <div style={{width: '100%'}}>
                                 <Tabs type="card" style={{width: '100%'}}>
-                                    <Tabs.TabPane key={4} tab={<span><Icon type="solution" />Razões</span>} >
+                                    <Tabs.TabPane key={4} tab={<span><Icon type="solution" />Tabela de preços</span>} >
                                         <TabPreco {...props}/>
                                     </Tabs.TabPane>                                
                                 </Tabs> 
                             </div>
+                        }
+                        {
+                            isEqual(state, STATE_TAB_ORDEM) && (isEqual(tipoPessoa, CLIENTE) 
+                            ) &&
+                            <div style={{width: '100%'}}>
+                                <Tabs type="card" style={{width: '100%'}}>
+                                    <Tabs.TabPane key={4} tab={<span><Icon type="solution" />Compras do cliente</span>} >
+                                        <TabOrdemServico {...props}/>
+                                    </Tabs.TabPane>                                
+                                </Tabs> 
+                            </div>
                         }                        
+
+                                  
                         {/* {
                             isEqual(state, STATE_BLOQUEIOS) &&
                             <div style={{width: '100%'}}>

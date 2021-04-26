@@ -45,10 +45,13 @@ class BuscaRapida extends Component {
             const { id, tipoPessoa } = pessoa
             this.setState({redirect: false, pessoa: {}})
 
-            return <Redirect to={this.getLink(id, tipoPessoa)} />
+            //return <Redirect to={this.getLink(id, tipoPessoa)} />
+            this.props.history.push(this.getLink(id, tipoPessoa));
+            window.location.reload(false);
         }
 
         const { result = [], fetching } = this.props
+        
         const options = result.map((pessoa) => {
             const { id, nome, tipoPessoa } = pessoa
             

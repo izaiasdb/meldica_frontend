@@ -106,18 +106,20 @@ const Routes = () => (
 
 class App extends React.Component {
     render (){
-     const { profile, refreshProfile, cleanProfile } = this.props
-     const _isAuthenticated = profile ? true : false
-     if(!profile && isAuthenticated()) {
-         refreshProfile()
-         return null
-     }
-     if(profile && !isAuthenticated()) {
-        cleanProfile()
-        return null
-    }
-    
-    return (_isAuthenticated ? <MainLayout><Routes /></MainLayout> : <Routes />)
+        const { profile, refreshProfile, cleanProfile } = this.props
+        const _isAuthenticated = profile ? true : false
+
+        if(!profile && isAuthenticated()) {
+            refreshProfile()
+            return null
+        }
+        
+        if(profile && !isAuthenticated()) {
+            cleanProfile()
+            return null
+        }
+        
+        return (_isAuthenticated ? <MainLayout><Routes /></MainLayout> : <Routes />)
     }
 }
 
