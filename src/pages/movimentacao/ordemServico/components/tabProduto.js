@@ -537,7 +537,9 @@ export default class TabProduto extends React.Component {
                     </Col>                    
                 </Row>       
                 <Row gutter = { 12 }>
-                    <Form.Item label={"Produtos"}>
+                    <Form.Item 
+                        //label={"Produtos"}
+                        >
                         {
                             getFieldDecorator('ordemServico.produtoItemsList', {
                                 rules: [{ required: false, type: 'array', message: 'Por favor, informe pelo menos um produto.'}],
@@ -545,7 +547,30 @@ export default class TabProduto extends React.Component {
                                 valuePropName: 'dataSource'
                             })(
                                 <Table rowKey={(row) => row.id || row.produto && row.produto.id} size={"small"} 
-                                    pagination={false} bordered>
+                                    pagination={false} bordered
+                                    title={() => <span>PRODUTOS</span>}
+                                    footer={() => 
+                                        <Row>
+                                            <Col span={4}>
+                                               {"Total qtd. caixas:" + produtoItemsList.reduce((acum, {quantidadeCaixa}) => acum + Number(quantidadeCaixa), 0) }
+                                            </Col>
+                                            <Col span={4}>
+                                               {"Total vl. caixa:" + produtoItemsList.reduce((acum, {valorCaixa}) => acum + Number(valorCaixa), 0) }
+                                            </Col>
+                                            <Col span={4}>
+                                               {"Total desconto:" + produtoItemsList.reduce((acum, {desconto}) => acum + Number(desconto), 0) }
+                                            </Col>        
+                                            <Col span={4}>
+                                               {"Total valor c/ desc.:" + produtoItemsList.reduce((acum, {valorCaixa, desconto}) => acum + ( Number(valorCaixa) - Number(desconto)), 0) }
+                                            </Col>                                                                                      
+                                            <Col span={4}>
+                                               {"Total NF caixa:" + produtoItemsList.reduce((acum, {valorNfCaixa}) => acum + Number(valorNfCaixa), 0) }
+                                            </Col>                                            
+                                            <Col span={4}>
+                                               {'Total produto(c/ desc):' + produtoItemsList.reduce((acum, {total}) => acum + Number(total), 0) }
+                                            </Col>
+                                        </Row>
+                                    }>
                                     <Table.Column title={<center>Produto</center>} key={"nomeProduto"} dataIndex={"nomeProduto"} align={"center"} />  
                                     <Table.Column title={<center>Qtd. cx's</center>} key={"quantidadeCaixa"} dataIndex={"quantidadeCaixa"} align={"center"} />    
                                     <Table.Column title={<center>Qtd. unids.</center>} key={"quantidadeUnidade"} dataIndex={"quantidadeUnidade"} align={"center"} />

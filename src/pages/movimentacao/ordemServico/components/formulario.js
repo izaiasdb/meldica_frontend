@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Row, Button, Form, Spin, Tabs, Icon, Input, Modal, Col, Avatar, Divider,  } from 'antd'
+import { Card, Row, Button, Form, Spin, Tabs, Icon, Input, Modal, Col, Avatar, Divider, Tooltip } from 'antd'
 import { isEqual, isNil, isEmpty, get } from 'lodash'
 import { SEARCHING, INSERTING, VIEWING } from '../../../util/state'
 import { connect } from 'react-redux'
@@ -80,6 +80,21 @@ class Formulario extends Component {
         )
     }
 
+    getTotalPagoSemFrete(pagarReceberList, formaItemsList) {
+        const formaSemFreteList = formaItemsList.filter(c=> c.tipoForma == "P");
+        let total = 0;
+
+        formaSemFreteList.map(forma => {
+            const pgList = pagarReceberList.filter(c=> c.idOrdemServicoFormaCondicaoPagamento == forma.id);
+
+            if (!isNil(pgList) && pgList.length > 0){
+                total += pgList.reduce((acum, {valorPago}) => acum + Number(valorPago), 0);
+            }
+        })
+
+        return total;
+    }
+
     render() {
         const { activeKey } = this.state
         const { 
@@ -107,7 +122,8 @@ class Formulario extends Component {
             produtoItemsList = [], 
             formaItemsList = [], 
             transportadoraItemsList = [], 
-            kitList = []
+            kitList = [],
+            pagarReceberList = [],
         } = isNil(ordemServico) ? {} : ordemServico
 
         let idTabelaPreco = getFieldValue("ordemServico.tabelaPreco.id")
@@ -134,8 +150,10 @@ class Formulario extends Component {
         let totalProdutoKitDesconto = kitProdutoListForm.filter(c=> c.bonificacao == false).reduce((acum, {desconto, quantidadeUnidade}) => acum + desconto * quantidadeUnidade, 0);
         let totalForma = formaItemsListForm.reduce((acum,{valor, desconto }) => acum + Number(valor), 0);
         let totalDescForma = formaItemsListForm.filter(c=> c.tipoForma == "P").reduce((acum,{desconto}) => acum + Number(desconto), 0);
+        // É o desconto dado por ex. do cartão de crédito.
         // Idenpendente se é produto ou frete, pois pode ser pago os dois com cartão
         let totalDescFormaCondicao = formaItemsListForm.reduce((acum,{descontoFormaCondicao}) => acum + Number(descontoFormaCondicao), 0);
+        let totalDescFormaCondicaoSemFrete = formaItemsListForm.filter(c=> c.tipoForma == "P").reduce((acum,{descontoFormaCondicao}) => acum + Number(descontoFormaCondicao), 0);
         //let totalFormaDescontos = formaItemsListForm.reduce((acum,{descontoFormaCondicao, desconto }) => acum + Number(descontoFormaCondicao + desconto), 0);
         
         //VOLUMES E PESOS
@@ -145,9 +163,13 @@ class Formulario extends Component {
         let totalVolumeKit = kitList.reduce((acum,) => acum + 1, 0);
         let totalFrete = transportadoraItemsListForm.reduce((acum,{valorFrete}) => acum + Number(valorFrete), 0);
         let totalPedido = (totalProdutoMeldica ? totalProdutoMeldica : 0) + (totalProdutoCosmetico ? totalProdutoCosmetico : 0) +  (totalProdutoKit ? totalProdutoKit : 0) + (totalFrete ? totalFrete : 0);
+        let totalPedidoSemFrete = (totalProdutoMeldica ? totalProdutoMeldica : 0) + (totalProdutoCosmetico ? totalProdutoCosmetico : 0) +  (totalProdutoKit ? totalProdutoKit : 0);
         
-        //let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - (totalFormaDescontos ? totalFormaDescontos : 0);
-        let faltaReceber = totalPedido - (valorPago ? valorPago : 0) - ( (totalDescForma ? totalDescForma : 0) + (totalDescFormaCondicao ? totalDescFormaCondicao : 0));
+        const valorPagoPagarReceber = this.getTotalPagoSemFrete(pagarReceberList, formaItemsListForm)
+
+        // Não conta com frete
+        //let faltaReceber = totalPedidoSemFrete - (valorPago ? valorPago : 0) - ( (totalDescForma ? totalDescForma : 0) + (totalDescFormaCondicaoSemFrete ? totalDescFormaCondicaoSemFrete : 0));
+        let faltaReceber = totalPedidoSemFrete - (valorPagoPagarReceber ? valorPagoPagarReceber : 0) - ( (totalDescForma ? totalDescForma : 0) + (totalDescFormaCondicaoSemFrete ? totalDescFormaCondicaoSemFrete : 0));        
         let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeCaixa}) => acum + (Number(quantidadeCaixa) * Number(valorNfCaixa)), 0);
         let totalNFUnidade = produtoItemsListForm.filter(c=> c.fracionado == true).reduce((acum,{ valorNfUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfUnidade)), 0);
         let totalNFKit = kitList.reduce((acum,{ valorNf}) => acum + valorNf, 0);
@@ -205,9 +227,11 @@ class Formulario extends Component {
                         }
                         </Col>
                         <Col span={ 3 }>
-                        {
-                            getCard('Total a pagar', '#6BD098', 'dollar', totalPedido ? totalPedido.toFixed(2) : 0)
-                        }
+                            <Tooltip title="Produtos Naturais + Produtos Cosméticos + frete"> 
+                            {
+                                getCard('Total a pagar', '#6BD098', 'dollar', totalPedido ? totalPedido.toFixed(2) : 0)
+                            }
+                            </Tooltip>
                         </Col>                            
                         {/* <Col span={ 3 }>
                         {
@@ -215,9 +239,11 @@ class Formulario extends Component {
                         }
                         </Col> */}
                         <Col span={ 3 }>
-                        {
-                            getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago.toFixed(2) : 0)
-                        }
+                            <Tooltip title="Valor recebido de: Produtos Naturais e Produtos Cosméticos (Não soma com frete)"> 
+                            {
+                                getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago.toFixed(2) : 0)
+                            }
+                            </Tooltip>
                         </Col>                          
                       
                     </Row>   
@@ -248,9 +274,11 @@ class Formulario extends Component {
                         }  
                         </Col>     
                         <Col span={ 3 }>
-                        {
-                            getCard('Tot. desc. forma', '#FBC658', 'code-sandbox', totalDescForma.toFixed(2), true, false)
-                        }  
+                            <Tooltip title="Desconto dado na forma de pagamento apenas de: Produtos Naturais e Produtos Cosméticos (Não soma com desconto de frete)"> 
+                            {
+                                getCard('Tot. desc. forma', '#FBC658', 'code-sandbox', totalDescForma.toFixed(2), true, false)
+                            }  
+                            </Tooltip>
                         </Col>     
                         {/* <Col span={ 3 }>
                         {
@@ -258,9 +286,11 @@ class Formulario extends Component {
                         }
                         </Col> */}
                         <Col span={ 3 }>
-                        {
-                            getCard('Falta receber', '#6BD098', 'dollar', faltaReceber.toFixed(2), true, true, true)
-                        }   
+                            <Tooltip title="Valor do financeiro que falta receber: Produtos Naturais e Produtos Cosméticos (Não soma com desconto de frete)"> 
+                            {
+                                getCard('Falta receber', '#6BD098', 'dollar', faltaReceber.toFixed(2), true, true, true)
+                            }   
+                            </Tooltip>
                         </Col>   
                     </Row>                 
                     {/* <Divider /> */}
