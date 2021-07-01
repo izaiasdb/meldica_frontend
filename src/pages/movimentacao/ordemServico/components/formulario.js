@@ -239,7 +239,7 @@ class Formulario extends Component {
                         }
                         </Col> */}
                         <Col span={ 3 }>
-                            <Tooltip title="Valor recebido de: Produtos Naturais e Produtos Cosméticos (Não soma com frete)"> 
+                            <Tooltip title="Valor recebido de: Produtos Naturais + Produtos Cosméticos (Não soma com frete)"> 
                             {
                                 getCard('Valor recebido', '#6BD098', 'dollar', valorPago ? valorPago.toFixed(2) : 0)
                             }
@@ -274,7 +274,7 @@ class Formulario extends Component {
                         }  
                         </Col>     
                         <Col span={ 3 }>
-                            <Tooltip title="Desconto dado na forma de pagamento apenas de: Produtos Naturais e Produtos Cosméticos (Não soma com desconto de frete)"> 
+                            <Tooltip title="Desconto dado na forma de pagamento apenas de: Produtos Naturais + Produtos Cosméticos (Não soma com desconto de frete)"> 
                             {
                                 getCard('Tot. desc. forma', '#FBC658', 'code-sandbox', totalDescForma.toFixed(2), true, false)
                             }  
@@ -286,7 +286,7 @@ class Formulario extends Component {
                         }
                         </Col> */}
                         <Col span={ 3 }>
-                            <Tooltip title="Valor do financeiro que falta receber: Produtos Naturais e Produtos Cosméticos (Não soma com desconto de frete)"> 
+                            <Tooltip title="Valor do financeiro que falta receber: Produtos Naturais + Produtos Cosméticos (Não soma com desconto de frete)"> 
                             {
                                 getCard('Falta receber', '#6BD098', 'dollar', faltaReceber.toFixed(2), true, true, true)
                             }   
