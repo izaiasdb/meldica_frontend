@@ -6,7 +6,7 @@ import Actions from '../redux'
 import Pagination from '../../../util/Pagination'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
-import { getTitle } from '../../../util/helper'
+import { getTitle, getTagStatusNota } from '../../../util/helper'
 import { hasAnyAuthority, getUser } from '../../../../services/authenticationService'
 import Workbook from 'react-excel-workbook'
 import { openNotification } from '../../../util/notification'
@@ -357,9 +357,11 @@ class Tabela extends Component {
                                     //width={'10%'}
                                     />                                                                                                            
                     <Table.Column key={'statusNovaDescricao'} 
-                                    dataIndex={'statusNovaDescricao'} 
+                                    //dataIndex={'statusNovaDescricao'} 
+                                    dataIndex={'statusNota'} 
                                     title={'Status Nota'} 
-                                    align={ "left" }/>
+                                    align={ "left" }
+                                    render={(text) => getTagStatusNota(text,false)}/>
                     <Table.Column key={'cliente.nome'} 
                                     dataIndex={'cliente.nome'} 
                                     title={'Cliente'} 

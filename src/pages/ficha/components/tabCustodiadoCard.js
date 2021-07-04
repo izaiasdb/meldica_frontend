@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Row, Col, Input, Collapse, Divider, Button, Card, Popover, Badge, Icon, Alert } from 'antd'
-import ImageUtil from '../../../util/imageUtil'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 
@@ -31,11 +30,11 @@ export default class TabCustodiadoCard extends Component {
                         <Card  
                             key={key}
                             style={{ width: 250 }}
-                            cover={<ImageUtil src={item.pessoaRelacao.foto} 
-                                                title={item.pessoaRelacao.nome} 
-                                                size={200} 
-                                                fixed
-                                                />}
+                            // cover={<ImageUtil src={item.pessoaRelacao.foto} 
+                            //                     title={item.pessoaRelacao.nome} 
+                            //                     size={200} 
+                            //                     fixed
+                            //                     />}
                             bordered={false}
                         >
                             <Meta title={item.pessoaRelacao.nome} 

@@ -36,3 +36,27 @@ export const getHeader = (text) =>
 export const getTagSimNao = (condition , reverseColor) => (condition === true) ? <Tag color={ reverseColor === true ? 'red' : 'green'}>{'SIM'}</Tag> : <Tag color={ reverseColor === true ? 'green' : 'red'}>{'NÃO'}</Tag>   
 
 export const getTagAtivoInativo = (condition, reverseColor) => (condition === true) ? <Tag color={ reverseColor === true ? 'red' : 'green'}>{'ATIVO'}</Tag> : <Tag color={ reverseColor === true ? 'green' : 'red'}>{'INATIVO'}</Tag>
+
+export const getTagStatusNota = (statusNota) => {
+    console.log(statusNota)
+    if(typeof statusNota != "undefined" && statusNota != null && statusNota != ''){
+        switch (statusNota) {
+            case 'A':
+                return (<Tag color={'green'}>{'ABERTA'}</Tag>)
+            case 'L':
+                return (<Tag color={'orange'}>{'LOGÍSTICA'}</Tag>)
+            case 'F':
+                return (<Tag color={'black'}>{'FECHADO'}</Tag>)
+            case 'R':
+                return (<Tag color={'gray'}>{'REABERTO'}</Tag>)
+            case 'L':
+                return (<Tag color={'pink'}>{'LIBERADO'}</Tag>)
+            case 'E':
+                return (<Tag color={'blue'}>{'ENTREGUE'}</Tag>)
+            case 'C':
+                return (<Tag color={'red'}>{'CANCELADO'}</Tag>)                
+            default:
+                return (<Tag>{''}</Tag>)
+        }
+    }
+}
