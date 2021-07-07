@@ -95,6 +95,20 @@ class Formulario extends Component {
         return total;
     }
 
+    getTotalPagoComFrete(pagarReceberList, formaItemsList) {
+        let total = 0;
+
+        formaItemsList.map(forma => {
+            const pgList = pagarReceberList.filter(c=> c.idOrdemServicoFormaCondicaoPagamento == forma.id);
+
+            if (!isNil(pgList) && pgList.length > 0){
+                total += pgList.reduce((acum, {valorPago}) => acum + Number(valorPago), 0);
+            }
+        })
+
+        return total;
+    }
+
     render() {
         const { activeKey } = this.state
         const { 
@@ -165,11 +179,14 @@ class Formulario extends Component {
         let totalPedido = (totalProdutoMeldica ? totalProdutoMeldica : 0) + (totalProdutoCosmetico ? totalProdutoCosmetico : 0) +  (totalProdutoKit ? totalProdutoKit : 0) + (totalFrete ? totalFrete : 0);
         let totalPedidoSemFrete = (totalProdutoMeldica ? totalProdutoMeldica : 0) + (totalProdutoCosmetico ? totalProdutoCosmetico : 0) +  (totalProdutoKit ? totalProdutoKit : 0);
         
-        const valorPagoPagarReceber = this.getTotalPagoSemFrete(pagarReceberList, formaItemsListForm)
+        //const valorPagoPagarReceber = this.getTotalPagoSemFrete(pagarReceberList, formaItemsListForm)
+        const valorPagoPagarReceber = this.getTotalPagoComFrete(pagarReceberList, formaItemsListForm)
 
         // Não conta com frete
         //let faltaReceber = totalPedidoSemFrete - (valorPago ? valorPago : 0) - ( (totalDescForma ? totalDescForma : 0) + (totalDescFormaCondicaoSemFrete ? totalDescFormaCondicaoSemFrete : 0));
-        let faltaReceber = totalPedidoSemFrete - (valorPagoPagarReceber ? valorPagoPagarReceber : 0) - ( (totalDescForma ? totalDescForma : 0) + (totalDescFormaCondicaoSemFrete ? totalDescFormaCondicaoSemFrete : 0));        
+        //Falta receber com frete 06/07/2021
+        //let faltaReceber = totalPedidoSemFrete - (valorPagoPagarReceber ? valorPagoPagarReceber : 0) - ( (totalDescForma ? totalDescForma : 0) + (totalDescFormaCondicaoSemFrete ? totalDescFormaCondicaoSemFrete : 0));        
+        let faltaReceber = totalPedido - (valorPagoPagarReceber ? valorPagoPagarReceber : 0) - ( (totalDescForma ? totalDescForma : 0) + (totalDescFormaCondicao ? totalDescFormaCondicao : 0));        
         let totalNFCaixa = produtoItemsListForm.filter(c=> c.fracionado == false).reduce((acum,{ valorNfCaixa, quantidadeCaixa}) => acum + (Number(quantidadeCaixa) * Number(valorNfCaixa)), 0);
         let totalNFUnidade = produtoItemsListForm.filter(c=> c.fracionado == true).reduce((acum,{ valorNfUnidade, quantidadeUnidade}) => acum + (Number(quantidadeUnidade) * Number(valorNfUnidade)), 0);
         let totalNFKit = kitList.reduce((acum,{ valorNf}) => acum + valorNf, 0);

@@ -62,7 +62,7 @@ class TabDados extends Component {
                                 })(
                                 <Select showSearch
                                         optionFilterProp="children"
-                                        disabled = {!isEqual(idPerfilLocal, PERFIL_ADMINISTRADOR)}
+                                        //disabled = {!isEqual(idPerfilLocal, PERFIL_ADMINISTRADOR)}
                                         filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}                                            >
                                         <Select.Option key={1} value={null}>{"Selecione"}</Select.Option>
                                         {generateOptions(perfis.map(({id, nome: descricao}) => ({id, descricao})))}
