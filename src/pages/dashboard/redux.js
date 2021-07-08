@@ -1,6 +1,8 @@
 import { createReducer, createActions } from 'reduxsauce'
 import Immutable from 'seamless-immutable'
 import { get } from "lodash"
+import moment from 'moment'
+
 import { MESSAGE_ERROR_DEFAULT } from '../util/messages'
 
 const { Types, Creators } = createActions({
@@ -14,14 +16,18 @@ const { Types, Creators } = createActions({
    dashboardSetUnidadeAtual: ['unidadeAtual'],
    dashboardPesquisarMensagemUnidade: ['obj'],
    dashboardPesquisarVenda: ['obj'],
+   dashboardSetIdTipoDashboard: ['idTipoDashboard'],
+   dashboardSetPeriodo: ['periodo'],
 });
 
 export const DashboardTypes = Types;
 export default Creators;
 
 export const INITIAL_STATE = Immutable({
-    data:  {},
-    fetching: false
+    data: {},
+    idTipoDashboard: '1',
+    periodo: "01/" + moment().format('MM/YYYY'),
+    fetching: false,
 });
 
 export const request = (state) => state.merge({ fetching: true })
@@ -43,8 +49,19 @@ export const success = (state, { dados }) =>  {
 export const failure = (state, { message = MESSAGE_ERROR_DEFAULT}) => {
   return state.merge({fetching: false, data: {...state.data, message: {tipo: 'error', descricao: message }}})
 }
+
 export const setUnidadeAtual = (state, {unidadeAtual}) => {  
   return state.merge({data: {...state.data, unidadeAtual}});
+}
+
+export const setIdTipoDashBoard = (state, {idTipoDashboard}) => {  
+  //return state.merge({data: {...state.data, idTipoDashboard}});
+  return state.merge({idTipoDashboard});
+}
+
+export const setPeriodo = (state, {periodo}) => {  
+  //return state.merge({data: {...state.data, periodo}});
+  return state.merge({periodo});
 }
 
 export const cleanMessage = (state) => state.merge({data: {...state.data, message: ""}})
@@ -61,4 +78,6 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.DASHBOARD_SET_UNIDADE_ATUAL]               : setUnidadeAtual,
   [Types.DASHBOARD_PESQUISAR_MENSAGEM_UNIDADE]      : request,
   [Types.DASHBOARD_PESQUISAR_VENDA]                 : request,
+  [Types.DASHBOARD_SET_ID_TIPO_DASHBOARD]           : setIdTipoDashBoard,
+  [Types.DASHBOARD_SET_PERIODO]                     : setPeriodo,
 })

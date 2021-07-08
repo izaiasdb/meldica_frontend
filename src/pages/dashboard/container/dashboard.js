@@ -19,8 +19,8 @@ class Dashboard extends Component {
 
         this.state = { 
             unidade: {},
-            idTipoDashboard: '1',
-            periodo: "01/" + moment().format('MM/YYYY') //moment().format('DD/MM/YYYY')
+            //idTipoDashboard: '1',
+            //periodo: "01/" + moment().format('MM/YYYY') //moment().format('DD/MM/YYYY')
         }
     }   
 
@@ -69,19 +69,29 @@ class Dashboard extends Component {
     // }   
     
     tipoDashboardHandleChange = (idTipoDashboard) => {
-        const { periodo } = this.state
+        //const { periodo } = this.state
+        const { periodo, setIdTipoDashboard } = this.props
         console.log(`selected ${idTipoDashboard}`);
-        this.setState({ idTipoDashboard })
+        //this.setState({ idTipoDashboard })
 
-        this.pesquisarVenda(idTipoDashboard, periodo)
+        if (!isNil(periodo)){
+            setIdTipoDashboard(idTipoDashboard)
+            this.pesquisarVenda(idTipoDashboard, periodo)
+        }
     }
 
     dataHandleChange = (date, dateString) => {
-        const { idTipoDashboard } = this.state
-        console.log(date, dateString);
-        this.setState({ periodo: "01/" + dateString })
+        //const { idTipoDashboard } = this.state
+        //const { data = {} } = this.props
+        const { idTipoDashboard, setPeriodo } = this.props
+        //const { idTipoDashboard } = data || {}
 
-        this.pesquisarVenda(idTipoDashboard, "01/" + dateString)
+        if (!isNil(idTipoDashboard)){
+            console.log(date, dateString);
+            //this.setState({ periodo: "01/" + dateString })
+            setPeriodo("01/" + dateString)
+            this.pesquisarVenda(idTipoDashboard, "01/" + dateString)
+        }
     }
 
     pesquisarVenda(idTipoDashboard, periodo) {
@@ -122,13 +132,11 @@ class Dashboard extends Component {
     render(){
         let { 
             fetching, 
-            vendaList = []  
-        } = this.props
-        
-        const { 
+            vendaList = [] ,
             idTipoDashboard,
             periodo,
-        } = this.state
+        } = this.props
+        
         //populacaoTotalPorUnidade = cloneDeep(populacaoTotalPorUnidade).sort((a, b) => b.total - a.total)
         let pula = 1;
 
@@ -167,7 +175,8 @@ class Dashboard extends Component {
                                             onChange={this.dataHandleChange} 
                                             placeholder="Selecione o mês"
                                             format={'MM/YYYY'}
-                                            value={new moment()} 
+                                            value={new moment(periodo)} 
+                                            //value={new moment()} 
                                             //value={new moment(periodo)}
                                         />
                                         }
@@ -346,7 +355,9 @@ class Dashboard extends Component {
 const mapStateToProps = (state) => {
     return {
         ...state.dashboard.data,
-        fetching: state.dashboard.fetching
+        fetching: state.dashboard.fetching,
+        idTipoDashboard: state.dashboard.idTipoDashboard,
+        periodo: state.dashboard.periodo,
     }
 }
 
@@ -358,6 +369,8 @@ const mapDispatchToProps = (dispatch) => ({
     getPopulacaoTotalPorUnidade: () => dispatch(DashboardActions.dashboardGetPopulacaoTotalPorUnidade()),  
     pesquisarMensagemUnidade: (obj) => dispatch(DashboardActions.dashboardPesquisarMensagemUnidade(obj)),
     pesquisarVenda: (obj) => dispatch(DashboardActions.dashboardPesquisarVenda(obj)),
+    setIdTipoDashboard: (idTipoDashboard) => dispatch(DashboardActions.dashboardSetIdTipoDashboard(idTipoDashboard)),
+    setPeriodo: (periodo) => dispatch(DashboardActions.dashboardSetPeriodo(periodo)),
 })
 
 const wrapedPesquisa = Form.create()(Dashboard)
