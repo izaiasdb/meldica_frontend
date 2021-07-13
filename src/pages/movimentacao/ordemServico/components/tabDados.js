@@ -74,16 +74,16 @@ const TabDados = (props) => {
         idPlanoContaOrdemServico = configuracaoList[0].planoContaOrdemServico.id;
     }
     
-    let clienteTabelaPrecoFilteredList = clienteTabelaPrecoList.filter(c=> c.idCliente == idCliente)
-    let tabelaPrecoFilteredList = []
+    //let clienteTabelaPrecoFilteredList = clienteTabelaPrecoList.filter(c=> c.idCliente == idCliente)
+    //let tabelaPrecoFilteredList = []
 
-    if (clienteTabelaPrecoFilteredList.length > 0) {
-        tabelaPrecoFilteredList = tabelaPrecoList.filter((a) => {
-            return clienteTabelaPrecoFilteredList.some((f) => {
-                return f.tabelaPreco.id === a.id;
-            });
-        });        
-    }
+    // if (clienteTabelaPrecoFilteredList.length > 0) {
+    //     tabelaPrecoFilteredList = tabelaPrecoList.filter((a) => {
+    //         return clienteTabelaPrecoFilteredList.some((f) => {
+    //             return f.tabelaPreco.id === a.id;
+    //         });
+    //     });        
+    // }
 
     const clienteEscolhido = clienteList.find(c => c.id == idCliente)
 
@@ -298,7 +298,8 @@ const TabDados = (props) => {
                                 disabled= {isEqual(stateView, VIEWING)}
                                 >
                                 <Option key={1} value={null}>{"Selecione"}</Option>
-                                {generateOptions(tabelaPrecoFilteredList)}
+                                {/* {generateOptions(tabelaPrecoFilteredList)} */}
+                                {generateOptions(tabelaPrecoList)}
                             </Select>
                             )
                         }

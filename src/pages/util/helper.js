@@ -49,8 +49,10 @@ export const getTagStatusNota = (statusNota) => {
                 return (<Tag color={'black'}>{'FECHADO'}</Tag>)
             case 'R':
                 return (<Tag color={'gray'}>{'REABERTO'}</Tag>)
-            case 'L':
+            case 'T':
+                //return (<Tag color={'brown'}>{'LIBERADO'}</Tag>)
                 return (<Tag color={'pink'}>{'LIBERADO'}</Tag>)
+                //return (<Tag color={'green'}>{'LIBERADO'}</Tag>)
             case 'E':
                 return (<Tag color={'blue'}>{'ENTREGUE'}</Tag>)
             case 'C':
