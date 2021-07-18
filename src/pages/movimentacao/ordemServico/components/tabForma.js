@@ -28,7 +28,7 @@ export default class TabForma extends React.Component {
         let formaItemsList = getFieldValue("ordemServico.formaItemsList")
         let { id, formaCondicaoPagamento, valor, desconto, total, idEmpresa, tipoForma } = osForma      
         
-        if(!(formaCondicaoPagamento && formaCondicaoPagamento.id && valor)){
+        if(!(idEmpresa && tipoForma && formaCondicaoPagamento && formaCondicaoPagamento.id && valor)){
             openNotification({tipo: 'warning', descricao: 'Por favor, preencha todos os campos referentes a forma.'})
             return null
         }     
@@ -109,10 +109,11 @@ export default class TabForma extends React.Component {
     handleChangeForma = (idForma) => {    
         const { form: { getFieldsValue, setFieldsValue }, formaCondicaoList = [], } = this.props    
         const { osForma } = getFieldsValue()       
-        const { valor } = osForma 
+        const { valor, percDesconto } = osForma 
 
         let formaCondicaoForm = formaCondicaoList.find(c=> c.id == idForma);
-        let vValorDesconto = obterValorDesconto(formaCondicaoForm.percDesconto, valor);        
+       // let vValorDesconto = obterValorDesconto(formaCondicaoForm.percDesconto, valor);        
+        let vValorDesconto = obterValorDesconto(percDesconto, valor);        
         let descontoFormaCondicao = 0;
 
         if (formaCondicaoForm && formaCondicaoForm.percDesconto != 0){
@@ -320,7 +321,7 @@ export default class TabForma extends React.Component {
                 { getFieldDecorator("osForma.nomeFormaPagamento", { initialValue: formaPagamentoNome })(<Input type="hidden" />) }        
                 { getFieldDecorator("osForma.nomeCondicaoPagamento", { initialValue: condicaoPagamentoNome })(<Input type="hidden" />) }        
                 <Row gutter = { 12 }>
-                    <Col span = { 6 }>
+                    <Col span = { 12 }>
                         <Form.Item label={"Forma condição de pagamento"}>
                             {
                                 getFieldDecorator('osForma.formaCondicaoPagamento.id', {})(
@@ -338,7 +339,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>               
                     </Col>
-                    <Col span = { 4 }>
+                    <Col span = { 6 }>
                         <Form.Item label={"Empresa"}>
                             {
                                 getFieldDecorator('osForma.idEmpresa', {})(
@@ -356,7 +357,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>               
                     </Col>                    
-                    <Col span={ 2 }>
+                    <Col span={ 6 }>
                         <Form.Item label={"Tipo Forma"}>
                             {
                                 getFieldDecorator('osForma.tipoForma', {
@@ -375,8 +376,10 @@ export default class TabForma extends React.Component {
                                 )
                             }
                         </Form.Item>
-                    </Col>                                   
-                    <Col span={2}>
+                    </Col>           
+                </Row>
+                <Row gutter = { 12 }>   
+                    <Col span={4}>
                         <Form.Item label={"Valor"}>
                             {
                                 getFieldDecorator('osForma.valor', {
@@ -394,7 +397,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col> 
-                    <Col span={2}>
+                    <Col span={4}>
                         <Form.Item label={"Perc. desconto"}>
                             {
                                 getFieldDecorator('osForma.percDesconto', {
@@ -413,7 +416,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col> 
-                    <Col span={2}>
+                    <Col span={4}>
                         <Form.Item label={"Desconto"}>
                             {
                                 getFieldDecorator('osForma.desconto', {
@@ -432,7 +435,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                    <Col span={2}>
+                    <Col span={4}>
                         <Form.Item label={"Perc. desc. da forma"}>
                             {
                                 getFieldDecorator('osForma.percDescontoFormaCondicao', {
@@ -449,7 +452,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                    <Col span={2}>
+                    <Col span={4}>
                         <Form.Item label={"Desconto da forma"}>
                             {
                                 getFieldDecorator('osForma.descontoFormaCondicao', {
@@ -466,7 +469,7 @@ export default class TabForma extends React.Component {
                             }
                         </Form.Item>
                     </Col>
-                    <Col span={2}>
+                    <Col span={4}>
                         <Form.Item label={"Total"}>
                             {
                                 getFieldDecorator('osForma.total', {
