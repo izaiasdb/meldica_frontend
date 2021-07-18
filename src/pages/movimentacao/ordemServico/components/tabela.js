@@ -292,6 +292,14 @@ class Tabela extends Component {
                             onClick={(e) => this.setModo(record, VIEWING)} />
                     </Tooltip>  
                     <Divider type="vertical"/>
+                    <Tooltip title="Imprimir pedido">
+                        <Icon 
+                            className={'tabela-icone'}
+                            type={ 'printer' } 
+                            onClick={(e) => this.props.imprimir({ ...record, tipoRelatorio: "T" })}
+                            />
+                    </Tooltip>  
+                    {/* 
                     <Tooltip title="Imprimir Naturais e Encapsulados">
                         <Icon 
                             className={'tabela-icone'}
@@ -306,7 +314,7 @@ class Tabela extends Component {
                             type={ 'printer' } 
                             onClick={(e) => this.props.imprimir({ ...record, tipoRelatorio: "C" })}
                             />
-                    </Tooltip>                                                       
+                    </Tooltip>                                                        */}
                 </>
                 }
             </div> 

@@ -132,6 +132,7 @@ export default class TabProduto extends React.Component {
         const { osProduto } = getFieldsValue() 
         const { percDesconto, quantidadeUnidade, quantidadeCaixa } = osProduto 
 
+        
         this.alterandoValores(idProduto, percDesconto)
     }  
 
@@ -165,7 +166,7 @@ export default class TabProduto extends React.Component {
         let totalProduto = 0;
 
         if (fracionado) {
-            vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade);
+            vValorDesconto = obterValorDesconto(percDesconto, valorVendaUnidade); 
             totalProduto = (valorVendaUnidade - vValorDesconto) * (isNil(quantidadeUnidade) ? produto.quantidadeCaixa : quantidadeUnidade);
         } else {
             vValorDesconto = obterValorDesconto(percDesconto, valorVendaCaixa);
@@ -246,7 +247,7 @@ export default class TabProduto extends React.Component {
         const { osProduto } = getFieldsValue()     
         const { produto: {id: idProduto}, percDesconto, quantidadeCaixa} = osProduto
 
-        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa)     
+        this.alterandoValores(idProduto, percDesconto, quantidadeUnidade, quantidadeCaixa)
     } 
 
     limpar = () => {
@@ -317,6 +318,11 @@ export default class TabProduto extends React.Component {
         const valorCaixaForm = getFieldValue("osProduto.valorCaixa") || 0 
         const valorUnidadeForm = getFieldValue("osProduto.valorUnidade") || 0 
         let idEmpresaProduto = getFieldValue("osProduto.idEmpresaProduto") || 0
+        let percDesconto = getFieldValue("osProduto.percDesconto") || 0
+        let quantidadeUnidade = getFieldValue("osProduto.quantidadeUnidade") || 0
+        let valorUnidade = getFieldValue("osProduto.valorUnidade") || 0
+        let qtdEstoqueUnidade = getFieldValue("osProduto.qtdEstoqueUnidade") || 0
+        
         let fracionado = false; 
         let produto = null;  
         let percDescontoMaximo = 0;
@@ -342,7 +348,13 @@ export default class TabProduto extends React.Component {
                 { getFieldDecorator("osProduto.id", { initialValue: idForm })(<Input type="hidden" />) }
                 { getFieldDecorator("osProduto.produto.nome", { initialValue: produtoNome })(<Input type="hidden" />) }     
                 { getFieldDecorator("osProduto.idEmpresaProduto", { initialValue: idEmpresaProduto })(<Input type="hidden" />) } 
-                { getFieldDecorator("osProduto.fracionado", { initialValue: fracionado })(<Input type="hidden" />) } 
+                { getFieldDecorator("osProduto.fracionado", { initialValue: fracionado })(<Input type="hidden" />) }
+                {/* // 18-07-2021 -> Remover percentual de desconto */}
+                { getFieldDecorator("osProduto.percDesconto", { initialValue: percDesconto })(<Input type="hidden" />) } 
+                { getFieldDecorator("osProduto.quantidadeUnidade", { initialValue: quantidadeUnidade })(<Input type="hidden" />) } 
+                { getFieldDecorator("osProduto.valorUnidade", { initialValue: valorUnidade })(<Input type="hidden" />) } 
+                { getFieldDecorator("osProduto.qtdEstoqueUnidade", { initialValue: qtdEstoqueUnidade })(<Input type="hidden" />) } 
+                
                 <Row gutter = { 12 }>
                     <Col span = { 6 }>
                         <Form.Item label={"Produto"}>
@@ -414,7 +426,7 @@ export default class TabProduto extends React.Component {
                             }
                         </Form.Item>
                     </Col>                     
-                    <Col span={3}>
+                    {/* <Col span={3}>
                         <Form.Item label={"Perc. desc." + "(máx "+(percDescontoMaximo ? percDescontoMaximo : 0) +")"}>
                             {
                                 getFieldDecorator('osProduto.percDesconto', {
@@ -431,7 +443,7 @@ export default class TabProduto extends React.Component {
                                 )
                             }
                         </Form.Item>
-                    </Col> 
+                    </Col>  */}
                     <Col span={3}>
                         <Form.Item label={"Desc." + "(máx "+(descontoMaximo ? descontoMaximo : 0 )+")"}>
                             {
@@ -480,7 +492,7 @@ export default class TabProduto extends React.Component {
                         </Form.Item>
                     </Col>                        
                 </Row>  
-                <Row gutter = { 12 }>
+                {/* <Row gutter = { 12 }>
                     <Col span = { 6 }>
                     </Col>
                     <Col span={2}>
@@ -535,7 +547,7 @@ export default class TabProduto extends React.Component {
                             }
                         </Form.Item>
                     </Col>                    
-                </Row>       
+                </Row>        */}
                 <Row gutter = { 12 }>
                     <Form.Item 
                         //label={"Produtos"}
@@ -573,7 +585,7 @@ export default class TabProduto extends React.Component {
                                     }>
                                     <Table.Column title={<center>Produto</center>} key={"nomeProduto"} dataIndex={"nomeProduto"} align={"center"} />  
                                     <Table.Column title={<center>Qtd. cx's</center>} key={"quantidadeCaixa"} dataIndex={"quantidadeCaixa"} align={"center"} />    
-                                    <Table.Column title={<center>Qtd. unids.</center>} key={"quantidadeUnidade"} dataIndex={"quantidadeUnidade"} align={"center"} />
+                                    {/* <Table.Column title={<center>Qtd. unids.</center>} key={"quantidadeUnidade"} dataIndex={"quantidadeUnidade"} align={"center"} /> */}
                                     <Table.Column title={<center>Valor(unit)</center>} key={"valorUnidade"} dataIndex={"valorUnidade"} align={"center"} />
                                     <Table.Column title={<center>Valor(cx)</center>} key={"valorCaixa"} dataIndex={"valorCaixa"} align={"center"} />
                                     <Table.Column title={<center>Desconto</center>} key={"desconto"} dataIndex={"desconto"} align={"center"} />
@@ -581,7 +593,7 @@ export default class TabProduto extends React.Component {
                                         render={(text, record) => record.fracionado ?
                                              (record.valorUnidade - record.desconto) : 
                                              (record.valorCaixa - record.desconto)  } />
-                                    <Table.Column title={<center>NF unit.</center>} key={"valorNfUnidade"} dataIndex={"valorNfUnidade"} align={"center"} />
+                                    {/* <Table.Column title={<center>NF unit.</center>} key={"valorNfUnidade"} dataIndex={"valorNfUnidade"} align={"center"} /> */}
                                     <Table.Column title={<center>NF cx</center>} key={"valorNfCaixa"} dataIndex={"valorNfCaixa"} align={"center"} />
                                     <Table.Column title={<center>Total(C/ Desc.)</center>} key={"total"} dataIndex={"total"} align={"center"} />
                                     <Table.Column title={<center>Bonif.</center>} key={"bonificacao"} dataIndex={"bonificacao"} align={"center"}
