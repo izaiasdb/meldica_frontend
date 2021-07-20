@@ -77,10 +77,10 @@ export default class TabProduto extends React.Component {
         osProduto.idEmpresaProduto = produtoForm.empresa.id;
 
         if (produtoForm.fracionado) {
-            osProduto.valorCaixa = 0;
+            osProduto.valorCaixa = produtoForm.quantidadeCaixa * produtoForm.valorVendaUnidade;
             osProduto.quantidadeCaixa = quantidadeUnidade / produtoForm.quantidadeCaixa;
         } else {
-            osProduto.valorUnidade = 0;
+            osProduto.valorUnidade = produtoForm.valorVendaCaixa / osProduto.quantidadeNaCaixa;
             osProduto.quantidadeUnidade = quantidadeCaixa * produtoForm.quantidadeCaixa;
         }
                
@@ -319,9 +319,10 @@ export default class TabProduto extends React.Component {
         const valorUnidadeForm = getFieldValue("osProduto.valorUnidade") || 0 
         let idEmpresaProduto = getFieldValue("osProduto.idEmpresaProduto") || 0
         let percDesconto = getFieldValue("osProduto.percDesconto") || 0
-        let quantidadeUnidade = getFieldValue("osProduto.quantidadeUnidade") || 0
-        let valorUnidade = getFieldValue("osProduto.valorUnidade") || 0
-        let qtdEstoqueUnidade = getFieldValue("osProduto.qtdEstoqueUnidade") || 0
+        // 18-07-2021 -> Remover percentual de desconto
+        // let quantidadeUnidade = getFieldValue("osProduto.quantidadeUnidade") || 0
+        // let valorUnidade = getFieldValue("osProduto.valorUnidade") || 0
+        // let qtdEstoqueUnidade = getFieldValue("osProduto.qtdEstoqueUnidade") || 0
         
         let fracionado = false; 
         let produto = null;  
@@ -349,11 +350,11 @@ export default class TabProduto extends React.Component {
                 { getFieldDecorator("osProduto.produto.nome", { initialValue: produtoNome })(<Input type="hidden" />) }     
                 { getFieldDecorator("osProduto.idEmpresaProduto", { initialValue: idEmpresaProduto })(<Input type="hidden" />) } 
                 { getFieldDecorator("osProduto.fracionado", { initialValue: fracionado })(<Input type="hidden" />) }
-                {/* // 18-07-2021 -> Remover percentual de desconto */}
                 { getFieldDecorator("osProduto.percDesconto", { initialValue: percDesconto })(<Input type="hidden" />) } 
-                { getFieldDecorator("osProduto.quantidadeUnidade", { initialValue: quantidadeUnidade })(<Input type="hidden" />) } 
+                {/* // 18-07-2021 -> Remover percentual de desconto */}
+                {/* { getFieldDecorator("osProduto.quantidadeUnidade", { initialValue: quantidadeUnidade })(<Input type="hidden" />) } 
                 { getFieldDecorator("osProduto.valorUnidade", { initialValue: valorUnidade })(<Input type="hidden" />) } 
-                { getFieldDecorator("osProduto.qtdEstoqueUnidade", { initialValue: qtdEstoqueUnidade })(<Input type="hidden" />) } 
+                { getFieldDecorator("osProduto.qtdEstoqueUnidade", { initialValue: qtdEstoqueUnidade })(<Input type="hidden" />) }  */}
                 
                 <Row gutter = { 12 }>
                     <Col span = { 6 }>
@@ -492,7 +493,7 @@ export default class TabProduto extends React.Component {
                         </Form.Item>
                     </Col>                        
                 </Row>  
-                {/* <Row gutter = { 12 }>
+                <Row gutter = { 12 }>
                     <Col span = { 6 }>
                     </Col>
                     <Col span={2}>
@@ -547,7 +548,7 @@ export default class TabProduto extends React.Component {
                             }
                         </Form.Item>
                     </Col>                    
-                </Row>        */}
+                </Row>
                 <Row gutter = { 12 }>
                     <Form.Item 
                         //label={"Produtos"}
